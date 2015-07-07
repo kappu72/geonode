@@ -66,6 +66,14 @@ if _ALLOW_TIME_STEP:
         'TIME_ENABLED',
         False)
 
+_ALLOW_MOSAIC_STEP = getattr(settings, 'UPLOADER', False)
+if _ALLOW_MOSAIC_STEP:
+    _ALLOW_MOSAIC_STEP = _ALLOW_MOSAIC_STEP.get(
+        'OPTIONS',
+        False).get(
+        'MOSAIC_ENABLED',
+        False)
+
 _ASYNC_UPLOAD = True if ogc_server_settings and ogc_server_settings.DATASTORE else False
 
 # at the moment, the various time support transformations require the database
@@ -474,6 +482,10 @@ def time_step_view(request, upload_session):
 
     return _next_step_response(request, upload_session)
 
+def mosaic_step_view(request, upload_session):
+    import_session = upload_session.import_session
+
+    return _next_step_response(request, upload_session)
 
 def run_import(upload_session, async=_ASYNC_UPLOAD):
     # run_import can raise an exception which callers should handle
@@ -510,6 +522,7 @@ def final_step_view(req, upload_session):
 _steps = {
     'save': save_step_view,
     'time': time_step_view,
+    'mosaic': mosaic_step_view,
     'srs': srs_step_view,
     'final': final_step_view,
     'csv': csv_step_view,
@@ -532,6 +545,12 @@ if not _ALLOW_TIME_STEP:
             steps.remove('time')
         _pages[t] = tuple(steps)
 
+if not _ALLOW_MOSAIC_STEP:
+    for t, steps in _pages.items():
+        steps = list(steps)
+        if 'mosaic' in steps:
+            steps.remove('mosaic')
+        _pages[t] = tuple(steps)
 
 def get_next_step(upload_session, offset=1):
     assert upload_session.upload_type is not None

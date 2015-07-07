@@ -353,7 +353,8 @@ def run_import(upload_session, async):
 
     _log('running import session')
     # run async if using a database
-    import_session.commit(async)
+    #import_session.commit(async)
+    import_session.commit()
 
     # @todo check status of import session - it may fail, but due to protocol,
     # this will not be reported during the commit
