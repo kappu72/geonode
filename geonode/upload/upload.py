@@ -321,6 +321,9 @@ def run_import(upload_session, async):
     if import_session.state == 'INCOMPLETE':
         if task.state != 'ERROR':
             raise Exception('unknown item state: %s' % task.state)
+    elif import_session.state == 'PENDING':
+        if task.state != 'READY':
+            import_session.commit(async)
 
     # if a target datastore is configured, ensure the datastore exists
     # in geoserver and set the uploader target appropriately
@@ -353,8 +356,7 @@ def run_import(upload_session, async):
 
     _log('running import session')
     # run async if using a database
-    #import_session.commit(async)
-    import_session.commit()
+    import_session.commit(async)
 
     # @todo check status of import session - it may fail, but due to protocol,
     # this will not be reported during the commit
