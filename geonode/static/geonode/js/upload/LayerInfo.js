@@ -134,7 +134,7 @@ define(function (require, exports) {
      *  @returns {FromData}
      */
     LayerInfo.prototype.prepareFormData = function (form_data) {
-        var i, ext, file, perm, geogig, geogig_store, time;
+        var i, ext, file, perm, geogig, geogig_store, time, mosaic;
 
         if (!form_data) {
             form_data = new FormData();
