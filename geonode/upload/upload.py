@@ -318,11 +318,12 @@ def run_import(upload_session, async):
     import_session = upload_session.import_session
     import_session = gs_uploader.get_session(import_session.id)
     task = import_session.tasks[0]
+
     if import_session.state == 'INCOMPLETE':
         if task.state != 'ERROR':
             raise Exception('unknown item state: %s' % task.state)
     elif import_session.state == 'PENDING':
-        if task.state != 'READY':
+        if task.state == 'READY':
             import_session.commit(async)
 
     # if a target datastore is configured, ensure the datastore exists
@@ -509,6 +510,10 @@ def final_step(upload_session, user):
 
     _log('Getting from catalog [%s]', name)
     publishing = cat.get_layer(name)
+
+    if import_session.state == 'PENDING':
+        if task.state == 'READY':
+            import_session.commit()
 
     if not publishing:
         raise LayerNotReady("Expected to find layer named '%s' in geoserver" % name)
