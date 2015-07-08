@@ -511,7 +511,10 @@ def final_step(upload_session, user):
     _log('Getting from catalog [%s]', name)
     publishing = cat.get_layer(name)
 
-    if import_session.state == 'PENDING':
+    if import_session.state == 'INCOMPLETE':
+        if task.state != 'ERROR':
+            raise Exception('unknown item state: %s' % task.state)
+    elif import_session.state == 'PENDING':
         if task.state == 'READY':
             import_session.commit()
 

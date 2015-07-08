@@ -160,7 +160,11 @@ define(function (require, exports) {
         if (time_enabled) {
             time = $('#' + this.main.name.slice(0, -4) + '-time').is(':checked');
             form_data.append('time', time);
-        } 
+        }
+        if (mosaic_enabled) {
+            mosaic = $('#' + this.main.name.slice(0, -4) + '-mosaic').is(':checked');
+            form_data.append('mosaic', mosaic);
+        }
 
         form_data.append('base_file', this.main);
         form_data.append('permissions', JSON.stringify(perm));
@@ -457,7 +461,8 @@ define(function (require, exports) {
                 type: this.type.name,
                 format: this.type.format,
                 geogig: geogig_enabled,
-                time: time_enabled
+                time: time_enabled,
+				mosaic: mosaic_enabled
             });
         file_queue.append(li);
         this.errors = this.collectErrors();

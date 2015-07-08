@@ -31,6 +31,16 @@
 
     </div>
     <% } %>
+    <% if (format == 'raster') { %>
+    <div id='<%= name %>-vector-options' class='row span8'>
+        <% if (mosaic) { %>
+            <div class="checkbox">
+                <input type='checkbox' id='<%= name %>-mosaic' name='<%= name %>-mosaic'/><label for="<%= name %>-mosaic">&nbsp;Configure as ImageMosaic Granule</label>
+            </div>
+        <% } %>
+
+    </div>
+    <% } %>
     <hr />
     <div id="<%= name %>-files" class="row span8">
       <ul class='files'></ul>
