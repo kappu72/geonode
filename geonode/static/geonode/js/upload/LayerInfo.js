@@ -469,16 +469,25 @@ define(function (require, exports) {
         this.displayFiles();
         this.displayErrors();
         this.element = $(this.selector);
+		
+		var time_re_txt = "[0-9]{8}";
 
-		$('#' + this.name + '-mosaic').on('change', this.doImageMosaicToggle);
+        $('#' + this.name + '-mosaic').on('change', this.doImageMosaicToggle);
 
-		$('#' + this.name + '-timedim-value').on('input', function() {
-			var input = $(this);
-			var re = new RegExp($('#' + this.name + '-timedim-format-select').val(), "g");
-			var is_valid = re.test(input.val());
-			if(is_valid){/*input.removeClass("invalid").addClass("valid");*/ alert("Valid!");}
-			else{/*input.removeClass("valid").addClass("invalid");*/ alert("Invalid!");}
-		});
+        $('#' + this.name + '-timedim-format-select').on('change', function() {
+                var input = $(this);
+
+                time_re_txt = input.val();
+        });
+
+        $('#' + this.name + '-timedim-value').on('input', function() {
+                var input = $(this);
+
+                var re = new RegExp(time_re_txt, "g");
+                var is_valid = re.test(input.val());
+                if(is_valid){/*input.removeClass("invalid").addClass("valid");*/ input[0].setCustomValidity('');}
+                else{/*input.removeClass("valid").addClass("invalid");*/ input[0].setCustomValidity('The provided value does not match the selected Date/Time format!');}
+        });
 
         $('#' + this.name + '\\:geogig_toggle').on('change', this.doGeoGigToggle);
 
