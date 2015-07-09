@@ -470,6 +470,8 @@ define(function (require, exports) {
         this.displayErrors();
         this.element = $(this.selector);
 
+		$('#' + this.name + '-mosaic').on('change', this.doImageMosaicToggle);
+
         $('#' + this.name + '\\:geogig_toggle').on('change', this.doGeoGigToggle);
 
         // Add values to the geogig store dropdown and hide.
@@ -582,6 +584,18 @@ define(function (require, exports) {
         } else {
             $("#s2id_" + base_name + "\\:geogig_store").hide()
             $('#' + base_name + '\\:geogig_store').hide();
+        }
+    };
+
+	LayerInfo.prototype.doImageMosaicToggle = function (event) {
+        var target = event.target || event.srcElement;
+        var id = target.id;
+        var base_name = id.split('-')[0];
+        var mosaic_chkbox = $('#' + id).is(':checked');
+        if (mosaic_chkbox) {
+            $('#' + base_name + '-mosaic-options').show();
+        } else {
+            $('#' + base_name + '-mosaic-options').hide();
         }
     };
 

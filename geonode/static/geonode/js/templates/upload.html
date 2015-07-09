@@ -37,17 +37,22 @@
             <div class="checkbox">
                 <input type='checkbox' id='<%= name %>-mosaic' name='<%= name %>-mosaic'/><label for="<%= name %>-mosaic">&nbsp;Configure as ImageMosaic Granule</label>
             </div>
-            <div class="checkbox">
-                <input type='checkbox' id='<%= name %>-timedim' name='<%= name %>-timedim'/><label for="<%= name %>-timedim">&nbsp;Has TIME Dimension</label>
-                <select id="end_format_select">
-                    <option selected="true" value="0">DDMMYYYY</option>
-                    <option value="1">DDMMYYYY'T'hhmmss</option>
-                    <option value="2">DDMMYYYY'T'hhmmss'Z'</option>
-                </select><label for="end_format_select">&nbsp;{% trans "Date Format" %}</label>
-                <input type='text' id='<%= name %>-timedim-value' name='<%= name %>-timedim-value'/><label for="<%= name %>-timedim-value">&nbsp;Has TIME Dimension</label>
+            <div id='<%= name %>-mosaic-options' class='row span8' style='display:none'>
+              <div class="checkbox">
+                  <input type='checkbox' id='<%= name %>-timedim' name='<%= name %>-timedim'/><label for="<%= name %>-timedim">&nbsp;Has TIME Dimension</label>
+              </div>
+              <div class="checkbox">
+                  <select id='<%= name %>-timedim-format-select' name='<%= name %>-timedim-format-select'>
+                      <option selected="true" value="0">DDMMYYYY</option>
+                      <option value="1">DDMMYYYY'T'hhmmss</option>
+                      <option value="2">DDMMYYYY'T'hhmmss'Z'</option>
+                  </select><label for='<%= name %>-timedim-format-select'>&nbsp;Date/Time Format"</label>
+              </div>
+              <div class="checkbox">
+                <input type='text' id='<%= name %>-timedim-value' name='<%= name %>-timedim-value'/><label for="<%= name %>-timedim-value">&nbsp;Date/Time Vlaue</label>
+              </div>
             </div>
         <% } %>
-
     </div>
     <% } %>
     <hr />
