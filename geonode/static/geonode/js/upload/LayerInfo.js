@@ -482,11 +482,18 @@ define(function (require, exports) {
 
         $('#' + this.name + '-timedim-value').on('input', function() {
                 var input = $(this);
+				
+				var id = input.id;
+				var base_name = id.split('-')[0];
 
                 var re = new RegExp(time_re_txt, "g");
                 var is_valid = re.test(input.val());
-                if(is_valid){/*input.removeClass("invalid").addClass("valid");*/ input[0].setCustomValidity('');}
-                else{/*input.removeClass("valid").addClass("invalid");*/ input[0].setCustomValidity('The provided value does not match the selected Date/Time format!');}
+                if(is_valid){
+					$('#' + base_name + '-timedim-value-valid').hide();
+				}
+                else{
+					$('#' + base_name + '-timedim-value-valid').show();
+				}
         });
 
         $('#' + this.name + '\\:geogig_toggle').on('change', this.doGeoGigToggle);
