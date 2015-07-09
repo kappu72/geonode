@@ -4,9 +4,9 @@
 
 define(function (require, exports) {
 
-    var _        = require('underscore'),
-        fileTypes = require('upload/FileTypes'),
-        path     = require('upload/path'),
+        var _      = require('underscore'),
+        fileTypes  = require('upload/FileTypes'),
+        path       = require('upload/path'),
         common     = require('upload/common'),
         LayerInfo;
 
@@ -471,6 +471,14 @@ define(function (require, exports) {
         this.element = $(this.selector);
 
 		$('#' + this.name + '-mosaic').on('change', this.doImageMosaicToggle);
+
+		$('#' + this.name + '-timedim-value').on('input', function() {
+			var input = $(this);
+			var re = new RegExp($('#' + this.name + '-timedim-format-select').val(), "g");
+			var is_valid = re.test(input.val());
+			if(is_valid){/*input.removeClass("invalid").addClass("valid");*/ alert("Valid!");}
+			else{/*input.removeClass("valid").addClass("invalid");*/ alert("Invalid!");}
+		});
 
         $('#' + this.name + '\\:geogig_toggle').on('change', this.doGeoGigToggle);
 
