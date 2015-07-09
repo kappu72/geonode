@@ -470,7 +470,7 @@ define(function (require, exports) {
         this.displayErrors();
         this.element = $(this.selector);
 		
-		var time_re_txt = "[0-9]{8}";
+	var time_re_txt = "[0-9]{8}";
 
         $('#' + this.name + '-mosaic').on('change', this.doImageMosaicToggle);
 
@@ -483,17 +483,14 @@ define(function (require, exports) {
         $('#' + this.name + '-timedim-value').on('input', function() {
                 var input = $(this);
 				
-				var id = input.id;
-				var base_name = id.split('-')[0];
-
                 var re = new RegExp(time_re_txt, "g");
                 var is_valid = re.test(input.val());
                 if(is_valid){
-					$('#' + base_name + '-timedim-value-valid').hide();
-				}
-                else{
-					$('#' + base_name + '-timedim-value-valid').show();
-				}
+		   $('#' + this.name + '-valid').hide();
+		}
+                else {
+		   $('#' + this.name + '-valid').show();
+	        }
         });
 
         $('#' + this.name + '\\:geogig_toggle').on('change', this.doGeoGigToggle);
@@ -611,7 +608,7 @@ define(function (require, exports) {
         }
     };
 
-	LayerInfo.prototype.doImageMosaicToggle = function (event) {
+    LayerInfo.prototype.doImageMosaicToggle = function (event) {
         var target = event.target || event.srcElement;
         var id = target.id;
         var base_name = id.split('-')[0];
