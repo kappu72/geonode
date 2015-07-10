@@ -495,6 +495,31 @@ def time_step_view(request, upload_session):
 def mosaic_step_view(request, upload_session):
     import_session = upload_session.import_session
 
+    if request.method == 'GET':
+        # check for invalid attribute names
+        store_type = import_session.tasks[0].target.store_type
+        if store_type == 'dataStore':
+            layer = import_session.tasks[0].layer
+            invalid = filter(
+                lambda a: str(
+                    a.name).find(' ') >= 0,
+                layer.attributes)
+            if invalid:
+                att_list = "<pre>%s</pre>" % '. '.join(
+                    [a.name for a in invalid])
+                msg = "Attributes with spaces are not supported : %s" % att_list
+                return render_to_response(
+                    'upload/layer_upload_error.html', RequestContext(request, {'error_msg': msg}))
+        context = {
+            'time_form': _create_time_form(import_session, None),
+            'layer_name': import_session.tasks[0].layer.name,
+            'async_upload': _is_async_step(upload_session)
+        }
+        return render_to_response('upload/layer_upload_time.html',
+                                  RequestContext(request, context))
+    elif request.method != 'POST':
+        raise Exception()
+
     return _next_step_response(request, upload_session)
 
 def run_import(upload_session, async=_ASYNC_UPLOAD):
