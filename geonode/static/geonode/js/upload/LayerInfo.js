@@ -99,7 +99,13 @@ define(function (require, exports) {
      */
     LayerInfo.prototype.collectErrors = function () {
         var errors = [];
-		console.log("Collecting errors for " + this.name);
+		
+		var mosaic_is_valid = true;
+		var is_granule = $('#' + this.name + '-mosaic').is(':checked');
+		var is_time_valid = $('#' + this.name + '-timedim').is(':checked') && !$('#' + this.name + '-timedim-value-valid').is(':visible');
+
+		console.log(is_granule + " " + is_time_valid);
+
         if (this.type) {
             errors = this.type.findTypeErrors(this.getExtensions());
         } else {
