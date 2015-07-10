@@ -149,6 +149,19 @@ define(['underscore',
             if ($.inArray(ext,types) == -1){
                 types.push(ext);
             }
+
+			var mosaic_is_valid = true;
+			var is_granule = $('#' + files[i].name + '-mosaic').is(':checked');
+			var is_time_valid = $('#' + files[i].name + '-timedim').is(':checked') && !$('#' + files[i].name + '-timedim-value-valid').is(':visible');
+
+			if (is_granule) {
+				mosaic_is_valid = is_time_valid;
+			}
+
+			if (!mosaic_is_valid) {
+				return false;
+			}
+
         }
         var matched = false;
         for (var file_type in fileTypes){
