@@ -145,22 +145,28 @@ define(['underscore',
         var files = layers[Object.keys(layers)[0]]['files'];
         var types = [];
         for (var i = 0; i<files.length; i++){
+            var base_name = files[i].name.split('.')[0];
+            console.log("Checking file ... " + base_name );
             var ext = files[i].name.split('.').pop().toLowerCase();
             if ($.inArray(ext,types) == -1){
                 types.push(ext);
             }
 
-			var mosaic_is_valid = true;
-			var is_granule = $('#' + files[i].name + '-mosaic').is(':checked');
-			var is_time_valid = $('#' + files[i].name + '-timedim').is(':checked') && !$('#' + files[i].name + '-timedim-value-valid').is(':visible');
+            var mosaic_is_valid = true;
+            var is_granule = $('#' + base_name + '-mosaic').is(':checked');
+            var is_time_valid = $('#' + base_name + '-timedim').is(':checked') && !$('#' + base_name + '-timedim-value-valid').is(':visible');
 
-			if (is_granule) {
-				mosaic_is_valid = is_time_valid;
-			}
+            console.log(base_name + " -> " + is_granule + " / " + is_time_valid);
 
-			if (!mosaic_is_valid) {
-				return false;
-			}
+            if (is_granule) {
+               mosaic_is_valid = is_time_valid;
+            }
+
+            console.log(mosaic_is_valid);
+
+            if (!mosaic_is_valid) {
+               return false;
+            }
 
         }
         var matched = false;
