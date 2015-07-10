@@ -443,8 +443,6 @@ define(function (require, exports) {
              }
            }
           });
-
-
     }
 
     /** Function to display the layers collected from the files
@@ -454,6 +452,7 @@ define(function (require, exports) {
      *  @returns {string}
      */
     LayerInfo.prototype.display = function (file_queue) {
+
         var layerTemplate = _.template($('#layerTemplate').html()),
             li = layerTemplate({
                 name: this.name,
@@ -470,27 +469,31 @@ define(function (require, exports) {
         this.displayErrors();
         this.element = $(this.selector);
 		
-	var time_re_txt = "[0-9]{8}";
+	    var time_re_txt = "[0-9]{8}";
 
         $('#' + this.name + '-mosaic').on('change', this.doImageMosaicToggle);
 
         $('#' + this.name + '-timedim-format-select').on('change', function() {
-                var input = $(this);
+             var input = $(this);
 
-                time_re_txt = input.val();
+             time_re_txt = input.val();
+
+			 var id = input.id;
+			 var base_name = id.split('-')[0];
+
+			 $('#' + base_name + '-timedim-value-valid').show();
         });
 
         $('#' + this.name + '-timedim-value').on('input', function() {
-                var input = $(this);
-				
-                var re = new RegExp(time_re_txt, "g");
-                var is_valid = re.test(input.val());
-                if(is_valid){
-		   $('#' + this.name + '-valid').hide();
-		}
-                else {
-		   $('#' + this.name + '-valid').show();
-	        }
+           var input = $(this);
+           	
+           var re = new RegExp(time_re_txt, "g");
+           var is_valid = re.test(input.val());
+           if(is_valid){
+		      $('#' + this.name + '-valid').hide();
+		   } else {
+		      $('#' + this.name + '-valid').show();
+	       }
         });
 
         $('#' + this.name + '\\:geogig_toggle').on('change', this.doGeoGigToggle);
