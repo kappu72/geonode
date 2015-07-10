@@ -104,7 +104,13 @@ define(function (require, exports) {
 		var is_granule = $('#' + this.name + '-mosaic').is(':checked');
 		var is_time_valid = $('#' + this.name + '-timedim').is(':checked') && !$('#' + this.name + '-timedim-value-valid').is(':visible');
 
-		console.log(is_granule + " " + is_time_valid);
+		if (is_granule) {
+			mosaic_is_valid = is_time_valid;
+		}
+
+		if (!mosaic_is_valid) {
+			errors.push('The configuration of the file as a Mosaic Granule is not valid, please fix the issue and try again');
+		}
 
         if (this.type) {
             errors = this.type.findTypeErrors(this.getExtensions());
