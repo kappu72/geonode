@@ -177,6 +177,16 @@ def _next_step_response(req, upload_session, force_ajax=True):
              'redirect_to': '/upload/time',
              }
         )
+    if next == 'mosaic' and force_ajax:
+        import_session = upload_session.import_session
+        url = reverse('data_upload') + "?id=%s" % import_session.id
+        return json_response(
+            {'url': url,
+             'status': 'incomplete',
+             'success': True,
+             'redirect_to': '/upload/mosaic',
+             }
+        )
     if next == 'srs' and force_ajax:
         import_session = upload_session.import_session
         url = reverse('data_upload') + "?id=%s" % import_session.id
@@ -532,7 +542,7 @@ _steps = {
 # and 'save' is the implied first step :P
 _pages = {
     'shp': ('srs', 'time', 'run', 'final'),
-    'tif': ('time', 'run', 'final'),
+    'tif': ('mosaic', 'run', 'final'),
     'kml': ('run', 'final'),
     'csv': ('csv', 'time', 'run', 'final'),
     'geojson': ('run', 'final')

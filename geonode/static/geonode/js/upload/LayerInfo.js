@@ -394,6 +394,7 @@ define(function (require, exports) {
         var form_data = this.prepareFormData(),
             self = this;
         var prog = "";
+
         $.ajaxQueue({
             url: form_target,
             async: true,
