@@ -99,6 +99,7 @@ define(function (require, exports) {
      */
     LayerInfo.prototype.collectErrors = function () {
         var errors = [];
+		console.log("Collecting errors for " + this.name);
         if (this.type) {
             errors = this.type.findTypeErrors(this.getExtensions());
         } else {
@@ -478,8 +479,7 @@ define(function (require, exports) {
 
              time_re_txt = input.val();
 
-			 var id = input.id;
-			 var base_name = id.split('-')[0];
+			 var base_name = this.name.split('-')[0];
 
 			 $('#' + base_name + '-timedim-value-valid').show();
         });
