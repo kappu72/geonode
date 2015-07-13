@@ -127,6 +127,10 @@ class UploaderSession(object):
     # time related info - need to store here until geoserver layer exists
     time_info = None
 
+    # whether the user has selected a time dimension for ImageMosaic granules or not
+    mosaic_time_regex = None
+    mosaic_time_value = None
+
     def __init__(self, **kw):
         for k, v in kw.items():
             if hasattr(self, k):
@@ -265,7 +269,7 @@ def save_step(user, layer, spatial_files, overwrite=True):
         basename = os.path.basename(f)
         print (" --------------> " + os.path.dirname(f) + " " + os.path.basename(f))
         head, tail = os.path.splitext(basename)
-        dst_file = os.path.join(dirname, head + "_Alfa7691" + tail)
+        dst_file = os.path.join(dirname, head + "_" + this.mosaic_time_value + tail)
         os.rename(f, dst_file)
         spatial_files[0].base_file = dst_file
         print (" --------------> " + str(spatial_files.all_files()))
