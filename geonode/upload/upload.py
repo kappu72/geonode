@@ -149,14 +149,14 @@ def upload(name, base_file,
            end_time_attribute=None, end_time_transform_type=None,
            presentation_strategy=None, precision_value=None,
            precision_step=None, use_big_date=False,
-           overwrite=False):
+           overwrite=False,mosaic_time_regex=None,mosaic_time_value=None):
 
     if user is None:
         user = get_default_user()
     if isinstance(user, basestring):
         user = get_user_model().objects.get(username=user)
 
-    import_session = save_step(user, name, base_file, overwrite)
+    import_session = save_step(user, name, base_file, overwrite, mosaic_time_regex, mosaic_time_value)
 
     upload_session = UploaderSession(
         base_file=base_file,
@@ -182,7 +182,7 @@ def _log(msg, *args):
     logger.info(msg, *args)
 
 
-def save_step(user, layer, spatial_files, overwrite=True):
+def save_step(user, layer, spatial_files, overwrite=True, mosaic_time_regex=None, mosaic_time_value=None):
     _log('Uploading layer: [%s], files [%s]', layer, spatial_files)
 
     if len(spatial_files) > 1:
