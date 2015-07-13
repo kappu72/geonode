@@ -232,6 +232,7 @@ GEONODE_APPS = (
     # GeoNode Contrib Apps
 
     # 'geonode.contrib.dynamic',
+    'geonode.contrib.exif',
 
     # GeoServer Apps
     # Geoserver needs to come last because
@@ -531,8 +532,8 @@ CATALOGUE = {
         # 'URL': 'http://localhost:8080/deegree-csw-demo-3.0.4/services',
 
         # login credentials (for GeoNetwork)
-        'USER': 'admin',
-        'PASSWORD': 'admin',
+        # 'USER': 'admin',
+        # 'PASSWORD': 'admin',
     }
 }
 
@@ -792,6 +793,9 @@ LEAFLET_CONFIG = {
 
 # option to enable/disable resource unpublishing for administrators
 RESOURCE_PUBLISHING = False
+
+# Settings for EXIF contrib app
+EXIF_ENABLED = False
 
 CACHES = {
     # DUMMY CACHE FOR DEVELOPMENT
