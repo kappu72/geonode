@@ -176,7 +176,19 @@ define(function (require, exports) {
         }
         if (mosaic_enabled) {
             mosaic = $('#' + this.main.name.slice(0, -4) + '-mosaic').is(':checked');
-            form_data.append('mosaic', mosaic);
+			var is_time_valid = $('#' + this.main.name.slice(0, -4) + '-timedim').is(':checked') && !$('#' + this.main.name.slice(0, -4) + '-timedim-value-valid').is(':visible');
+
+			if (mosaic && is_time_valid) {
+				form_data.append('mosaic', mosaic);
+
+				var time_regex = $('#' + this.main.name.slice(0, -4) + '-timedim-format-select').val();
+				var time_value = $('#' + this.main.name.slice(0, -4) + '-timedim-value').val();
+
+				console.log("time_regex:" + time_regex + " / time_value:" + time_value);
+
+				form_data.append('mosaic_time_regex', time_regex);
+				form_data.append('mosaic_time_value', time_value);
+			}
         }
 
         form_data.append('base_file', this.main);
