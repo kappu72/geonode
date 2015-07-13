@@ -259,6 +259,17 @@ def save_step(user, layer, spatial_files, overwrite=True):
 
         # @todo settings for use_url or auto detection if geoserver is
         # on same host
+
+        f = spatial_files[0].base_file
+        dirname = os.path.dirname(f)
+        basename = os.path.basename(f)
+        print (" --------------> " + os.path.dirname(f) + " " + os.path.basename(f))
+        head, tail = os.path.splitext(basename)
+        dst_file = os.path.join(dirname, head + "_Alfa7691" + tail)
+        os.rename(f, dst_file)
+        spatial_files[0].base_file = dst_file
+        print (" --------------> " + str(spatial_files.all_files()))
+
         import_session = gs_uploader.upload_files(
             spatial_files.all_files(),
             use_url=False,
@@ -282,6 +293,9 @@ def save_step(user, layer, spatial_files, overwrite=True):
 
         if not error_msg and import_session.tasks:
             task = import_session.tasks[0]
+
+            print (" ************* " + str(task))
+
             # single file tasks will have just a file entry
             if hasattr(task, 'files'):
                 # @todo gsimporter - test this
