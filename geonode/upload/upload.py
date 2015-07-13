@@ -269,7 +269,7 @@ def save_step(user, layer, spatial_files, overwrite=True):
         basename = os.path.basename(f)
         print (" --------------> " + os.path.dirname(f) + " " + os.path.basename(f))
         head, tail = os.path.splitext(basename)
-        dst_file = os.path.join(dirname, head + "_" + this.mosaic_time_value + tail)
+        dst_file = os.path.join(dirname, head + "_" + self.mosaic_time_value + tail)
         os.rename(f, dst_file)
         spatial_files[0].base_file = dst_file
         print (" --------------> " + str(spatial_files.all_files()))
