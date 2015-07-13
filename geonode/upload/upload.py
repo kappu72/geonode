@@ -675,7 +675,7 @@ def import_imagemosaic_granules(spatial_files, mosaic_time_regex, mosaic_time_va
         "abs_path_flag": "false",
         "time_attr":  "time",
         "aux_metadata_flag":  "False",
-        "mosaic_time_regex": "mosaic_time_regex"
+        "mosaic_time_regex": mosaic_time_regex
     }
 
     indexer_template="""AbsolutePath={abs_path_flag}
@@ -694,10 +694,10 @@ SuggestedSPI=it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReaderSpi"""
         timeregex_prop_file.write(timeregex_template.format(**context))
 
     import zipfile
-    z = zipfile.ZipFile(dirname + '/' + basename +'.zip', "w")
+    z = zipfile.ZipFile(dirname + '/' + head +'.zip', "w")
 
-    z.write(dirname + '/indexer.properties')
-    z.write(dirname + '/timeregex.properties')
+    z.write(dirname + '/indexer.properties', arcname = 'indexer.properties')
+    z.write(dirname + '/timeregex.properties', arcname = 'timeregex.properties')
 
     z.close()
 
@@ -707,6 +707,6 @@ SuggestedSPI=it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReaderSpi"""
     # - name = name of the ImageMosaic (equal to the base_name)
     # - data = abs path to the zip file
     # - configure = parameter allows for future configuration after harvesting
-    name = basename
-    data = open(dirname + '/' + basename +'.zip', 'rb')
+    name = head
+    data = open(dirname + '/' + head +'.zip', 'rb')
     cat.create_imagemosaic(name, data, configure=True)
