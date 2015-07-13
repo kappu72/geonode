@@ -264,21 +264,18 @@ def save_step(user, layer, spatial_files, overwrite=True, mosaic_time_regex=None
         # @todo settings for use_url or auto detection if geoserver is
         # on same host
 
-        f = spatial_files[0].base_file
-        dirname = os.path.dirname(f)
-        basename = os.path.basename(f)
-        print (" --------------> " + os.path.dirname(f) + " " + os.path.basename(f))
-        head, tail = os.path.splitext(basename)
-        dst_file = os.path.join(dirname, head + "_" + mosaic_time_value + tail)
-        os.rename(f, dst_file)
-        spatial_files[0].base_file = dst_file
-        print (" --------------> " + str(spatial_files.all_files()))
+        # Is it a regular file or an ImageMosaic?
+        if mosaic_time_regex and mosaic_time_value:
+            # we want to ingest as ImageMosaic
+            import_imagemosaic_granules(spatial_files, mosaic_time_regex, mosaic_time_value)
 
-        import_session = gs_uploader.upload_files(
-            spatial_files.all_files(),
-            use_url=False,
-            import_id=next_id,
-            mosaic=len(spatial_files) > 1)
+        else:
+            # moving forward with a regular Importer session
+            import_session = gs_uploader.upload_files(
+                spatial_files.all_files(),
+                use_url=False,
+                import_id=next_id,
+                mosaic=len(spatial_files) > 1)
 
         upload.import_id = import_session.id
         upload.save()
@@ -654,3 +651,62 @@ def final_step(upload_session, user):
     signals.upload_complete.send(sender=final_step, layer=saved_layer)
 
     return saved_layer
+
+def import_imagemosaic_granules(spatial_files, mosaic_time_regex, mosaic_time_value):
+
+    # The very first step is to rename the granule by adding the selected regex
+    #  matching value to the filename.
+
+    f = spatial_files[0].base_file
+    dirname = os.path.dirname(f)
+    basename = os.path.basename(f)
+    print (" --------------> " + os.path.dirname(f) + " " + os.path.basename(f))
+    head, tail = os.path.splitext(basename)
+    dst_file = os.path.join(dirname, head + "_" + mosaic_time_value + tail)
+    os.rename(f, dst_file)
+    spatial_files[0].base_file = dst_file
+    print (" --------------> " + str(spatial_files.all_files()))
+
+    # We use the GeoServer REST APIs in order to create the ImageMosaic
+    #  and later add the granule through the GeoServer Importer.
+
+    # 1. Create a zip file containing the ImageMosaic .properties files
+    context = {
+        "abs_path_flag": "false",
+        "time_attr":  "time",
+        "aux_metadata_flag":  "False",
+        "mosaic_time_regex": "mosaic_time_regex"
+    }
+
+    indexer_template="""AbsolutePath={abs_path_flag}
+TimeAttribute={time_attr}
+Schema= the_geom:Polygon,location:String,{time_attr}:java.util.Date
+PropertyCollectors=TimestampFileNameExtractorSPI[timeregex]({time_attr})
+CheckAuxiliaryMetadata={aux_metadata_flag}
+SuggestedSPI=it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReaderSpi"""
+
+    with open(dirname + '/indexer.properties','w') as indexer_prop_file:
+        indexer_prop_file.write(indexer_template.format(**context))
+
+    timeregex_template="""regex=(?<=_)({mosaic_time_regex})"""
+
+    with open(dirname + '/timeregex.properties','w') as timeregex_prop_file:
+        timeregex_prop_file.write(timeregex_template.format(**context))
+
+    import zipfile
+    z = zipfile.ZipFile(dirname + '/' + basename +'.zip', "w")
+
+    z.write(dirname + '/indexer.properties')
+    z.write(dirname + '/timeregex.properties')
+
+    z.close()
+
+    # 2. Send a "create ImageMosaic" request to GeoServer through gs_config
+    cat = gs_catalog
+    cat._cache.clear()
+    # - name = name of the ImageMosaic (equal to the base_name)
+    # - data = abs path to the zip file
+    # - configure = parameter allows for future configuration after harvesting
+    name = basename
+    data = open(dirname + '/' + basename +'.zip', 'rb')
+    cat.create_imagemosaic(name, data, configure=True)
