@@ -45,6 +45,9 @@ class LayerUploadForm(forms.Form):
     geogig_store = forms.CharField(required=False)
     time = forms.BooleanField(required=False)
 
+    mosaic_time_regex = forms.CharField(required=False)
+    mosaic_time_value = forms.CharField(required=False)
+
     abstract = forms.CharField(required=False)
     layer_title = forms.CharField(required=False)
     permissions = JSONField()
