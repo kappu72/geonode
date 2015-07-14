@@ -704,6 +704,7 @@ SuggestedSPI=it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReaderSpi"""
     import zipfile
     z = zipfile.ZipFile(dirname + '/' + head +'.zip', "w")
 
+    z.write(dst_file, arcname = head + "_" + mosaic_time_value + tail)
     z.write(dirname + '/indexer.properties', arcname = 'indexer.properties')
     z.write(dirname + '/timeregex.properties', arcname = 'timeregex.properties')
 
