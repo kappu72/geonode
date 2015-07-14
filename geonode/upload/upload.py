@@ -267,7 +267,15 @@ def save_step(user, layer, spatial_files, overwrite=True, mosaic_time_regex=None
         # Is it a regular file or an ImageMosaic?
         if mosaic_time_regex and mosaic_time_value:
             # we want to ingest as ImageMosaic
-            import_imagemosaic_granules(spatial_files, mosaic_time_regex, mosaic_time_value)
+            target_store = import_imagemosaic_granules(spatial_files, mosaic_time_regex, mosaic_time_value)
+
+            # moving forward with a regular Importer session
+            import_session = gs_uploader.upload_files(
+                spatial_files.all_files(),
+                use_url=False,
+                import_id=next_id,
+                mosaic=len(spatial_files) > 1,
+                target_store=target_store)
 
         else:
             # moving forward with a regular Importer session
@@ -710,3 +718,5 @@ SuggestedSPI=it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReaderSpi"""
     name = head
     data = open(dirname + '/' + head +'.zip', 'rb')
     cat.create_imagemosaic(name, data, configure=True)
+
+    return head
