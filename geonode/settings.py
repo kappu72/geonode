@@ -233,6 +233,7 @@ GEONODE_APPS = (
 
     # 'geonode.contrib.dynamic',
     'geonode.contrib.exif',
+    'geonode.contrib.mosaic',
 
     # GeoServer Apps
     # Geoserver needs to come last because
@@ -664,7 +665,7 @@ CKAN_ORIGINS = [{
 # Be sure to replace @GeoNode with your organization or site's twitter handle.
 TWITTER_CARD = True
 TWITTER_SITE = '@GeoNode'
-TWITTER_HASHTAGS = ['geonode'] 
+TWITTER_HASHTAGS = ['geonode']
 
 OPENGRAPH_ENABLED = True
 
