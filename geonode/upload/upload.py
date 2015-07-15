@@ -34,6 +34,7 @@ This needs to be made more stateful by adding a model.
 from geonode.layers.utils import get_valid_layer_name
 from geonode.layers.metadata import set_metadata
 from geonode.layers.models import Layer
+from geonode.contrib.mosaic.models import Mosaic
 from geonode import GeoNodeException
 from geonode.people.utils import get_default_user
 from geonode.upload.models import Upload
@@ -175,7 +176,7 @@ def upload(name, base_file,
               time_format=None, srs=None, use_big_date=use_big_date)
 
     run_import(upload_session, async=False)
-    final_step(upload_session, user)
+    final_step(upload_session, user, mosaic_time_regex, mosaic_time_value)
 
 
 def _log(msg, *args):
@@ -508,7 +509,7 @@ def srs_step(upload_session, srs):
     layer.set_srs(srs)
 
 
-def final_step(upload_session, user):
+def final_step(upload_session, user, mosaic_time_regex=None, mosaic_time_value=None):
     from geonode.geoserver.helpers import get_sld_for
     import_session = upload_session.import_session
     _log('Reloading session %s to check validity', import_session.id)
@@ -596,10 +597,21 @@ def final_step(upload_session, user):
                     owner=user,)
 
     _log('record defaults: %s', defaults)
-    saved_layer, created = Layer.objects.get_or_create(
-        name=task.layer.name,
-        defaults=defaults
-    )
+    # Is it a regular file or an ImageMosaic?
+    if mosaic_time_regex and mosaic_time_value:
+        saved_layer, created = Mosaic.objects.get_or_create(
+            name=task.layer.name,
+            defaults=defaults,
+
+            has_time=True,
+            has_elevation=False,
+            time_regex=mosaic_time_regex
+        )
+    else:
+        saved_layer, created = Layer.objects.get_or_create(
+            name=task.layer.name,
+            defaults=defaults
+        )
 
     # Should we throw a clearer error here?
     assert saved_layer is not None
