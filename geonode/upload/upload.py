@@ -157,6 +157,8 @@ def upload(name, base_file,
     if isinstance(user, basestring):
         user = get_user_model().objects.get(username=user)
 
+    print (' ----------------> [save_step] Mosaic: ' + str(mosaic_time_regex) + ' ** ' + str(mosaic_time_value))
+
     import_session = save_step(user, name, base_file, overwrite, mosaic_time_regex=mosaic_time_regex, mosaic_time_value=mosaic_time_value)
 
     upload_session = UploaderSession(
@@ -176,6 +178,9 @@ def upload(name, base_file,
               time_format=None, srs=None, use_big_date=use_big_date)
 
     run_import(upload_session, async=False)
+
+    print (' ----------------> [final_step] Mosaic: ' + str(mosaic_time_regex) + ' ** ' + str(mosaic_time_value))
+
     final_step(upload_session, user, mosaic_time_regex=mosaic_time_regex, mosaic_time_value=mosaic_time_value)
 
 
