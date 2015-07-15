@@ -39,7 +39,7 @@ from geonode.people.utils import get_default_user
 from geonode.upload.models import Upload
 from geonode.upload import signals
 from geonode.upload.utils import create_geoserver_db_featurestore
-from geonode.geoserver.helpers import gs_catalog, gs_uploader, ogc_server_settings
+from geonode.geoserver.helpers import gs_catalog, gs_uploader, ogc_server_settings, set_time_dimension
 from geonode.geoserver.helpers import set_time_info
 
 import geoserver
@@ -720,5 +720,8 @@ SuggestedSPI=it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReaderSpi"""
     data = open(dirname + '/' + head +'.zip', 'rb')
     #cat.create_imagemosaic(name, data, configure=True)
     cat.create_imagemosaic(name, data)
+
+    # configure time as LIST
+    set_time_dimension(cat, name)
 
     return head

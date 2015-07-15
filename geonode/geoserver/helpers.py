@@ -1654,3 +1654,11 @@ def _fixup_ows_url(thumb_spec):
     gspath = '"' + ogc_server_settings.public_url  # this should be in img src attributes
     repl = '"' + ogc_server_settings.LOCATION
     return re.sub(gspath, repl, thumb_spec)
+
+def set_time_dimension(cat, layer):
+    # configure the layer time dimension as LIST
+    cat._cache.clear()
+    timeInfo = DimensionInfo("time", "true", "LIST", None, "ISO8601", None, attribute="time")
+    resource = cat.get_layer(name).resource
+    resource.metadata = {'time':timeInfo}
+    cat.save(resource)
