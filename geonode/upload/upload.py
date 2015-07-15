@@ -165,7 +165,9 @@ def upload(name, base_file,
         import_session=import_session,
         layer_abstract="",
         layer_title=name,
-        permissions=None
+        permissions=None,
+        mosaic_time_regex=mosaic_time_regex, 
+        mosaic_time_value=mosaic_time_value
     )
 
     time_step(upload_session,
@@ -279,8 +281,8 @@ def save_step(user, layer, spatial_files, overwrite=True, mosaic_time_regex=None
                 mosaic=len(spatial_files) > 1,
                 target_store=target_store)
 
-            upload.mosaic_time_regex=mosaic_time_regex
-            upload.mosaic_time_value=mosaic_time_value
+            upload.mosaic_time_regex = mosaic_time_regex
+            upload.mosaic_time_value = mosaic_time_value
         else:
             # moving forward with a regular Importer session
             import_session = gs_uploader.upload_files(
