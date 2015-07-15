@@ -157,7 +157,7 @@ def upload(name, base_file,
     if isinstance(user, basestring):
         user = get_user_model().objects.get(username=user)
 
-    import_session = save_step(user, name, base_file, overwrite, mosaic_time_regex, mosaic_time_value)
+    import_session = save_step(user, name, base_file, overwrite, mosaic_time_regex=mosaic_time_regex, mosaic_time_value=mosaic_time_value)
 
     upload_session = UploaderSession(
         base_file=base_file,
@@ -176,7 +176,7 @@ def upload(name, base_file,
               time_format=None, srs=None, use_big_date=use_big_date)
 
     run_import(upload_session, async=False)
-    final_step(upload_session, user, mosaic_time_regex, mosaic_time_value)
+    final_step(upload_session, user, mosaic_time_regex=mosaic_time_regex, mosaic_time_value=mosaic_time_value)
 
 
 def _log(msg, *args):
@@ -598,10 +598,10 @@ def final_step(upload_session, user, mosaic_time_regex=None, mosaic_time_value=N
 
     _log('record defaults: %s', defaults)
     # Is it a regular file or an ImageMosaic?
+
+    print (' ----------------> Mosaic: ' + str(mosaic_time_regex) + ' ** ' + str(mosaic_time_value))
+
     if mosaic_time_regex and mosaic_time_value:
-
-        print (' ----------------> Mosaic: ' + str(mosaic_time_regex) + ' ** ' + str(mosaic_time_value))
-
         saved_layer, created = Mosaic.objects.get_or_create(
             name=task.layer.name,
             defaults=defaults,
