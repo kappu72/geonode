@@ -608,8 +608,8 @@ def final_step(upload_session, user):
                 abstract=abstract or '',
                 owner=user,
                 bbox_x0=llbbox[0],
-                bbox_x1=llbbox[2],
-                bbox_y0=llbbox[1],
+                bbox_x1=llbbox[1],
+                bbox_y0=llbbox[2],
                 bbox_y1=llbbox[3],),
 
             has_time=True,
