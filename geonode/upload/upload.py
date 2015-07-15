@@ -592,24 +592,27 @@ def final_step(upload_session, user):
     # delete hook on layer should fix this?)
     cat._cache.clear()
 
-    defaults = dict(store=target.name,
-                    storeType=target.store_type,
-                    typename=typename,
-                    workspace=target.workspace_name,
-                    title=title,
-                    uuid=layer_uuid,
-                    abstract=abstract or '',
-                    owner=user,)
-
-    _log('record defaults: %s', defaults)
     # Is it a regular file or an ImageMosaic?
-
-    print (' ----------------> Mosaic: ' + str(upload_session.mosaic_time_regex) + ' ** ' + str(upload_session.mosaic_time_value))
-
     if upload_session.mosaic_time_regex and upload_session.mosaic_time_value:
+        
+        bbox = [publishing.extent.xmin, publishing.extent.ymin,
+                publishing.extent.xmax, publishing.extent.ymax]
+
         saved_layer, created = Mosaic.objects.get_or_create(
             name=task.layer.name,
-            defaults=defaults,
+            defaults = dict(store=target.name,
+                storeType=target.store_type,
+                typename=typename,
+                workspace=target.workspace_name,
+                title=title,
+                uuid=layer_uuid,
+                abstract=abstract or '',
+                owner=user,
+                srid="EPSG:%s" % publishing.extent.spatialReference.wkid,
+                bbox_x0=bbox[0],
+                bbox_x1=bbox[2],
+                bbox_y0=bbox[1],
+                bbox_y1=bbox[3],),
 
             has_time=True,
             has_elevation=False,
@@ -618,7 +621,14 @@ def final_step(upload_session, user):
     else:
         saved_layer, created = Layer.objects.get_or_create(
             name=task.layer.name,
-            defaults=defaults
+            defaults = dict(store=target.name,
+                storeType=target.store_type,
+                typename=typename,
+                workspace=target.workspace_name,
+                title=title,
+                uuid=layer_uuid,
+                abstract=abstract or '',
+                owner=user,)
         )
 
     # Should we throw a clearer error here?
