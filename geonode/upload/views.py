@@ -297,7 +297,9 @@ def save_step_view(req, session):
             upload_type=base_file[0].file_type.code,
             geogig=form.cleaned_data['geogig'],
             geogig_store=form.cleaned_data['geogig_store'],
-            time=form.cleaned_data['time']
+            time=form.cleaned_data['time'],
+            mosaic_time_regex=form.cleaned_data['mosaic_time_regex'],
+            mosaic_time_value=form.cleaned_data['mosaic_time_value']
         )
         return _next_step_response(req, upload_session, force_ajax=True)
     else:
