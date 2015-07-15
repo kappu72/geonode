@@ -1659,6 +1659,6 @@ def set_time_dimension(cat, layer):
     # configure the layer time dimension as LIST
     cat._cache.clear()
     timeInfo = DimensionInfo("time", "true", "LIST", None, "ISO8601", None, attribute="time")
-    resource = cat.get_layer(name).resource
+    resource = cat.get_layer(layer).resource
     resource.metadata = {'time':timeInfo}
     cat.save(resource)
