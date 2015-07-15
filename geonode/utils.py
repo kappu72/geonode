@@ -483,7 +483,7 @@ def resolve_object(request, model, query, permission='base.view_resourcebase',
 
     allowed = True
     if permission.split('.')[-1] in ['change_layer_data', 'change_layer_style']:
-        if obj.__class__.__name__ == 'Layer':
+        if obj.__class__.__name__ == 'Layer' or obj.__class__.__name__ == 'Mosaic':
             obj_to_check = obj
     if permission:
         if permission_required or request.method != 'GET':
