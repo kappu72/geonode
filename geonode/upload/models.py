@@ -68,6 +68,12 @@ class Upload(models.Model):
     # hold a dict of any intermediate Layer metadata - not used for now
     metadata = models.TextField(null=True)
 
+    mosaic_time_regex = models.CharField(max_length=128, null=True)
+    mosaic_time_value = models.CharField(max_length=128, null=True)
+
+    mosaic_elev_regex = models.CharField(max_length=128, null=True)
+    mosaic_elev_value = models.CharField(max_length=128, null=True)
+
     class Meta:
         ordering = ['-date']
 
