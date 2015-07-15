@@ -599,6 +599,9 @@ def final_step(upload_session, user, mosaic_time_regex=None, mosaic_time_value=N
     _log('record defaults: %s', defaults)
     # Is it a regular file or an ImageMosaic?
     if mosaic_time_regex and mosaic_time_value:
+
+        print (' ----------------> Mosaic: ' + str(mosaic_time_regex) + ' ** ' + str(mosaic_time_value))
+
         saved_layer, created = Mosaic.objects.get_or_create(
             name=task.layer.name,
             defaults=defaults,
