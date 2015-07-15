@@ -595,8 +595,8 @@ def final_step(upload_session, user):
     # Is it a regular file or an ImageMosaic?
     if upload_session.mosaic_time_regex and upload_session.mosaic_time_value:
         
-        bbox = [publishing.extent.xmin, publishing.extent.ymin,
-                publishing.extent.xmax, publishing.extent.ymax]
+        bbox = [publishing.resource.latlon_bbox.minx, publishing.resource.latlon_bbox.miny,
+                publishing.resource.latlon_bbox.maxx, publishing.resource.latlon_bbox.maxy]
 
         saved_layer, created = Mosaic.objects.get_or_create(
             name=task.layer.name,
@@ -608,7 +608,6 @@ def final_step(upload_session, user):
                 uuid=layer_uuid,
                 abstract=abstract or '',
                 owner=user,
-                srid="EPSG:%s" % publishing.extent.spatialReference.wkid,
                 bbox_x0=bbox[0],
                 bbox_x1=bbox[2],
                 bbox_y0=bbox[1],
