@@ -595,6 +595,8 @@ def final_step(upload_session, user):
     # Is it a regular file or an ImageMosaic?
     if upload_session.mosaic_time_regex and upload_session.mosaic_time_value:
         
+        print (' >>>>>>> ' + str(publishing.resource.latlon_bbox))
+
         bbox = [publishing.resource.latlon_bbox.minx, publishing.resource.latlon_bbox.miny,
                 publishing.resource.latlon_bbox.maxx, publishing.resource.latlon_bbox.maxy]
 
