@@ -595,7 +595,7 @@ def final_step(upload_session, user):
     # Is it a regular file or an ImageMosaic?
     if upload_session.mosaic_time_regex and upload_session.mosaic_time_value:
         
-        llbbox = publishing.resource.latlon_bbox.minx
+        llbbox = publishing.resource.latlon_bbox
 
         saved_layer, created = Mosaic.objects.get_or_create(
             name=task.layer.name,
