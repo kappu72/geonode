@@ -45,6 +45,11 @@ vec_exts = shp_exts + csv_exts + kml_exts
 
 cov_exts = ['.tif', '.tiff', '.geotiff', '.geotif']
 
+TIME_REGEX = (
+    ('[0-9]{8}', _('YYYYMMDD')),
+    ('[0-9]{8}T[0-9]{6}', _("YYYYMMDD'T'hhmmss")),
+    ('[0-9]{8}T[0-9]{6}Z', _("YYYYMMDD'T'hhmmss'Z'")),
+)
 
 class Style(models.Model):
 

@@ -44,7 +44,6 @@ from geonode.services.models import Service
 from geonode.layers.forms import LayerForm, LayerUploadForm, NewLayerUploadForm, LayerAttributeForm
 from geonode.base.forms import CategoryForm
 from geonode.layers.models import Layer, Attribute, UploadSession
-from geonode.contrib.mosaic.models import Mosaic
 from geonode.base.enumerations import CHARSETS
 from geonode.base.models import TopicCategory
 
@@ -102,14 +101,6 @@ def _resolve_layer(request, typename, permission='base.view_resourcebase',
     if Service.objects.filter(name=service_typename[0]).exists():
         service = Service.objects.filter(name=service_typename[0])
         layer_obj = resolve_object(request,
-                              Mosaic,
-                              {'service': service[0],
-                               'typename': service_typename[1] if service[0].method != "C" else typename},
-                              permission=permission,
-                              permission_msg=msg,
-                              **kwargs)
-        if not layer_obj:
-            layer_obj = resolve_object(request,
                               Layer,
                               {'service': service[0],
                                'typename': service_typename[1] if service[0].method != "C" else typename},
@@ -118,20 +109,12 @@ def _resolve_layer(request, typename, permission='base.view_resourcebase',
                               **kwargs)
     else:
         layer_obj = resolve_object(request,
-                              Mosaic,
+                              Layer,
                               {'typename': typename,
                                'service': None},
                               permission=permission,
                               permission_msg=msg,
                               **kwargs)
-        if not layer_obj:
-            layer_obj = resolve_object(request,
-                                  Layer,
-                                  {'typename': typename,
-                                   'service': None},
-                                  permission=permission,
-                                  permission_msg=msg,
-                                  **kwargs)
 
     return layer_obj
 
