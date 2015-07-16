@@ -181,7 +181,7 @@ define(function (require, exports) {
 			if (mosaic && is_time_valid) {
 				form_data.append('mosaic', mosaic);
 
-				var append_to_mosaic_opts = $('#' + this.main.name.slice(0, -4) + '-mosaic-granule-format-options').is(':checked');
+				var append_to_mosaic_opts = $('#' + this.main.name.slice(0, -4) + '-mosaic-granule').is(':checked');
 				var append_to_mosaic_name = $('#' + this.main.name.slice(0, -4) + '-mosaic-granule-format-select').val();
 
 				console.log("append_to_mosaic_opts:" + append_to_mosaic_opts + " / append_to_mosaic_name:" + append_to_mosaic_name);
