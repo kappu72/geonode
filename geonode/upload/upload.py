@@ -185,7 +185,7 @@ def _log(msg, *args):
     logger.info(msg, *args)
 
 
-def save_step(user, layer, spatial_files, overwrite=True, mosaic_time_regex=None, mosaic_time_value=None):
+def save_step(user, layer, spatial_files, overwrite=True, append_to_mosaic_opts=None, append_to_mosaic_name=None, mosaic_time_regex=None, mosaic_time_value=None):
     _log('Uploading layer: [%s], files [%s]', layer, spatial_files)
 
     if len(spatial_files) > 1:
@@ -270,7 +270,7 @@ def save_step(user, layer, spatial_files, overwrite=True, mosaic_time_regex=None
         # Is it a regular file or an ImageMosaic?
         if mosaic_time_regex and mosaic_time_value:
             # we want to ingest as ImageMosaic
-            target_store = import_imagemosaic_granules(spatial_files, mosaic_time_regex, mosaic_time_value)
+            target_store = import_imagemosaic_granules(spatial_files, append_to_mosaic_opts, append_to_mosaic_name, mosaic_time_regex, mosaic_time_value)
 
             # moving forward with a regular Importer session
             import_session = gs_uploader.upload_files(
@@ -596,22 +596,29 @@ def final_step(upload_session, user):
         
         #llbbox = publishing.resource.latlon_bbox
 
-        saved_layer, created = Layer.objects.get_or_create(
-            name=task.layer.name,
-            defaults = dict(store=target.name,
-                storeType=target.store_type,
-                typename=typename,
-                workspace=target.workspace_name,
-                title=title,
-                uuid=layer_uuid,
-                abstract=abstract or '',
-                owner=user,),
+        if not upload_session.append_to_mosaic_opts:
+            saved_layer, created = Layer.objects.get_or_create(
+                name=task.layer.name,
+                defaults = dict(store=target.name,
+                    storeType=target.store_type,
+                    typename=typename,
+                    workspace=target.workspace_name,
+                    title=title,
+                    uuid=layer_uuid,
+                    abstract=abstract or '',
+                    owner=user,),
 
-            is_mosaic=True,
-            has_time=True,
-            has_elevation=False,
-            time_regex=upload_session.mosaic_time_regex
-        )
+                is_mosaic=True,
+                has_time=True,
+                has_elevation=False,
+                time_regex=upload_session.mosaic_time_regex
+            )
+        else:
+            saved_layer = Layer.objects.find(name=append_to_mosaic_name)
+            if saved_layer:
+                created = True
+            else:
+                created = False
     else:
         saved_layer, created = Layer.objects.get_or_create(
             name=task.layer.name,
@@ -684,7 +691,7 @@ def final_step(upload_session, user):
 
     return saved_layer
 
-def import_imagemosaic_granules(spatial_files, mosaic_time_regex, mosaic_time_value):
+def import_imagemosaic_granules(spatial_files, append_to_mosaic_opts, append_to_mosaic_name, mosaic_time_regex, mosaic_time_value):
 
     # The very first step is to rename the granule by adding the selected regex
     #  matching value to the filename.
@@ -725,27 +732,32 @@ SuggestedSPI=it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReaderSpi"""
     with open(dirname + '/timeregex.properties','w') as timeregex_prop_file:
         timeregex_prop_file.write(timeregex_template.format(**context))
 
-    import zipfile
-    z = zipfile.ZipFile(dirname + '/' + head +'.zip', "w")
+    if not append_to_mosaic_opts:
 
-    z.write(dst_file, arcname = head + "_" + mosaic_time_value + tail)
-    z.write(dirname + '/indexer.properties', arcname = 'indexer.properties')
-    z.write(dirname + '/timeregex.properties', arcname = 'timeregex.properties')
+        import zipfile
+        z = zipfile.ZipFile(dirname + '/' + head +'.zip', "w")
 
-    z.close()
+        z.write(dst_file, arcname = head + "_" + mosaic_time_value + tail)
+        z.write(dirname + '/indexer.properties', arcname = 'indexer.properties')
+        z.write(dirname + '/timeregex.properties', arcname = 'timeregex.properties')
 
-    # 2. Send a "create ImageMosaic" request to GeoServer through gs_config
-    cat = gs_catalog
-    cat._cache.clear()
-    # - name = name of the ImageMosaic (equal to the base_name)
-    # - data = abs path to the zip file
-    # - configure = parameter allows for future configuration after harvesting
-    name = head
-    data = open(dirname + '/' + head +'.zip', 'rb')
-    #cat.create_imagemosaic(name, data, configure=True)
-    cat.create_imagemosaic(name, data)
+        z.close()
 
-    # configure time as LIST
-    set_time_dimension(cat, name)
+        # 2. Send a "create ImageMosaic" request to GeoServer through gs_config
+        cat = gs_catalog
+        cat._cache.clear()
+        # - name = name of the ImageMosaic (equal to the base_name)
+        # - data = abs path to the zip file
+        # - configure = parameter allows for future configuration after harvesting
+        name = head
+        data = open(dirname + '/' + head +'.zip', 'rb')
+        #cat.create_imagemosaic(name, data, configure=True)
+        cat.create_imagemosaic(name, data)
 
-    return head
+        # configure time as LIST
+        set_time_dimension(cat, name)
+
+        return head
+    else:
+
+        return append_to_mosaic_name

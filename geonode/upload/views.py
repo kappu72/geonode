@@ -275,6 +275,8 @@ def save_step_view(req, session):
             name,
             base_file,
             overwrite=False,
+            append_to_mosaic_opts=form.cleaned_data['append_to_mosaic_opts'],
+            append_to_mosaic_name=form.cleaned_data['append_to_mosaic_name'],
             mosaic_time_regex=form.cleaned_data['mosaic_time_regex'],
             mosaic_time_value=form.cleaned_data['mosaic_time_value'])
 
@@ -298,6 +300,8 @@ def save_step_view(req, session):
             geogig=form.cleaned_data['geogig'],
             geogig_store=form.cleaned_data['geogig_store'],
             time=form.cleaned_data['time'],
+            append_to_mosaic_opts=form.cleaned_data['append_to_mosaic_opts'],
+            append_to_mosaic_name=form.cleaned_data['append_to_mosaic_name'],
             mosaic_time_regex=form.cleaned_data['mosaic_time_regex'],
             mosaic_time_value=form.cleaned_data['mosaic_time_value']
         )

@@ -45,6 +45,8 @@ class LayerUploadForm(forms.Form):
     geogig_store = forms.CharField(required=False)
     time = forms.BooleanField(required=False)
 
+    append_to_mosaic_opts = forms.BooleanField(required=False)
+    append_to_mosaic_name = forms.CharField(required=False)
     mosaic_time_regex = forms.CharField(required=False)
     mosaic_time_value = forms.CharField(required=False)
 

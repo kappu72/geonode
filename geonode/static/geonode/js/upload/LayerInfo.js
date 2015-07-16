@@ -181,10 +181,18 @@ define(function (require, exports) {
 			if (mosaic && is_time_valid) {
 				form_data.append('mosaic', mosaic);
 
+				var append_to_mosaic_opts = $('#' + this.main.name.slice(0, -4) + '-mosaic-granule-format-options').is(':checked');
+				var append_to_mosaic_name = $('#' + this.main.name.slice(0, -4) + '-mosaic-granule-format-select').val();
+
 				var time_regex = $('#' + this.main.name.slice(0, -4) + '-timedim-format-select').val();
 				var time_value = $('#' + this.main.name.slice(0, -4) + '-timedim-value').val();
 
-				console.log("time_regex:" + time_regex + " / time_value:" + time_value);
+				//console.log("time_regex:" + time_regex + " / time_value:" + time_value);
+
+				form_data.append('append_to_mosaic_opts', append_to_mosaic_opts);
+				if (append_to_mosaic_opts) {
+					form_data.append('append_to_mosaic_name', append_to_mosaic_name);
+				}
 
 				form_data.append('mosaic_time_regex', time_regex);
 				form_data.append('mosaic_time_value', time_value);
