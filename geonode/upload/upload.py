@@ -616,7 +616,7 @@ def final_step(upload_session, user):
                 time_regex=upload_session.mosaic_time_regex
             )
         else:
-            saved_layer = Layer.objects.find(name=append_to_mosaic_name)
+            saved_layer = Layer.objects.filter(name=append_to_mosaic_name)
             if saved_layer:
                 created = True
             else:

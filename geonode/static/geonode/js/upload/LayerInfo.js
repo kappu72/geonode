@@ -184,7 +184,7 @@ define(function (require, exports) {
 				var append_to_mosaic_opts = $('#' + this.main.name.slice(0, -4) + '-mosaic-granule').is(':checked');
 				var append_to_mosaic_name = $('#' + this.main.name.slice(0, -4) + '-mosaic-granule-format-select').val();
 
-				console.log("append_to_mosaic_opts:" + append_to_mosaic_opts + " / append_to_mosaic_name:" + append_to_mosaic_name);
+				//console.log("append_to_mosaic_opts:" + append_to_mosaic_opts + " / append_to_mosaic_name:" + append_to_mosaic_name);
 
 				var time_regex = $('#' + this.main.name.slice(0, -4) + '-timedim-format-select').val();
 				var time_value = $('#' + this.main.name.slice(0, -4) + '-timedim-value').val();
