@@ -124,7 +124,9 @@ def _resolve_layer(request, typename, permission='base.view_resourcebase',
 @login_required
 def layer_upload(request, template='upload/layer_upload.html'):
     if request.method == 'GET':
+        mosaics = Layer.objects.filter(is_mosaic=True).order_by('name')
         ctx = {
+            'mosaics' : mosaics,
             'charsets': CHARSETS,
             'is_layer': True,
         }

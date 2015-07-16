@@ -37,6 +37,14 @@
             <div class="checkbox">
                 <input type='checkbox' id='<%= name %>-mosaic' name='<%= name %>-mosaic'/><label for="<%= name %>-mosaic">&nbsp;Configure as ImageMosaic Granule</label>
                 <div id='<%= name %>-mosaic-options' class='row span8' style='display:none'>
+                  <section class="charset">
+                    <p>{% trans "Select the charset or leave default" %}</p>
+                    <select id="charset">
+                      {% for mosaic in mosaics %}
+                      <option value={{ 'mosaic.name' }}>{{ mosaic.name }}</option>
+                      {% endfor %}
+                    </select>
+                  </section>                
                   <div class="checkbox">
                       <input type='checkbox' id='<%= name %>-timedim' name='<%= name %>-timedim'/><label for="<%= name %>-timedim">&nbsp;Has TIME Dimension</label>
                   </div>
