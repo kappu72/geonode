@@ -233,7 +233,6 @@ GEONODE_APPS = (
 
     # 'geonode.contrib.dynamic',
     'geonode.contrib.exif',
-    'geonode.contrib.mosaic',
 
     # GeoServer Apps
     # Geoserver needs to come last because

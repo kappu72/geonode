@@ -34,7 +34,6 @@ This needs to be made more stateful by adding a model.
 from geonode.layers.utils import get_valid_layer_name
 from geonode.layers.metadata import set_metadata
 from geonode.layers.models import Layer
-from geonode.contrib.mosaic.models import Mosaic
 from geonode import GeoNodeException
 from geonode.people.utils import get_default_user
 from geonode.upload.models import Upload
@@ -595,9 +594,9 @@ def final_step(upload_session, user):
     # Is it a regular file or an ImageMosaic?
     if upload_session.mosaic_time_regex and upload_session.mosaic_time_value:
         
-        llbbox = publishing.resource.latlon_bbox
+        #llbbox = publishing.resource.latlon_bbox
 
-        saved_layer, created = Mosaic.objects.get_or_create(
+        saved_layer, created = Layer.objects.get_or_create(
             name=task.layer.name,
             defaults = dict(store=target.name,
                 storeType=target.store_type,
@@ -606,12 +605,9 @@ def final_step(upload_session, user):
                 title=title,
                 uuid=layer_uuid,
                 abstract=abstract or '',
-                owner=user,
-                bbox_x0=llbbox[0],
-                bbox_x1=llbbox[1],
-                bbox_y0=llbbox[2],
-                bbox_y1=llbbox[3],),
+                owner=user,),
 
+            is_mosaic=True,
             has_time=True,
             has_elevation=False,
             time_regex=upload_session.mosaic_time_regex
