@@ -622,8 +622,9 @@ def final_step(upload_session, user):
                 time_regex=upload_session.mosaic_time_regex
             )
         else:
-            saved_layer = Layer.objects.filter(name=upload_session.append_to_mosaic_name)
-            created = False
+            #saved_layer = Layer.objects.filter(name=upload_session.append_to_mosaic_name)
+            #created = False
+            saved_layer, created = Layer.objects.get_or_create(name=upload_session.append_to_mosaic_name)
     else:
         saved_layer, created = Layer.objects.get_or_create(
             name=task.layer.name,
@@ -677,8 +678,8 @@ def final_step(upload_session, user):
     # FIXME: Do this as part of the post_save hook
 
     permissions = upload_session.permissions
-    _log('Setting default permissions for [%s]', name)
     if created and permissions is not None:
+        _log('Setting default permissions for [%s]', name)
         saved_layer.set_permissions(permissions)
 
     if upload_session.tempdir and os.path.exists(upload_session.tempdir):
