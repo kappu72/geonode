@@ -717,7 +717,7 @@ def import_imagemosaic_granules(spatial_files, append_to_mosaic_opts, append_to_
 
     # 1. Create a zip file containing the ImageMosaic .properties files
     context = {
-        "abs_path_flag": "false",
+        "abs_path_flag": "True",
         "time_attr":  "time",
         "aux_metadata_flag":  "False",
         "mosaic_time_regex": mosaic_time_regex
