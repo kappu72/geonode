@@ -151,14 +151,16 @@ def upload(name, base_file,
            end_time_attribute=None, end_time_transform_type=None,
            presentation_strategy=None, precision_value=None,
            precision_step=None, use_big_date=False,
-           overwrite=False,mosaic_time_regex=None,mosaic_time_value=None):
+           overwrite=False,
+           append_to_mosaic_opts=None,append_to_mosaic_name=None,
+           mosaic_time_regex=None,mosaic_time_value=None):
 
     if user is None:
         user = get_default_user()
     if isinstance(user, basestring):
         user = get_user_model().objects.get(username=user)
 
-    import_session = save_step(user, name, base_file, overwrite, mosaic_time_regex=mosaic_time_regex, mosaic_time_value=mosaic_time_value)
+    import_session = save_step(user, name, base_file, overwrite, append_to_mosaic_opts=append_to_mosaic_opts, append_to_mosaic_name=append_to_mosaic_name, mosaic_time_regex=mosaic_time_regex, mosaic_time_value=mosaic_time_value)
 
     upload_session = UploaderSession(
         base_file=base_file,
@@ -167,6 +169,8 @@ def upload(name, base_file,
         layer_abstract="",
         layer_title=name,
         permissions=None,
+        append_to_mosaic_opts=append_to_mosaic_opts, 
+        append_to_mosaic_name=append_to_mosaic_name,
         mosaic_time_regex=mosaic_time_regex, 
         mosaic_time_value=mosaic_time_value
     )
@@ -282,6 +286,8 @@ def save_step(user, layer, spatial_files, overwrite=True, append_to_mosaic_opts=
                 mosaic=len(spatial_files) > 1,
                 target_store=target_store)
 
+            upload.append_to_mosaic_opts = append_to_mosaic_opts
+            upload.append_to_mosaic_name = append_to_mosaic_name
             upload.mosaic_time_regex = mosaic_time_regex
             upload.mosaic_time_value = mosaic_time_value
         else:
@@ -616,7 +622,7 @@ def final_step(upload_session, user):
                 time_regex=upload_session.mosaic_time_regex
             )
         else:
-            saved_layer = Layer.objects.filter(name=append_to_mosaic_name)
+            saved_layer = Layer.objects.filter(name=upload_session.append_to_mosaic_name)
             if saved_layer:
                 created = True
             else:
