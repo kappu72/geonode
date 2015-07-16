@@ -678,7 +678,7 @@ def final_step(upload_session, user):
 
     permissions = upload_session.permissions
     _log('Setting default permissions for [%s]', name)
-    if permissions is not None:
+    if created and permissions is not None:
         saved_layer.set_permissions(permissions)
 
     if upload_session.tempdir and os.path.exists(upload_session.tempdir):
