@@ -102,7 +102,7 @@ def _resolve_layer(request, typename, permission='base.view_resourcebase',
     if Service.objects.filter(name=service_typename[0]).exists():
         service = Service.objects.filter(name=service_typename[0])
         layer_obj = resolve_object(request,
-                              Layer,
+                              Mosaic,
                               {'service': service[0],
                                'typename': service_typename[1] if service[0].method != "C" else typename},
                               permission=permission,
@@ -110,7 +110,7 @@ def _resolve_layer(request, typename, permission='base.view_resourcebase',
                               **kwargs)
         if not layer_obj:
             layer_obj = resolve_object(request,
-                              Mosaic,
+                              Layer,
                               {'service': service[0],
                                'typename': service_typename[1] if service[0].method != "C" else typename},
                               permission=permission,
@@ -118,7 +118,7 @@ def _resolve_layer(request, typename, permission='base.view_resourcebase',
                               **kwargs)
     else:
         layer_obj = resolve_object(request,
-                              Layer,
+                              Mosaic,
                               {'typename': typename,
                                'service': None},
                               permission=permission,
@@ -126,7 +126,7 @@ def _resolve_layer(request, typename, permission='base.view_resourcebase',
                               **kwargs)
         if not layer_obj:
             layer_obj = resolve_object(request,
-                                  Mosaic,
+                                  Layer,
                                   {'typename': typename,
                                    'service': None},
                                   permission=permission,
@@ -562,6 +562,9 @@ def layer_remove(request, layername, template='layers/layer_remove.html'):
 def layer_thumbnail(request, layername):
     if request.method == 'POST':
         layer_obj = _resolve_layer(request, layername)
+
+        print ( ' ******************************************** ' + str(layer_obj) );
+
         try:
             image = _render_thumbnail(request.body)
 
