@@ -623,10 +623,7 @@ def final_step(upload_session, user):
             )
         else:
             saved_layer = Layer.objects.filter(name=upload_session.append_to_mosaic_name)
-            if saved_layer:
-                created = True
-            else:
-                created = False
+            created = False
     else:
         saved_layer, created = Layer.objects.get_or_create(
             name=task.layer.name,
