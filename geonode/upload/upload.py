@@ -128,6 +128,8 @@ class UploaderSession(object):
     time_info = None
 
     # whether the user has selected a time dimension for ImageMosaic granules or not
+    append_to_mosaic_opts = None
+    append_to_mosaic_name = None
     mosaic_time_regex = None
     mosaic_time_value = None
 
