@@ -35,7 +35,6 @@ from geonode.people.utils import get_valid_user
 from agon_ratings.models import OverallRating
 from geonode.utils import check_shp_columnnames
 from geonode.security.models import remove_object_permissions
-from geonode.geoserver.helpers import gs_catalog, gs_uploader
 
 logger = logging.getLogger("geonode.layers.models")
 
@@ -171,22 +170,6 @@ class Layer(ResourceBase):
     @property
     def attributes(self):
         return self.attribute_set.exclude(attribute='the_geom')
-
-    @property
-    def granules(self):
-        if self.is_mosaic:
-            cat = gs_catalog
-            cat._cache.clear()
-            store = cat.get_store(self.name)
-            coverages = cat.mosaic_coverages(store)
-            schema = cat.mosaic_coverage_schema(coverages['coverages']['coverage'][0]['name'], store)
-            granules = cat.mosaic_granules(coverages['coverages']['coverage'][0]['name'], store)
-
-            print (' +++++++++++++++++++++++++++++++++++++++++ \n' + str(granules) + '\n +++++++++++++++++++++++++++++++++++++++++ ')
-
-            return granules
-        else:
-            return None
 
     def get_base_file(self):
         """Get the shp or geotiff file for this layer.

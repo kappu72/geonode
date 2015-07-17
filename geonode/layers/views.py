@@ -272,6 +272,17 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     metadata = layer.link_set.metadata().filter(
         name__in=settings.DOWNLOAD_FORMATS_METADATA)
 
+    granules = None
+    if layer.is_mosaic:
+        cat = gs_catalog
+        cat._cache.clear()
+        store = cat.get_store(layer.name)
+        coverages = cat.mosaic_coverages(store)
+        schema = cat.mosaic_coverage_schema(coverages['coverages']['coverage'][0]['name'], store)
+        granules = cat.mosaic_granules(coverages['coverages']['coverage'][0]['name'], store)
+
+        print (' +++++++++++++++++++++++++++++++++++++++++ \n' + str(granules) + '\n +++++++++++++++++++++++++++++++++++++++++ ')
+
     context_dict = {
         "resource": layer,
         'perms_list': get_perms(request.user, layer.get_self_resource()),
@@ -280,6 +291,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         "metadata": metadata,
         "is_layer": True,
         "wps_enabled": settings.OGC_SERVER['default']['WPS_ENABLED'],
+        "granules": granules,
     }
 
     context_dict["viewer"] = json.dumps(
