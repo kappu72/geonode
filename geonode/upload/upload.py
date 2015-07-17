@@ -757,8 +757,8 @@ SuggestedSPI=it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReaderSpi"""
         # - configure = parameter allows for future configuration after harvesting
         name = head
         data = open(dirname + '/' + head +'.zip', 'rb')
-        cat.create_imagemosaic(name, data, configure=True)
-        #cat.create_imagemosaic(name, data)
+        #cat.create_imagemosaic(name, data, configure=True)
+        cat.create_imagemosaic(name, data)
 
         # configure time as LIST
         set_time_dimension(cat, name)
