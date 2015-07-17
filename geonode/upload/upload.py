@@ -39,8 +39,7 @@ from geonode.people.utils import get_default_user
 from geonode.upload.models import Upload
 from geonode.upload import signals
 from geonode.upload.utils import create_geoserver_db_featurestore
-from geonode.geoserver.helpers import gs_catalog, gs_uploader, ogc_server_settings, set_time_dimension
-from geonode.geoserver.helpers import set_time_info
+from geonode.geoserver.helpers import gs_catalog, gs_uploader, ogc_server_settings, set_time_dimension, set_time_info
 
 import geoserver
 from geoserver.resource import Coverage
