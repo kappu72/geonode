@@ -39,7 +39,7 @@ from geonode.people.utils import get_default_user
 from geonode.upload.models import Upload
 from geonode.upload import signals
 from geonode.upload.utils import create_geoserver_db_featurestore
-from geonode.geoserver.helpers import gs_catalog, gs_uploader, ogc_server_settings, set_time_dimension, set_time_info
+from geonode.geoserver.helpers import gs_catalog, gs_uploader, ogc_server_settings, mosaic_delete_first_granule, set_time_dimension, set_time_info
 
 import geoserver
 from geoserver.resource import Coverage
@@ -758,6 +758,10 @@ SuggestedSPI=it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReaderSpi"""
         data = open(dirname + '/' + head +'.zip', 'rb')
         #cat.create_imagemosaic(name, data, configure=True)
         cat.create_imagemosaic(name, data)
+
+        # - since GeoNode will uploade the first granule again through the Importer, we need to /
+        #   delete the one created by the gs_config
+        mosaic_delete_first_granule(cat, name)
 
         # configure time as LIST
         set_time_dimension(cat, name)

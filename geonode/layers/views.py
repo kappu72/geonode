@@ -281,7 +281,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         schema = cat.mosaic_coverage_schema(coverages['coverages']['coverage'][0]['name'], store)
         granules = cat.mosaic_granules(coverages['coverages']['coverage'][0]['name'], store)
 
-        print (' +++++++++++++++++++++++++++++++++++++++++ \n' + str(granules) + '\n +++++++++++++++++++++++++++++++++++++++++ ')
+        #print (' +++++++++++++++++++++++++++++++++++++++++ \n' + str(granules) + '\n +++++++++++++++++++++++++++++++++++++++++ ')
 
     context_dict = {
         "resource": layer,

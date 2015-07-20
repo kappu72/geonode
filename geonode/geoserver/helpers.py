@@ -1655,6 +1655,17 @@ def _fixup_ows_url(thumb_spec):
     repl = '"' + ogc_server_settings.LOCATION
     return re.sub(gspath, repl, thumb_spec)
 
+def mosaic_delete_first_granule(cat, layer):
+    # - since GeoNode will uploade the first granule again through the Importer, we need to /
+    #   delete the one created by the gs_config
+    cat._cache.clear()
+    store = cat.get_store(layer)
+    coverages = cat.mosaic_coverages(store)
+
+    granule_id = layer + ".1"
+
+    cat.mosaic_delete_granule(coverages['coverages']['coverage'][0]['name'], store, granule_id)
+
 def set_time_dimension(cat, layer):
     # configure the layer time dimension as LIST
     cat._cache.clear()
