@@ -68,7 +68,7 @@
                     <td>{{ feature.id }}</td>
                     <td>{% if feature.properties.time %}{{ feature.properties.time }}{% endif %}</td>
                     <!-- td>{% if feature.properties.elevation %}{{ feature.properties.elevation }}{% endif %}</td -->
-                    <td><a class="btn btn-block btn-xs" href="{% url "layer_remove" resource.service_typename %}"><img src="/static/lib/img/cancel-on.png"/></a></td>
+                    <td><a class="btn btn-block btn-xs" href="{% url "layer_granule_remove" feature.id resource.service_typename %}"><img src="/static/lib/img/cancel-on.png"/></a></td>
                   </tr>
                 {% endfor %}
               </tbody>
