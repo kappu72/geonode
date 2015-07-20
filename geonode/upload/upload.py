@@ -794,7 +794,7 @@ max\ connections=5"""
 
         # - since GeoNode will uploade the first granule again through the Importer, we need to /
         #   delete the one created by the gs_config
-        mosaic_delete_first_granule(cat, name)
+        #mosaic_delete_first_granule(cat, name)
 
         # configure time as LIST
         set_time_dimension(cat, name)
