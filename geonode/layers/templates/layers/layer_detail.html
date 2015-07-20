@@ -57,8 +57,9 @@
               <thead>
                 <tr>
                   <th>{% trans "Granule ID" %}</th>
-                  <th>{% trans "Time" %}</th>
-                  <th>{% trans "Elevation" %}</th>
+                  <th>Time</th>
+                  <!-- th>{% trans "Elevation" %}</th -->
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -66,7 +67,8 @@
                   <tr>
                     <td>{{ feature.id }}</td>
                     <td>{% if feature.properties.time %}{{ feature.properties.time }}{% endif %}</td>
-                    <td>{% if feature.properties.elevation %}{{ feature.properties.elevation }}{% endif %}</td>
+                    <!-- td>{% if feature.properties.elevation %}{{ feature.properties.elevation }}{% endif %}</td -->
+                    <td><a class="btn btn-block btn-xs" href="{% url "layer_remove" resource.service_typename %}"><img src="/static/lib/img/cancel-on.png"/></a></td>
                   </tr>
                 {% endfor %}
               </tbody>
@@ -91,11 +93,11 @@
                     <td>{% if resource.has_time %}True{% else %}False{% endif %}</td>
                     <td>{% if resource.time_regex %}{{ resource.time_regex }}{% else %}&nbsp;{% endif %}</td>
                   </tr>
-                  <tr>
+                  <!-- tr>
                     <td title="ELEVATION">ELEVATION</td>
                     <td>{% if resource.has_elevation %}True{% else %}False{% endif %}</td>
                     <td>{% if resource.elevation_regex %}{{ resource.elevation_regex }}{% else %}&nbsp;{% endif %}</td>
-                  </tr>
+                  </tr -->
               </tbody>
             </table>
         {% endif %}
