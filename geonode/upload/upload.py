@@ -704,22 +704,37 @@ def import_imagemosaic_granules(spatial_files, append_to_mosaic_opts, append_to_
     f = spatial_files[0].base_file
     dirname = os.path.dirname(f)
     basename = os.path.basename(f)
-    print (" --------------> " + os.path.dirname(f) + " " + os.path.basename(f))
+    
+    #print (" --------------> " + os.path.dirname(f) + " " + os.path.basename(f))
+    
     head, tail = os.path.splitext(basename)
     dst_file = os.path.join(dirname, head + "_" + mosaic_time_value + tail)
     os.rename(f, dst_file)
     spatial_files[0].base_file = dst_file
-    print (" --------------> " + str(spatial_files.all_files()))
+    
+    #print (" --------------> " + str(spatial_files.all_files()))
 
     # We use the GeoServer REST APIs in order to create the ImageMosaic
     #  and later add the granule through the GeoServer Importer.
 
     # 1. Create a zip file containing the ImageMosaic .properties files
+    db = ogc_server_settings.datastore_db
+    db_engine = 'postgis' if \
+        'postgis' in db['ENGINE'] else db['ENGINE']
+
+    if not db_engine == 'postgis':
+        raise UploadException("Unsupported DataBase for Mosaics!")
+
     context = {
         "abs_path_flag": "True",
         "time_attr":  "time",
         "aux_metadata_flag":  "False",
-        "mosaic_time_regex": mosaic_time_regex
+        "mosaic_time_regex": mosaic_time_regex,
+        "db_host": db['HOST'],
+        "db_port": db['PORT'],
+        "db_name": db['NAME'],
+        "db_user": db['USER'],
+        "db_password": db['PASSWORD']
     }
 
     indexer_template="""AbsolutePath={abs_path_flag}
@@ -729,10 +744,27 @@ PropertyCollectors=TimestampFileNameExtractorSPI[timeregex]({time_attr})
 CheckAuxiliaryMetadata={aux_metadata_flag}
 SuggestedSPI=it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReaderSpi"""
 
+    datastore_template="""SPI=org.geotools.data.postgis.PostgisNGDataStoreFactory
+host={db_host}
+port={db_port}
+database={db_name}
+user={db_user}
+passwd={db_password}
+Loose\ bbox=true
+Estimated\ extends=false
+validate\ connections=true
+Connection\ timeout=10
+min\ connections=5
+max\ connections=5"""
+
+    timeregex_template="""regex=(?<=_)({mosaic_time_regex})"""
+
+
     with open(dirname + '/indexer.properties','w') as indexer_prop_file:
         indexer_prop_file.write(indexer_template.format(**context))
 
-    timeregex_template="""regex=(?<=_)({mosaic_time_regex})"""
+    with open(dirname + '/datastore.properties','w') as datastore_prop_file:
+        datastore_prop_file.write(datastore_template.format(**context))
 
     with open(dirname + '/timeregex.properties','w') as timeregex_prop_file:
         timeregex_prop_file.write(timeregex_template.format(**context))
@@ -744,6 +776,7 @@ SuggestedSPI=it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReaderSpi"""
 
         z.write(dst_file, arcname = head + "_" + mosaic_time_value + tail)
         z.write(dirname + '/indexer.properties', arcname = 'indexer.properties')
+        z.write(dirname + '/datastore.properties', arcname = 'datastore.properties')
         z.write(dirname + '/timeregex.properties', arcname = 'timeregex.properties')
 
         z.close()

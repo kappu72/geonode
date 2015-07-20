@@ -567,8 +567,6 @@ def layer_thumbnail(request, layername):
     if request.method == 'POST':
         layer_obj = _resolve_layer(request, layername)
 
-        print ( ' ******************************************** ' + str(layer_obj) );
-
         try:
             image = _render_thumbnail(request.body)
 
