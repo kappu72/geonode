@@ -278,8 +278,11 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         cat._cache.clear()
         store = cat.get_store(layer.name)
         coverages = cat.mosaic_coverages(store)
-        schema = cat.mosaic_coverage_schema(coverages['coverages']['coverage'][0]['name'], store)
-        granules = cat.mosaic_granules(coverages['coverages']['coverage'][0]['name'], store)
+        try:
+            schema = cat.mosaic_coverage_schema(coverages['coverages']['coverage'][0]['name'], store)
+            granules = cat.mosaic_granules(coverages['coverages']['coverage'][0]['name'], store)
+        except:
+            granules = []
 
         #print (' +++++++++++++++++++++++++++++++++++++++++ \n' + str(granules) + '\n +++++++++++++++++++++++++++++++++++++++++ ')
 
