@@ -285,7 +285,7 @@ def cascading_delete(cat, layer_name):
 
         # Due to a possible bug of geoserver, we need this trick for now
         try:
-            cat.delete(resource, purge='all', recurse=True)  # This will fail
+            cat.delete(resource, recurse=True)  # This will fail
         except:
             cat.reload()  # this preservers the integrity of geoserver
 
