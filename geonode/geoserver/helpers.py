@@ -277,7 +277,7 @@ def cascading_delete(cat, layer_name):
         for s in styles:
             if s is not None and s.name not in _default_style_names:
                 try:
-                    cat.delete(s, purge=True)
+                    cat.delete(s, purge=true)
                 except FailedRequestError as e:
                     # Trying to delete a shared style will fail
                     # We'll catch the exception and log it.
@@ -285,7 +285,7 @@ def cascading_delete(cat, layer_name):
 
         # Due to a possible bug of geoserver, we need this trick for now
         try:
-            cat.delete(resource)  # This will fail
+            cat.delete(resource, purge='all', recurse=True)  # This will fail
         except:
             cat.reload()  # this preservers the integrity of geoserver
 
@@ -299,7 +299,7 @@ def cascading_delete(cat, layer_name):
         else:
             try:
                 if not store.get_resources():
-                    cat.delete(store, recurse=True)
+                    cat.delete(store, purge='all', recurse=True)
             except FailedRequestError as e:
                 # Catch the exception and log it.
                 logger.debug(e)
