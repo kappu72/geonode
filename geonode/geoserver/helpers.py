@@ -277,7 +277,7 @@ def cascading_delete(cat, layer_name):
         for s in styles:
             if s is not None and s.name not in _default_style_names:
                 try:
-                    cat.delete(s, purge=true)
+                    cat.delete(s, purge=True)
                 except FailedRequestError as e:
                     # Trying to delete a shared style will fail
                     # We'll catch the exception and log it.
@@ -292,6 +292,8 @@ def cascading_delete(cat, layer_name):
         if store.resource_type == 'dataStore' and 'dbtype' in store.connection_parameters and \
                 store.connection_parameters['dbtype'] == 'postgis':
             delete_from_postgis(resource_name)
+        elif store.resource_type == 'coverageStore':
+            cat.delete(store, purge='all', recurse=True)
         elif store.type and store.type.lower() == 'geogig':
             # Prevent the entire store from being removed when the store is a
             # GeoGig repository.
@@ -299,7 +301,7 @@ def cascading_delete(cat, layer_name):
         else:
             try:
                 if not store.get_resources():
-                    cat.delete(store, purge='all', recurse=True)
+                    cat.delete(store, recurse=True)
             except FailedRequestError as e:
                 # Catch the exception and log it.
                 logger.debug(e)
