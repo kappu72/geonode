@@ -299,7 +299,7 @@ def cascading_delete(cat, layer_name):
         else:
             try:
                 if not store.get_resources():
-                    cat.delete(store, purge=True, recurse=True)
+                    cat.delete(store, recurse=True)
             except FailedRequestError as e:
                 # Catch the exception and log it.
                 logger.debug(e)
