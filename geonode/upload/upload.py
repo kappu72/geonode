@@ -550,7 +550,7 @@ def final_step(upload_session, user):
         if task.state != 'ERROR':
             raise Exception('unknown item state: %s' % task.state)
     elif import_session.state == 'PENDING':
-        if task.state == 'READY':
+        if task.state == 'READY' and task.data.format != 'Shapefile':
             import_session.commit()
 
     if not publishing:
