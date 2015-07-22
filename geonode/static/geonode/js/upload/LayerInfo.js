@@ -190,7 +190,33 @@ define(function (require, exports) {
 				var time_value = $('#' + this.main.name.slice(0, -4) + '-timedim-value').val();
 
 				//console.log("time_regex:" + time_regex + " / time_value:" + time_value);
+                
+                var time_presentation_opts = $('#' + this.main.name.slice(0, -4) + '-timedim-presentation').is(':checked');
+                var time_presentation = "LIST";
+                var time_presentation_res = 0;
+                if (time_presentation_opts) {
+                    time_presentation = $('#' + this.main.name.slice(0, -4) + '-timedim-presentation-format-select').val();
+                    
+                    if (time_presentation === 'DISCRETE_INTERVAL') {
+                        // Years
+                        time_presentation_res += parseInt( $('#' + this.main.name.slice(0, -4) + '-timedim-presentation-years').val() ) * 31536000000;
+                        // Months
+                        time_presentation_res += parseInt( $('#' + this.main.name.slice(0, -4) + '-timedim-presentation-months').val() ) * 2628000000;
+                        // Weeks
+                        time_presentation_res += parseInt( $('#' + this.main.name.slice(0, -4) + '-timedim-presentation-weeks').val() ) * 604800000;
+                        // Days
+                        time_presentation_res += parseInt( $('#' + this.main.name.slice(0, -4) + '-timedim-presentation-days').val() ) * 86400000;
+                        // Hours
+                        time_presentation_res += parseInt( $('#' + this.main.name.slice(0, -4) + '-timedim-presentation-hours').val() ) * 3600000;
+                        // Minutes
+                        time_presentation_res += parseInt( $('#' + this.main.name.slice(0, -4) + '-timedim-presentation-minutes').val() ) * 60000;
+                        // Seconds
+                        time_presentation_res += parseInt( $('#' + this.main.name.slice(0, -4) + '-timedim-presentation-seconds').val() ) * 1000;
+                    }
+                }
 
+                //console.log("time_presentation:" + time_presentation + " / time_presentation_res:" + time_presentation_res);
+                
 				form_data.append('append_to_mosaic_opts', append_to_mosaic_opts);
 				if (append_to_mosaic_opts) {
 					form_data.append('append_to_mosaic_name', append_to_mosaic_name);
@@ -198,6 +224,9 @@ define(function (require, exports) {
 
 				form_data.append('mosaic_time_regex', time_regex);
 				form_data.append('mosaic_time_value', time_value);
+                
+                form_data.append('time_presentation', time_presentation);
+                form_data.append('time_presentation_res', time_presentation_res);
 			}
         }
 
