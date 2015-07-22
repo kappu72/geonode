@@ -47,15 +47,51 @@
                   <div class="checkbox">
                       <input type='checkbox' id='<%= name %>-timedim' name='<%= name %>-timedim'/><label for="<%= name %>-timedim">&nbsp;Has TIME Dimension</label>
                   </div>
-                  <div class="checkbox">
-                      <select id='<%= name %>-timedim-format-select' name='<%= name %>-timedim-format-select'>
-                          <option selected="true" value="[0-9]{8}">YYYYMMDD</option>
-                          <option value="[0-9]{8}T[0-9]{6}">YYYYMMDD'T'hhmmss</option>
-                          <option value="[0-9]{8}T[0-9]{6}Z">YYYYMMDD'T'hhmmss'Z'</option>
-                      </select><label for='<%= name %>-timedim-format-select'>&nbsp;Date/Time Format</label>
-                  </div>
-                  <div class="checkbox">
-                    <input type='text' id='<%= name %>-timedim-value' name='<%= name %>-timedim-value'/><label for="<%= name %>-timedim-value">&nbsp;Date/Time Vlaue</label> <em><strong><font color="red"><span id='<%= name %>-timedim-value-valid' name='<%= name %>-timedim-value-valid'>*</span></font></strong></em>
+                  <div id='<%= name %>-mosaic-timedim-options' class='row span8' style='display:none'>
+                      <div class="checkbox">
+                          <select id='<%= name %>-timedim-format-select' name='<%= name %>-timedim-format-select'>
+                              <option selected="true" value="[0-9]{8}">YYYYMMDD</option>
+                              <option value="[0-9]{8}T[0-9]{6}">YYYYMMDD'T'hhmmss</option>
+                              <option value="[0-9]{8}T[0-9]{6}Z">YYYYMMDD'T'hhmmss'Z'</option>
+                          </select><label for='<%= name %>-timedim-format-select'>&nbsp;Date/Time Format</label>
+                      </div>
+                      <div class="checkbox">
+                        <input type='text' id='<%= name %>-timedim-value' name='<%= name %>-timedim-value'/><label for="<%= name %>-timedim-value">&nbsp;Date/Time Vlaue</label> <em><strong><font color="red"><span id='<%= name %>-timedim-value-valid' name='<%= name %>-timedim-value-valid'>*</span></font></strong></em>
+                      </div>
+                      <div class="checkbox">
+                        <input type='checkbox' id='<%= name %>-timedim-presentation' name='<%= name %>-timedim-presentation'/><label for="<%= name %>-timedim-presentation">&nbsp;Advanced TIME Presentation Options</label>
+                      </div>
+                      <div id='<%= name %>-mosaic-timedim-presentation-options' class='row span8' style='display:none'>
+                          <div class="checkbox">
+                              <select id='<%= name %>-timedim-presentation-format-select' name='<%= name %>-timedim-presentation-format-select'>
+                                  <option value="LIST" selected="true">List</option>
+                                  <option value="DISCRETE_INTERVAL">Interval and Resolution</option>
+                                  <option value="CONTINUOUS_INTERVAL">Continuous Interval</option>
+                              </select><label for='<%= name %>-timedim-presentation-format-select'>&nbsp;Presentation</label>
+                              <div id='<%= name %>-mosaic-timedim-presentation-res-options' class='row span7' style='display:none'>
+                                <table>
+                                 <tr>
+                                    <td><label for="<%= name %>-timedim-presentation-yyyy">&nbsp;Years</label></td>
+                                    <td><label for="<%= name %>-timedim-presentation-months">&nbsp;Months</label></td>
+                                    <td><label for="<%= name %>-timedim-presentation-weeks">&nbsp;Weeks</label></td>
+                                    <td><label for="<%= name %>-timedim-presentation-days">&nbsp;Days</label></td>
+                                    <td><label for="<%= name %>-timedim-presentation-hours">&nbsp;Hours</label></td>
+                                    <td><label for="<%= name %>-timedim-presentation-minutes">&nbsp;Minutes</label></td>
+                                    <td><label for="<%= name %>-timedim-presentation-seconds">&nbsp;Seconds</label></td>
+                                 </tr>
+                                 <tr>
+                                    <td><input type='text' id='<%= name %>-timedim-presentation-years' style='width:80px'   onkeypress='return event.charCode >= 48 && event.charCode <= 57' value='0'/></td>
+                                    <td><input type='text' id='<%= name %>-timedim-presentation-months' style='width:80px'  onkeypress='return event.charCode >= 48 && event.charCode <= 57' value='0'/></td>
+                                    <td><input type='text' id='<%= name %>-timedim-presentation-weeks' style='width:80px'   onkeypress='return event.charCode >= 48 && event.charCode <= 57' value='0'/></td>
+                                    <td><input type='text' id='<%= name %>-timedim-presentation-days' style='width:80px'    onkeypress='return event.charCode >= 48 && event.charCode <= 57' value='0'/></td>
+                                    <td><input type='text' id='<%= name %>-timedim-presentation-hours' style='width:80px'   onkeypress='return event.charCode >= 48 && event.charCode <= 57' value='0'/></td>
+                                    <td><input type='text' id='<%= name %>-timedim-presentation-minutes' style='width:80px' onkeypress='return event.charCode >= 48 && event.charCode <= 57' value='0'/></td>
+                                    <td><input type='text' id='<%= name %>-timedim-presentation-seconds' style='width:80px' onkeypress='return event.charCode >= 48 && event.charCode <= 57' value='0'/></td>
+                                 </tr>
+                                </table>
+                              </div>
+                          </div>
+                      </div>
                   </div>
                 </div>
             </div>

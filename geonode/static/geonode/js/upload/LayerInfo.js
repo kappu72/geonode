@@ -508,12 +508,12 @@ define(function (require, exports) {
 	    var time_re_txt = "[0-9]{8}";
 
         $('#' + this.name + '-mosaic').on('change', this.doImageMosaicToggle);
-        
         $('#' + this.name + '-mosaic-granule').on('change', this.doImageMosaicGranuleOptionsToggle);
-        
+        $('#' + this.name + '-timedim').on('change', this.doImageMosaicTimedimOptionsToggle);
+        $('#' + this.name + '-timedim-presentation').on('change', this.doImageMosaicTimedimPresentationOptionsToggle);
         $('#' + this.name + '-mosaic-granule-format-select').on('change', this.doImageMosaicGranuleLayerSelect);
 
-        $('#' + this.name + '-timedim-format-select').on('change', function() {             
+        $('#' + this.name + '-timedim-format-select').on('change', function() {
              var input = $(this);
 
              time_re_txt = input.val();
@@ -522,7 +522,19 @@ define(function (require, exports) {
 
 			 $('#' + base_name + '-timedim-value-valid').show();
         });
+        
+        $('#' + this.name + '-timedim-presentation-format-select').on('change', function() {
+             var input = $(this);
 
+			 var base_name = this.name.split('-')[0];
+             
+             if (input.val() === 'DISCRETE_INTERVAL') {
+                $('#' + base_name + '-mosaic-timedim-presentation-res-options').show();
+             } else {
+                 $('#' + base_name + '-mosaic-timedim-presentation-res-options').hide();
+             }
+        });
+        
         $('#' + this.name + '-timedim-value').on('input', function() {
            var input = $(this);
            	
@@ -662,6 +674,30 @@ define(function (require, exports) {
         }
     };
     
+    LayerInfo.prototype.doImageMosaicTimedimOptionsToggle = function (event) {
+        var target = event.target || event.srcElement;
+        var id = target.id;
+        var base_name = id.split('-')[0];
+        var mosaic_chkbox = $('#' + id).is(':checked');
+        if (mosaic_chkbox) {
+            $('#' + base_name + '-mosaic-timedim-options').show();
+        } else {
+            $('#' + base_name + '-mosaic-timedim-options').hide();
+        }
+    };
+    
+    LayerInfo.prototype.doImageMosaicTimedimPresentationOptionsToggle = function (event) {
+        var target = event.target || event.srcElement;
+        var id = target.id;
+        var base_name = id.split('-')[0];
+        var mosaic_chkbox = $('#' + id).is(':checked');
+        if (mosaic_chkbox) {
+            $('#' + base_name + '-mosaic-timedim-presentation-options').show();
+        } else {
+            $('#' + base_name + '-mosaic-timedim-presentation-options').hide();
+        }
+    };
+    
     LayerInfo.prototype.doImageMosaicGranuleOptionsToggle = function (event) {
         var target = event.target || event.srcElement;
         var id = target.id;
@@ -690,6 +726,10 @@ define(function (require, exports) {
             $('#' + base_name + '-mosaic-granule-format-options').hide();
             $('#' + base_name + '-timedim').prop("checked", false);
             $('#' + base_name + '-timedim').prop("disabled", false);
+            $('#' + base_name + '-mosaic-timedim-options').hide();
+            $('#' + base_name + '-timedim-presentation').prop("checked", false);
+            $('#' + base_name + '-timedim-presentation').prop("disabled", false);
+            $('#' + base_name + '-mosaic-timedim-presentation-options').hide();
             $('#' + base_name + '-timedim-format-select').val($('#' + base_name + '-timedim-format-select option:first').val());
             $('#' + base_name + '-timedim-format-select').prop("disabled", false);
         }
@@ -706,12 +746,20 @@ define(function (require, exports) {
                     if (this.has_time === "True") {
                         $('#' + base_name + '-timedim').prop("checked", true);
                         $('#' + base_name + '-timedim').prop("disabled", true);
+                        $('#' + base_name + '-mosaic-timedim-options').show();
+                        $('#' + base_name + '-timedim-presentation').prop("checked", false);
+                        $('#' + base_name + '-timedim-presentation').prop("disabled", true);
+                        $('#' + base_name + '-mosaic-timedim-presentation-options').hide();
                         $('#' + base_name + '-timedim-format-select').val(this.time_regex);
                         $('#' + base_name + '-timedim-format-select').prop("disabled", true);
                     }
                     else {
                         $('#' + base_name + '-timedim').prop("checked", false);
                         $('#' + base_name + '-timedim').prop("disabled", false);
+                        $('#' + base_name + '-mosaic-timedim-options').hide();
+                        $('#' + base_name + '-timedim-presentation').prop("checked", false);
+                        $('#' + base_name + '-timedim-presentation').prop("disabled", false);
+                        $('#' + base_name + '-mosaic-timedim-presentation-options').hide();
                         $('#' + base_name + '-timedim-format-select').val($('#' + base_name + '-timedim-format-select option:first').val());
                         $('#' + base_name + '-timedim-format-select').prop("disabled", false);
                     }
