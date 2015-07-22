@@ -80,8 +80,7 @@ def geoserver_pre_save(instance, sender, **kwargs):
 
     # Retrieving Resources From GeoServer Catalog
     gs_catalog._cache.clear()
-    #gs_catalog.reset()
-    #gs_catalog.reload()
+    gs_catalog.reload()
 
     if not gs_resource:
 
@@ -94,21 +93,20 @@ def geoserver_pre_save(instance, sender, **kwargs):
 
         assert gs_resource == None, "Could not acquire the Resrouce from GeoServer Catalog (%s)!" % ( instance.name )
 
-    if gs_resource:
-        gs_resource.title = instance.title
-        gs_resource.abstract = instance.abstract
-        gs_resource.name = instance.name
+    gs_resource.title = instance.title
+    gs_resource.abstract = instance.abstract
+    gs_resource.name = instance.name
 
-        # Get metadata links
-        metadata_links = []
-        for link in instance.link_set.metadata():
-            metadata_links.append((link.mime, link.name, link.url))
+    # Get metadata links
+    metadata_links = []
+    for link in instance.link_set.metadata():
+        metadata_links.append((link.mime, link.name, link.url))
 
-        gs_resource.metadata_links = metadata_links
-        # gs_resource should only be called if
-        # ogc_server_settings.BACKEND_WRITE_ENABLED == True
-        if getattr(ogc_server_settings, "BACKEND_WRITE_ENABLED", True):
-            gs_catalog.save(gs_resource)
+    gs_resource.metadata_links = metadata_links
+    # gs_resource should only be called if
+    # ogc_server_settings.BACKEND_WRITE_ENABLED == True
+    if getattr(ogc_server_settings, "BACKEND_WRITE_ENABLED", True):
+        gs_catalog.save(gs_resource)
 
     gs_layer = gs_catalog.get_layer(instance.name)
 
