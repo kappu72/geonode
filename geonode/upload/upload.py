@@ -597,8 +597,8 @@ def final_step(upload_session, user):
     # @todo hacking - any cached layers might cause problems (maybe
     # delete hook on layer should fix this?)
     cat._cache.clear()
-    cat.reset()
-    cat.reload()
+    #cat.reset()
+    #cat.reload()
 
     # Is it a regular file or an ImageMosaic?
     if upload_session.mosaic_time_regex and upload_session.mosaic_time_value:

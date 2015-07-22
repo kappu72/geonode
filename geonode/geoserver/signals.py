@@ -80,8 +80,8 @@ def geoserver_pre_save(instance, sender, **kwargs):
 
     # Retrieving Resources From GeoServer Catalog
     gs_catalog._cache.clear()
-    gs_catalog.reset()
-    gs_catalog.reload()
+    #gs_catalog.reset()
+    #gs_catalog.reload()
 
     if not gs_resource:
 
