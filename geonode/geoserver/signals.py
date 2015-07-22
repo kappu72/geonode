@@ -91,8 +91,6 @@ def geoserver_pre_save(instance, sender, **kwargs):
             store=instance.store,
             workspace=instance.workspace)
 
-        assert gs_resource == None, "Could not acquire the Resrouce from GeoServer Catalog (%s)!" % ( instance.name )
-
     gs_resource.title = instance.title
     gs_resource.abstract = instance.abstract
     gs_resource.name = instance.name
