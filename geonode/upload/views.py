@@ -278,7 +278,9 @@ def save_step_view(req, session):
             append_to_mosaic_opts=form.cleaned_data['append_to_mosaic_opts'],
             append_to_mosaic_name=form.cleaned_data['append_to_mosaic_name'],
             mosaic_time_regex=form.cleaned_data['mosaic_time_regex'],
-            mosaic_time_value=form.cleaned_data['mosaic_time_value'])
+            mosaic_time_value=form.cleaned_data['mosaic_time_value'],
+            time_presentation=form.cleaned_data['time_presentation'], 
+            time_presentation_res=form.cleaned_data['time_presentation_res'])
 
         sld = None
 

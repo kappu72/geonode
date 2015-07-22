@@ -152,14 +152,18 @@ def upload(name, base_file,
            precision_step=None, use_big_date=False,
            overwrite=False,
            append_to_mosaic_opts=None,append_to_mosaic_name=None,
-           mosaic_time_regex=None,mosaic_time_value=None):
+           mosaic_time_regex=None,mosaic_time_value=None,
+           time_presentation=None, time_presentation_res=None):
 
     if user is None:
         user = get_default_user()
     if isinstance(user, basestring):
         user = get_user_model().objects.get(username=user)
 
-    import_session = save_step(user, name, base_file, overwrite, append_to_mosaic_opts=append_to_mosaic_opts, append_to_mosaic_name=append_to_mosaic_name, mosaic_time_regex=mosaic_time_regex, mosaic_time_value=mosaic_time_value)
+    import_session = save_step(user, name, base_file, overwrite, 
+                               append_to_mosaic_opts=append_to_mosaic_opts, append_to_mosaic_name=append_to_mosaic_name, 
+                               mosaic_time_regex=mosaic_time_regex, mosaic_time_value=mosaic_time_value,
+                               time_presentation=time_presentation, time_presentation_res=time_presentation_res)
 
     upload_session = UploaderSession(
         base_file=base_file,
@@ -190,7 +194,10 @@ def _log(msg, *args):
     logger.info(msg, *args)
 
 
-def save_step(user, layer, spatial_files, overwrite=True, append_to_mosaic_opts=None, append_to_mosaic_name=None, mosaic_time_regex=None, mosaic_time_value=None):
+def save_step(user, layer, spatial_files, overwrite=True, 
+              append_to_mosaic_opts=None, append_to_mosaic_name=None, 
+              mosaic_time_regex=None, mosaic_time_value=None, 
+              time_presentation=None, time_presentation_res=None):
     _log('Uploading layer: [%s], files [%s]', layer, spatial_files)
 
     if len(spatial_files) > 1:
@@ -275,7 +282,7 @@ def save_step(user, layer, spatial_files, overwrite=True, append_to_mosaic_opts=
         # Is it a regular file or an ImageMosaic?
         if mosaic_time_regex and mosaic_time_value:
             # we want to ingest as ImageMosaic
-            target_store = import_imagemosaic_granules(spatial_files, append_to_mosaic_opts, append_to_mosaic_name, mosaic_time_regex, mosaic_time_value)
+            target_store = import_imagemosaic_granules(spatial_files, append_to_mosaic_opts, append_to_mosaic_name, mosaic_time_regex, mosaic_time_value, time_presentation, time_presentation_res)
 
             # moving forward with a regular Importer session
             import_session = gs_uploader.upload_files(
@@ -708,7 +715,7 @@ def final_step(upload_session, user):
 
     return saved_layer
 
-def import_imagemosaic_granules(spatial_files, append_to_mosaic_opts, append_to_mosaic_name, mosaic_time_regex, mosaic_time_value):
+def import_imagemosaic_granules(spatial_files, append_to_mosaic_opts, append_to_mosaic_name, mosaic_time_regex, mosaic_time_value, time_presentation, time_presentation_res):
 
     # The very first step is to rename the granule by adding the selected regex
     #  matching value to the filename.
@@ -805,7 +812,7 @@ max\ connections=5"""
         cat.create_imagemosaic(name, data)
 
         # configure time as LIST
-        set_time_dimension(cat, name)
+        set_time_dimension(cat, name, time_presentation, time_presentation_res)
 
         # - since GeoNode will uploade the first granule again through the Importer, we need to /
         #   delete the one created by the gs_config

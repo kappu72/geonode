@@ -49,6 +49,8 @@ class LayerUploadForm(forms.Form):
     append_to_mosaic_name = forms.CharField(required=False)
     mosaic_time_regex = forms.CharField(required=False)
     mosaic_time_value = forms.CharField(required=False)
+    time_presentation = forms.IntegerField(required=False)
+    time_presentation_res = forms.IntegerField(required=False)
 
     abstract = forms.CharField(required=False)
     layer_title = forms.CharField(required=False)
