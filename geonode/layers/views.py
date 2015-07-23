@@ -273,16 +273,28 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         name__in=settings.DOWNLOAD_FORMATS_METADATA)
 
     granules = None
+    all_granules = None
+    filter = None
     if layer.is_mosaic:
         cat = gs_catalog
         cat._cache.clear()
         store = cat.get_store(layer.name)
         coverages = cat.mosaic_coverages(store)
+        filter = None
+        try:
+            if request.GET["filter"]:
+                filter = request.GET["filter"]
+        except:
+            pass
+            
         try:
             schema = cat.mosaic_coverage_schema(coverages['coverages']['coverage'][0]['name'], store)
-            granules = cat.mosaic_granules(coverages['coverages']['coverage'][0]['name'], store)
+            offset = request.page - 1
+            granules = cat.mosaic_granules(coverages['coverages']['coverage'][0]['name'], store, limit=10, offset=offset, filter=filter)
+            all_granules = cat.mosaic_granules(coverages['coverages']['coverage'][0]['name'], store, filter=filter)
         except:
-            granules = []
+            granules = {"features":[]}
+            all_granules = {"features":[]}
 
         #print (' +++++++++++++++++++++++++++++++++++++++++ \n' + str(granules) + '\n +++++++++++++++++++++++++++++++++++++++++ ')
 
@@ -295,6 +307,8 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         "is_layer": True,
         "wps_enabled": settings.OGC_SERVER['default']['WPS_ENABLED'],
         "granules": granules,
+        "all_granules": all_granules,
+        "filter": filter,
     }
 
     context_dict["viewer"] = json.dumps(
