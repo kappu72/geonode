@@ -159,9 +159,9 @@ define(['underscore',
             if (is_granule) {
                mosaic_is_valid = is_time_valid;
             }
-            */ mosaic_is_valid = is_granule;
+            */
 
-            if (!mosaic_is_valid) {
+            if (is_granule && !mosaic_is_valid) {
                return false;
             }
 

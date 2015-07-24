@@ -108,9 +108,9 @@ define(function (require, exports) {
         if (is_granule) {
 			mosaic_is_valid = is_time_valid;
 		}
-        */ mosaic_is_valid = is_granule;
+        */
 
-		if (!mosaic_is_valid) {
+		if (is_granule && !mosaic_is_valid) {
 			errors.push('The configuration of the file as a Mosaic Granule is not valid, please fix the issue and try again');
 		}
 
