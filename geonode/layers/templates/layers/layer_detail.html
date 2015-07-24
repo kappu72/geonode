@@ -91,6 +91,7 @@
                                 for (var ll = 0; ll < app.map.layers.length; ll++) {
                                     var layer = app.map.layers[ll];
                                     if (layer.name == layer_name) {
+                                      /*
                                         if (time) {
                                             var re = new RegExp("(\\+[0-9]{4})", "gm");
                                             var timePosition = time;
@@ -100,6 +101,11 @@
                                         
                                         if (feature_id) {
                                             map.layers[ll].mergeNewParams({"featureid" : feature_id});
+                                        }
+                                      */
+                                      
+                                        if (feature_id) {
+                                            map.layers[ll].mergeNewParams({"CQL_FILTER" : "IN ('" + feature_id + "')"});
                                         }
                                         
                                         bbox = JSON.parse(the_geom);
