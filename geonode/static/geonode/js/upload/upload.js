@@ -155,9 +155,11 @@ define(['underscore',
             var is_granule = $('#' + base_name + '-mosaic').is(':checked');
             var is_time_valid = $('#' + base_name + '-timedim').is(':checked') && !$('#' + base_name + '-timedim-value-valid').is(':visible');
 
+            /* -- DISABLED in order to allow pure Spatial Mosaics
             if (is_granule) {
                mosaic_is_valid = is_time_valid;
             }
+            */ mosaic_is_valid = is_granule;
 
             if (!mosaic_is_valid) {
                return false;
