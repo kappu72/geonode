@@ -93,8 +93,8 @@ class Layer(ResourceBase):
     is_mosaic = models.BooleanField(default=False)
     has_time = models.BooleanField(default=False)
     has_elevation = models.BooleanField(default=False)
-    time_regex = models.CharField(max_length=128, null=True, choices=TIME_REGEX)
-    elevation_regex = models.CharField(max_length=128, null=True)
+    time_regex = models.CharField(max_length=128, null=True, blank=True, choices=TIME_REGEX)
+    elevation_regex = models.CharField(max_length=128, null=True, blank=True)
 
     default_style = models.ForeignKey(
         Style,
