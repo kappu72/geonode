@@ -564,7 +564,19 @@ define(function (require, exports) {
              if (input.val() === 'DISCRETE_INTERVAL') {
                 $('#' + base_name + '-mosaic-timedim-presentation-res-options').show();
              } else {
-                 $('#' + base_name + '-mosaic-timedim-presentation-res-options').hide();
+                $('#' + base_name + '-mosaic-timedim-presentation-res-options').hide();
+             }
+        });
+
+        $('#' + this.name + '-timedim-defaultvalue-format-select').on('change', function() {
+             var input = $(this);
+
+			 var base_name = this.name.split('-')[0];
+             
+             if (input.val() === 'NEAREST' || input.val() === 'FIXED') {
+                $('#' + base_name + '-mosaic-timedim-defaultvalue-res-options').show();
+             } else {
+                $('#' + base_name + '-mosaic-timedim-defaultvalue-res-options').hide();
              }
         });
         
