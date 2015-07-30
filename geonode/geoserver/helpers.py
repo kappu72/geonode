@@ -1674,7 +1674,7 @@ def mosaic_delete_first_granule(cat, layer):
 
     cat.mosaic_delete_granule(coverages['coverages']['coverage'][0]['name'], store, granule_id)
 
-def set_time_dimension(cat, layer, time_presentation, time_presentation_res):
+def set_time_dimension(cat, layer, time_presentation, time_presentation_res, time_presentation_default_value, time_presentation_reference_value):
     # configure the layer time dimension as LIST
     cat._cache.clear()
     
@@ -1686,7 +1686,11 @@ def set_time_dimension(cat, layer, time_presentation, time_presentation_res):
     if time_presentation == 'DISCRETE_INTERVAL':
         resolution = time_presentation_res
 
-    timeInfo = DimensionInfo("time", "true", presentation, resolution, "ISO8601", None, attribute="time")
+    strategy = None
+    if time_presentation_default_value and not time_presentation_default_value == "":
+        strategy = time_presentation_default_value
+
+    timeInfo = DimensionInfo("time", "true", presentation, resolution, "ISO8601", strategy, attribute="time", reference_value=time_presentation_reference_value)
 
     resource = cat.get_layer(layer).resource
     resource.metadata = {'time':timeInfo}

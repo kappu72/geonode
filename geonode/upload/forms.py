@@ -52,6 +52,8 @@ class LayerUploadForm(forms.Form):
     mosaic_time_value = forms.CharField(required=False)
     time_presentation = forms.CharField(required=False)
     time_presentation_res = forms.IntegerField(required=False)
+    time_presentation_default_value = forms.CharField(required=False)
+    time_presentation_reference_value = forms.CharField(required=False)
 
     abstract = forms.CharField(required=False)
     layer_title = forms.CharField(required=False)
