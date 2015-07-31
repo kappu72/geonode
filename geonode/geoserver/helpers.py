@@ -284,8 +284,10 @@ def cascading_delete(cat, layer_name):
                     logger.debug(e)
 
         # Due to a possible bug of geoserver, we need this trick for now
+        # TODO: inspect the issue reported by this hack. Should be solved
+        #       with GS 2.7+
         try:
-            cat.delete(resource, recurse=True)  # This will fail
+            cat.delete(resource, recurse=True)  # This may fail
         except:
             cat.reload()  # this preservers the integrity of geoserver
 
@@ -297,19 +299,20 @@ def cascading_delete(cat, layer_name):
             # GeoGig repository.
             return
         else:
-            try:
-                if not store.get_resources():
-                    cat.delete(store, recurse=True)
-            except FailedRequestError as e:
-                # Catch the exception and log it.
-                logger.debug(e)
-
             if store.resource_type == 'coverageStore':
                 try:
+                    logger.info(" - Going to purge the " + store.resource_type + " : " + store.href)
                     cat.delete(store, purge='all', recurse=True)
                 except FailedRequestError as e:
                     # Trying to recursively purge a store may fail
                     # We'll catch the exception and log it.
+                    logger.debug(e)
+            else:
+                try:
+                    if not store.get_resources():
+                        cat.delete(store, recurse=True)
+                except FailedRequestError as e:
+                    # Catch the exception and log it.
                     logger.debug(e)
 
 
