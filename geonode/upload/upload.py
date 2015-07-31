@@ -768,7 +768,11 @@ def import_imagemosaic_granules(spatial_files, append_to_mosaic_opts, append_to_
         "db_port": db['PORT'],
         "db_name": db['NAME'],
         "db_user": db['USER'],
-        "db_password": db['PASSWORD']
+        "db_password": db['PASSWORD'],
+        "db_conn_timeout": db['CONN_TOUT'] or "10",
+        "db_conn_min": db['CONN_MIN'] or "1",
+        "db_conn_max": db['CONN_MAX'] or "5",
+        "db_conn_validate": db['CONN_VALIDATE'] or "true",
     }
 
     if mosaic_time_regex:
@@ -798,10 +802,10 @@ user={db_user}
 passwd={db_password}
 Loose\ bbox=true
 Estimated\ extends=false
-validate\ connections=true
-Connection\ timeout=10
-min\ connections=5
-max\ connections=5"""
+validate\ connections={db_conn_validate}
+Connection\ timeout={db_conn_timeout}
+min\ connections={db_conn_min}
+max\ connections={db_conn_max}"""
 
 
     with open(dirname + '/indexer.properties','w') as indexer_prop_file:
