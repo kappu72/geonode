@@ -302,7 +302,9 @@ def cascading_delete(cat, layer_name):
             if store.resource_type == 'coverageStore':
                 try:
                     logger.info(" - Going to purge the " + store.resource_type + " : " + store.href)
+                    cat.reset()  # this resets the coverage readers and unlocks the files
                     cat.delete(store, purge='all', recurse=True)
+                    cat.reload()  # this preservers the integrity of geoserver
                 except FailedRequestError as e:
                     # Trying to recursively purge a store may fail
                     # We'll catch the exception and log it.
