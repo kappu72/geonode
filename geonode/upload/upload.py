@@ -627,9 +627,11 @@ def final_step(upload_session, user):
         if upload_session.mosaic_time_regex and upload_session.mosaic_time_value:
             has_time = True
 
-            import  datetime
+            import pytz, datetime
             from geonode.layers.models import TIME_REGEX_FORMAT
+
             start = datetime.datetime.strptime(upload_session.mosaic_time_value, TIME_REGEX_FORMAT[upload_session.mosaic_time_regex])
+            start = pytz.utc.localize(start, is_dst = False)
             end = start
         else:
             has_time = False
@@ -658,6 +660,7 @@ def final_step(upload_session, user):
             saved_layer, created = Layer.objects.get_or_create(name=upload_session.append_to_mosaic_name)
 
             if saved_layer.temporal_extent_start and end:
+                print str(saved_layer.temporal_extent_start < end)
                 if saved_layer.temporal_extent_start < end:
                     saved_layer.temporal_extent_end=end
                 else:
