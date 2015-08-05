@@ -51,6 +51,12 @@ TIME_REGEX = (
     ('[0-9]{8}T[0-9]{6}Z', _("YYYYMMDD'T'hhmmss'Z'")),
 )
 
+TIME_REGEX_FORMAT = {
+    '[0-9]{8}': '%Y%m%d', 
+    '[0-9]{8}T[0-9]{6}': '%Y%m%dT%H%M%S', 
+    '[0-9]{8}T[0-9]{6}Z': '%Y%m%dT%H%M%SZ'
+}
+
 class Style(models.Model):
 
     """Model for storing styles.

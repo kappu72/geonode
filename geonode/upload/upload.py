@@ -622,8 +622,15 @@ def final_step(upload_session, user):
     if upload_session.mosaic:
         
         #llbbox = publishing.resource.latlon_bbox
+        start = None
+        end = None
         if upload_session.mosaic_time_regex and upload_session.mosaic_time_value:
             has_time = True
+
+            import  datetime
+            from geonode.layers.models import TIME_REGEX_FORMAT
+            start = datetime.datetime.strptime(upload_session.mosaic_time_value, TIME_REGEX_FORMAT[upload_session.mosaic_time_regex])
+            end = start
         else:
             has_time = False
 
@@ -638,7 +645,8 @@ def final_step(upload_session, user):
                     uuid=layer_uuid,
                     abstract=abstract or '',
                     owner=user,),
-
+                temporal_extent_start=start,
+                temporal_extent_end=end,
                 is_mosaic=True,
                 has_time=has_time,
                 has_elevation=False,
@@ -648,6 +656,12 @@ def final_step(upload_session, user):
             #saved_layer = Layer.objects.filter(name=upload_session.append_to_mosaic_name)
             #created = False
             saved_layer, created = Layer.objects.get_or_create(name=upload_session.append_to_mosaic_name)
+
+            if saved_layer.temporal_extent_start and end:
+                if saved_layer.temporal_extent_start < end:
+                    saved_layer.temporal_extent_end=end
+                else:
+                    saved_layer.temporal_extent_start=end
     else:
         saved_layer, created = Layer.objects.get_or_create(
             name=task.layer.name,
