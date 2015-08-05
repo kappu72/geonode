@@ -565,7 +565,7 @@ define(function (require, exports) {
 
              time_re_txt = input.val();
 
-			 var base_name = this.name.split('-')[0];
+			 var base_name = this.name.split('-timedim')[0];
 
 			 $('#' + base_name + '-timedim-value-valid').show();
         });
@@ -573,7 +573,7 @@ define(function (require, exports) {
         $('#' + this.name + '-timedim-presentation-format-select').on('change', function() {
              var input = $(this);
 
-			 var base_name = this.name.split('-')[0];
+			 var base_name = this.name.split('-timedim')[0];
              
              if (input.val() === 'DISCRETE_INTERVAL') {
                 $('#' + base_name + '-mosaic-timedim-presentation-res-options').show();
@@ -585,7 +585,7 @@ define(function (require, exports) {
         $('#' + this.name + '-timedim-defaultvalue-format-select').on('change', function() {
              var input = $(this);
 
-			 var base_name = this.name.split('-')[0];
+			 var base_name = this.name.split('-timedim')[0];
              
              if (input.val() === 'NEAREST' || input.val() === 'FIXED') {
                 $('#' + base_name + '-mosaic-timedim-defaultvalue-res-options').show();
@@ -722,7 +722,7 @@ define(function (require, exports) {
     LayerInfo.prototype.doGeoGigToggle = function (event) {
         var target = event.target || event.srcElement;
         var id = target.id;
-        var base_name = id.split(':')[0];
+        var base_name = id.split('-mosaic')[0];
         var geogig = $('#' + id.replace(':', '\\:')).is(':checked');
         if (geogig) {
             $('#' + base_name + '\\:geogig_store').show();
@@ -736,7 +736,7 @@ define(function (require, exports) {
     LayerInfo.prototype.doImageMosaicToggle = function (event) {
         var target = event.target || event.srcElement;
         var id = target.id;
-        var base_name = id.split('-')[0];
+        var base_name = id.split('-mosaic')[0];
         var mosaic_chkbox = $('#' + id).is(':checked');
         if (mosaic_chkbox) {
             $('#' + base_name + '-mosaic-options').show();
@@ -748,7 +748,7 @@ define(function (require, exports) {
     LayerInfo.prototype.doImageMosaicTimedimOptionsToggle = function (event) {
         var target = event.target || event.srcElement;
         var id = target.id;
-        var base_name = id.split('-')[0];
+        var base_name = id.split('-timedim')[0];
         var mosaic_chkbox = $('#' + id).is(':checked');
         if (mosaic_chkbox) {
             $('#' + base_name + '-mosaic-timedim-options').show();
@@ -760,7 +760,7 @@ define(function (require, exports) {
     LayerInfo.prototype.doImageMosaicTimedimPresentationOptionsToggle = function (event) {
         var target = event.target || event.srcElement;
         var id = target.id;
-        var base_name = id.split('-')[0];
+        var base_name = id.split('-timedim')[0];
         var mosaic_chkbox = $('#' + id).is(':checked');
         if (mosaic_chkbox) {
             $('#' + base_name + '-mosaic-timedim-presentation-options').show();
@@ -772,7 +772,7 @@ define(function (require, exports) {
     LayerInfo.prototype.doImageMosaicGranuleOptionsToggle = function (event) {
         var target = event.target || event.srcElement;
         var id = target.id;
-        var base_name = id.split('-')[0];
+        var base_name = id.split('-mosaic')[0];
         var mosaic_chkbox = $('#' + id).is(':checked');
         if (mosaic_chkbox) {
             $('#' + base_name + '-mosaic-granule-format-options').show();
@@ -810,7 +810,7 @@ define(function (require, exports) {
         var target = event.target || event.srcElement;
         var id = target.id;
         var val = target.value;
-        var base_name = id.split('-')[0];
+        var base_name = id.split('-mosaic')[0];
         if (val !== '') {
             $(json_mosaics).each(function () {
                 if (this.name === val) {
