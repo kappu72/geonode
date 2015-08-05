@@ -660,7 +660,7 @@ def final_step(upload_session, user):
 
             if saved_layer.temporal_extent_start and end:
                 print str(pytz.utc.localize(saved_layer.temporal_extent_start, is_dst = False) < end)
-                if saved_layer.temporal_extent_start < end:
+                if pytz.utc.localize(saved_layer.temporal_extent_start, is_dst = False) < end:
                     saved_layer.temporal_extent_end=end
                 else:
                     saved_layer.temporal_extent_start=end
