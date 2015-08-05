@@ -739,14 +739,14 @@ def import_imagemosaic_granules(spatial_files, append_to_mosaic_opts, append_to_
     dirname = os.path.dirname(f)
     basename = os.path.basename(f)
     
-    #print (" --------------> " + os.path.dirname(f) + " " + os.path.basename(f))
+    print (" --------------> " + os.path.dirname(f) + " " + os.path.basename(f))
     
     head, tail = os.path.splitext(basename)
-    dst_file = os.path.join(dirname, head + "_TD_" + mosaic_time_value + tail)
+    dst_file = os.path.join(dirname, head.replace("_", "-") + "_" + mosaic_time_value + tail)
     os.rename(f, dst_file)
     spatial_files[0].base_file = dst_file
     
-    #print (" --------------> " + str(spatial_files.all_files()))
+    print (" --------------> " + str(spatial_files.all_files()))
 
     # We use the GeoServer REST APIs in order to create the ImageMosaic
     #  and later add the granule through the GeoServer Importer.
@@ -783,7 +783,7 @@ PropertyCollectors=TimestampFileNameExtractorSPI[timeregex]({time_attr})
 CheckAuxiliaryMetadata={aux_metadata_flag}
 SuggestedSPI=it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReaderSpi"""
 
-        timeregex_template="""regex=(?<=_TD_)({mosaic_time_regex})"""
+        timeregex_template="""regex=(?<=_)({mosaic_time_regex})"""
 
         with open(dirname + '/timeregex.properties','w') as timeregex_prop_file:
             timeregex_prop_file.write(timeregex_template.format(**context))
