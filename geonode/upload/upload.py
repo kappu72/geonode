@@ -657,14 +657,16 @@ def final_step(upload_session, user):
             #saved_layer = Layer.objects.filter(name=upload_session.append_to_mosaic_name)
             #created = False
             saved_layer, created = Layer.objects.get_or_create(name=upload_session.append_to_mosaic_name)
-
-            if saved_layer.temporal_extent_start and end:
-                if pytz.utc.localize(saved_layer.temporal_extent_start, is_dst = False) < end:
-                    #saved_layer.temporal_extent_end=end
-                    saved_layer.update(temporal_extent_end=end)
-                else:
-                    #saved_layer.temporal_extent_start=end
-                    saved_layer.update(temporal_extent_start=end)
+            try:
+                if saved_layer.temporal_extent_start and end:
+                    if pytz.utc.localize(saved_layer.temporal_extent_start, is_dst = False) < end:
+                        saved_layer.temporal_extent_end=end
+                        Layer.objects.filter(name=upload_session.append_to_mosaic_name).update(temporal_extent_end=end)
+                    else:
+                        saved_layer.temporal_extent_start=end
+                        Layer.objects.filter(name=upload_session.append_to_mosaic_name).update(temporal_extent_start=end)
+            except Exception as e:
+                _log('There was an error updating the mosaic temporal extent: ' + str(e))
     else:
         saved_layer, created = Layer.objects.get_or_create(
             name=task.layer.name,
