@@ -660,10 +660,11 @@ def final_step(upload_session, user):
 
             if saved_layer.temporal_extent_start and end:
                 if pytz.utc.localize(saved_layer.temporal_extent_start, is_dst = False) < end:
-                    saved_layer.temporal_extent_end=end
+                    #saved_layer.temporal_extent_end=end
+                    saved_layer.update(temporal_extent_end=end)
                 else:
-                    saved_layer.temporal_extent_start=end
-                saved_layer.save()
+                    #saved_layer.temporal_extent_start=end
+                    saved_layer.update(temporal_extent_start=end)
     else:
         saved_layer, created = Layer.objects.get_or_create(
             name=task.layer.name,
