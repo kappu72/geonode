@@ -467,17 +467,7 @@ GeoNode.Composer = window.GeoExplorer && Ext.extend(GeoExplorer.Composer, {
             ptype: "gxp_getfeedfeatureinfo"
         },{
 			ptype: "gxp_playback",
-			playbackMode: "range",
-			labelButtons: false,
-			timeFormat: "l,F d, Y g:i:s A",
-			checked: true,
-			outputTarget: "paneltbar"/*,
-			outputConfig: {
-				step: 1,
-				units: "Hours",
-				range: ["2015-01-01T00:00:00.000Z", "2015-01-02T00:00:00.000Z"],
-				frameRate: 5
-			}*/
+			outputTarget: "paneltbar"
         });
         GeoNode.Composer.superclass.loadConfig.apply(this, arguments);
         for (key in this.tools) {
