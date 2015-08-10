@@ -276,18 +276,19 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     all_granules = None
     filter = None
     if layer.is_mosaic:
-        cat = gs_catalog
-        cat._cache.clear()
-        store = cat.get_store(layer.name)
-        coverages = cat.mosaic_coverages(store)
-        filter = None
         try:
-            if request.GET["filter"]:
-                filter = request.GET["filter"]
-        except:
-            pass
+            cat = gs_catalog
+            cat._cache.clear()
+            store = cat.get_store(layer.name)
+            coverages = cat.mosaic_coverages(store)
             
-        try:
+            filter = None
+            try:
+                if request.GET["filter"]:
+                    filter = request.GET["filter"]
+            except:
+                pass
+                
             schema = cat.mosaic_coverage_schema(coverages['coverages']['coverage'][0]['name'], store)
             offset = 10 * (request.page - 1)
             granules = cat.mosaic_granules(coverages['coverages']['coverage'][0]['name'], store, limit=10, offset=offset, filter=filter)
