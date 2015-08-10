@@ -274,11 +274,14 @@ def save_step(user, layer, spatial_files, overwrite=True,
     try:
         # importer tracks ids by autoincrement but is prone to corruption
         # which potentially may reset the id - hopefully prevent this...
-        #next_id = Upload.objects.all().aggregate(Max('import_id')).values()[0]
+        upload_next_id = Upload.objects.all().aggregate(Max('import_id')).values()[0]
         #next_id = next_id + 1 if next_id else 1
         importer_sessions = gs_uploader.get_sessions()
+        
+        #print " ****************** " + str(importer_sessions)
+        
         last_importer_session = importer_sessions[len(importer_sessions)-1] if importer_sessions else 0
-        next_id = last_importer_session.id + 1 if last_importer_session else 1
+        next_id = max(int(last_importer_session.id), int(upload_next_id)) + 1
 
         # save record of this whether valid or not - will help w/ debugging
         upload = Upload.objects.create(
