@@ -277,7 +277,7 @@ def save_step(user, layer, spatial_files, overwrite=True,
         #next_id = Upload.objects.all().aggregate(Max('import_id')).values()[0]
         #next_id = next_id + 1 if next_id else 1
         importer_sessions = gs_uploader.get_sessions()
-        last_importer_session = importer_sessions[len(importer_sessions)-1]
+        last_importer_session = importer_sessions[len(importer_sessions)-1] if importer_sessions else 0
         next_id = last_importer_session.id + 1 if last_importer_session else 1
 
         # save record of this whether valid or not - will help w/ debugging
@@ -335,7 +335,7 @@ def save_step(user, layer, spatial_files, overwrite=True,
         if not error_msg and import_session.tasks:
             task = import_session.tasks[0]
 
-            print (" ************* " + str(task))
+            # print (" ************* " + str(task))
 
             # single file tasks will have just a file entry
             if hasattr(task, 'files'):
@@ -377,7 +377,8 @@ def run_import(upload_session, async):
     if import_session.state == 'INCOMPLETE':
         if task.state != 'ERROR':
             raise Exception('unknown item state: %s' % task.state)
-    elif import_session.state == 'PENDING':
+            
+    elif import_session.state == 'PENDING' and task.target.store_type == 'coverageStore':
         if task.state == 'READY':
             import_session.commit(async)
 
@@ -403,6 +404,7 @@ def run_import(upload_session, async):
             target.name,
             target.workspace.name)
         task.set_target(target.name, target.workspace.name)
+        
     else:
         target = task.target
 

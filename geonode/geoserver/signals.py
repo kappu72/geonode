@@ -80,6 +80,7 @@ def geoserver_pre_save(instance, sender, **kwargs):
 
     # Retrieving Resources From GeoServer Catalog
     gs_catalog._cache.clear()
+    gs_catalog.reset()
     gs_catalog.reload()
 
     if not gs_resource:
@@ -91,6 +92,8 @@ def geoserver_pre_save(instance, sender, **kwargs):
             store=instance.store,
             workspace=instance.workspace)
 
+    print instance
+    
     gs_resource.title = instance.title
     gs_resource.abstract = instance.abstract
     gs_resource.name = instance.name
