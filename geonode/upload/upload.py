@@ -282,8 +282,6 @@ def save_step(user, layer, spatial_files, overwrite=True,
         last_importer_session = importer_sessions[len(importer_sessions)-1].id if importer_sessions else 0
         next_id = max(int(last_importer_session), int(upload_next_id)) + 1
 
-        print str(last_importer_session) + " -- " + str(upload_next_id) + " -- " + str(next_id)
-
         # save record of this whether valid or not - will help w/ debugging
         upload = Upload.objects.create(
             user=user,

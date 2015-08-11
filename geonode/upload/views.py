@@ -155,7 +155,6 @@ def _next_step_response(req, upload_session, force_ajax=True):
             upload_session.completed_step = 'save'
 
     next = get_next_step(upload_session)
-    print (" ------ >> " + next)
 
     if next == 'time':
         # @TODO we skip time steps for coverages currently
@@ -582,11 +581,10 @@ def get_next_step(upload_session, offset=1):
     except KeyError as e:
         raise Exception('Unsupported file type: %s' % e.message)
     index = -1
-    print (" ------ >> upload_session.completed_step " + str(upload_session.completed_step))
+
     if upload_session.completed_step and upload_session.completed_step != 'save':
         index = pages.index(upload_session.completed_step)
 
-    print (" ------ >> index " + str(index) + " + offset " + str(offset) + " = " + str(pages[max(min(len(pages) - 1, index + offset), 0)]))
     return pages[max(min(len(pages) - 1, index + offset), 0)]
 
 
