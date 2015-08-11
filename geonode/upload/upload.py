@@ -279,10 +279,10 @@ def save_step(user, layer, spatial_files, overwrite=True,
         #next_id = next_id + 1 if next_id else 1
         importer_sessions = gs_uploader.get_sessions()
         
-        #print " ****************** " + str(importer_sessions)
-        
         last_importer_session = importer_sessions[len(importer_sessions)-1].id if importer_sessions else 0
         next_id = max(int(last_importer_session), int(upload_next_id)) + 1
+
+        print str(last_importer_session) + " -- " + str(upload_next_id) + " -- " + str(next_id)
 
         # save record of this whether valid or not - will help w/ debugging
         upload = Upload.objects.create(
@@ -338,8 +338,6 @@ def save_step(user, layer, spatial_files, overwrite=True,
 
         if not error_msg and import_session.tasks:
             task = import_session.tasks[0]
-
-            # print (" ************* " + str(task))
 
             # single file tasks will have just a file entry
             if hasattr(task, 'files'):
@@ -767,14 +765,10 @@ def import_imagemosaic_granules(spatial_files, append_to_mosaic_opts, append_to_
     dirname = os.path.dirname(f)
     basename = os.path.basename(f)
     
-    print (" --------------> " + os.path.dirname(f) + " " + os.path.basename(f))
-    
     head, tail = os.path.splitext(basename)
     dst_file = os.path.join(dirname, head.replace("_", "-") + "_" + mosaic_time_value + tail)
     os.rename(f, dst_file)
     spatial_files[0].base_file = dst_file
-    
-    print (" --------------> " + str(spatial_files.all_files()))
 
     # We use the GeoServer REST APIs in order to create the ImageMosaic
     #  and later add the granule through the GeoServer Importer.

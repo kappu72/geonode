@@ -297,8 +297,6 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
             granules = {"features":[]}
             all_granules = {"features":[]}
 
-        #print (' +++++++++++++++++++++++++++++++++++++++++ \n' + str(granules) + '\n +++++++++++++++++++++++++++++++++++++++++ ')
-
     context_dict = {
         "resource": layer,
         'perms_list': get_perms(request.user, layer.get_self_resource()),
