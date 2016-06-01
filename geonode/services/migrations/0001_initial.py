@@ -1,4 +1,23 @@
 # -*- coding: utf-8 -*-
+#########################################################################
+#
+# Copyright (C) 2016 OSGeo
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+#########################################################################
+
 from __future__ import unicode_literals
 
 from django.db import migrations, models
@@ -17,9 +36,23 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Service',
             fields=[
-                ('resourcebase_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='base.ResourceBase')),
-                ('type', models.CharField(max_length=4, choices=[(b'AUTO', 'Auto-detect'), (b'OWS', 'Paired WMS/WFS/WCS'), (b'WMS', 'Web Map Service'), (b'CSW', 'Catalogue Service'), (b'REST', 'ArcGIS REST Service'), (b'OGP', 'OpenGeoPortal'), (b'HGL', 'Harvard Geospatial Library')])),
-                ('method', models.CharField(max_length=1, choices=[(b'L', 'Local'), (b'C', 'Cascaded'), (b'H', 'Harvested'), (b'I', 'Indexed'), (b'X', 'Live'), (b'O', 'OpenGeoPortal')])),
+                ('resourcebase_ptr',
+                    models.OneToOneField(
+                        parent_link=True, auto_created=True, primary_key=True, serialize=False,
+                        to='base.ResourceBase')),
+                ('type',
+                    models.CharField(
+                        max_length=4,
+                        choices=[
+                            (b'AUTO', 'Auto-detect'), (b'OWS', 'Paired WMS/WFS/WCS'), (b'WMS', 'Web Map Service'),
+                            (b'CSW', 'Catalogue Service'), (b'REST', 'ArcGIS REST Service'), (b'OGP', 'OpenGeoPortal'),
+                            (b'HGL', 'Harvard Geospatial Library')])),
+                ('method',
+                    models.CharField(
+                        max_length=1,
+                        choices=[
+                            (b'L', 'Local'), (b'C', 'Cascaded'), (b'H', 'Harvested'), (b'I', 'Indexed'), (b'X', 'Live'),
+                            (b'O', 'OpenGeoPortal')])),
                 ('base_url', models.URLField(unique=True, db_index=True)),
                 ('version', models.CharField(max_length=10, null=True, blank=True)),
                 ('name', models.CharField(unique=True, max_length=255, db_index=True)),
@@ -62,7 +95,25 @@ class Migration(migrations.Migration):
             name='ServiceProfileRole',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('role', models.CharField(help_text='function performed by the responsible party', max_length=255, choices=[(b'author', 'party who authored the resource'), (b'processor', 'party who has processed the data in a manner such that the resource has been modified'), (b'publisher', 'party who published the resource'), (b'custodian', 'party that accepts accountability and responsibility for the data and ensures         appropriate care and maintenance of the resource'), (b'pointOfContact', 'party who can be contacted for acquiring knowledge about or acquisition of the resource'), (b'distributor', 'party who distributes the resource'), (b'user', 'party who uses the resource'), (b'resourceProvider', 'party that supplies the resource'), (b'originator', 'party who created the resource'), (b'owner', 'party that owns the resource'), (b'principalInvestigator', 'key party responsible for gathering information and conducting research')])),
+                ('role',
+                    models.CharField(
+                        help_text='function performed by the responsible party', max_length=255,
+                        choices=[
+                            (b'author', 'party who authored the resource'),
+                            (b'processor', 'party who has processed the data in a manner '
+                                           'such that the resource has been modified'),
+                            (b'publisher', 'party who published the resource'),
+                            (b'custodian', 'party that accepts accountability and responsibility for the data and '
+                                           'ensures appropriate care and maintenance of the resource'),
+                            (b'pointOfContact', 'party who can be contacted for acquiring knowledge about '
+                                                'or acquisition of the resource'),
+                            (b'distributor', 'party who distributes the resource'),
+                            (b'user', 'party who uses the resource'),
+                            (b'resourceProvider', 'party that supplies the resource'),
+                            (b'originator', 'party who created the resource'),
+                            (b'owner', 'party that owns the resource'),
+                            (b'principalInvestigator', 'key party responsible for gathering information '
+                                                       'and conducting research')])),
                 ('profiles', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
                 ('service', models.ForeignKey(to='services.Service')),
             ],
@@ -71,7 +122,10 @@ class Migration(migrations.Migration):
             name='WebServiceHarvestLayersJob',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('status', models.CharField(default=b'pending', max_length=10, choices=[(b'pending', b'pending'), (b'failed', b'failed'), (b'process', b'process')])),
+                ('status',
+                    models.CharField(
+                        default=b'pending', max_length=10,
+                        choices=[(b'pending', b'pending'), (b'failed', b'failed'), (b'process', b'process')])),
                 ('service', models.ForeignKey(to='services.Service', unique=True)),
             ],
         ),
@@ -80,8 +134,17 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('base_url', models.URLField(unique=True)),
-                ('type', models.CharField(max_length=4, choices=[(b'AUTO', 'Auto-detect'), (b'OWS', 'Paired WMS/WFS/WCS'), (b'WMS', 'Web Map Service'), (b'CSW', 'Catalogue Service'), (b'REST', 'ArcGIS REST Service'), (b'OGP', 'OpenGeoPortal'), (b'HGL', 'Harvard Geospatial Library')])),
-                ('status', models.CharField(default=b'pending', max_length=10, choices=[(b'pending', b'pending'), (b'failed', b'failed'), (b'process', b'process')])),
+                ('type',
+                    models.CharField(
+                        max_length=4,
+                        choices=[
+                            (b'AUTO', 'Auto-detect'), (b'OWS', 'Paired WMS/WFS/WCS'), (b'WMS', 'Web Map Service'),
+                            (b'CSW', 'Catalogue Service'), (b'REST', 'ArcGIS REST Service'), (b'OGP', 'OpenGeoPortal'),
+                            (b'HGL', 'Harvard Geospatial Library')])),
+                ('status',
+                    models.CharField(
+                        default=b'pending', max_length=10,
+                        choices=[(b'pending', b'pending'), (b'failed', b'failed'), (b'process', b'process')])),
             ],
         ),
         migrations.AddField(
