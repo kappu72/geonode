@@ -123,7 +123,7 @@ setup(name='GeoNode',
 
         # GeoNode org maintained apps.
         "django-geoexplorer>=4.0.5",
-        "geonode-user-messages>=0.1.3",
+        "geonode-user-messages>=0.1.4",
         "geonode-avatar>=2.1.6",
         "geonode-announcements>=1.0.8",
         "geonode-agon-ratings>=0.3.5",
@@ -131,7 +131,7 @@ setup(name='GeoNode',
         "geonode-arcrest==10.2",
         "geonode-notification>=1.1.1",
         "geonode-dialogos>=0.5",
-        "gsconfig==1.0.4",
+        "gsconfig==1.0.6",
         "gsimporter==1.0.0",
         "gisdata>=0.5.4",
 
