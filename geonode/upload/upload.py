@@ -383,16 +383,14 @@ def run_import(upload_session, async):
     import_session = upload_session.import_session
     import_session = gs_uploader.get_session(import_session.id)
     task = import_session.tasks[0]
+    import_execution_requested = False
     if import_session.state == 'INCOMPLETE':
         if task.state != 'ERROR':
             raise Exception('unknown item state: %s' % task.state)
     elif import_session.state == 'PENDING' and task.target.store_type == 'coverageStore':
         if task.state == 'READY':
             import_session.commit(async)
-
-    elif import_session.state == 'PENDING' and task.target.store_type == 'coverageStore':
-        if task.state == 'READY':
-            import_session.commit(async)
+            import_execution_requested = True
 
     # if a target datastore is configured, ensure the datastore exists
     # in geoserver and set the uploader target appropriately
@@ -426,7 +424,8 @@ def run_import(upload_session, async):
 
     _log('running import session')
     # run async if using a database
-    import_session.commit(async)
+    if not import_execution_requested:
+        import_session.commit(async)
 
     # @todo check status of import session - it may fail, but due to protocol,
     # this will not be reported during the commit
@@ -604,19 +603,32 @@ def final_step(upload_session, user):
     else:
         sld = get_sld_for(publishing)
 
+    style = None
+    print " **************************************** "
     if sld is not None:
         try:
             cat.create_style(name, sld)
+            style = cat.get_style(name)
         except geoserver.catalog.ConflictingDataError as e:
-            msg = 'There was already a style named %s in GeoServer, cannot overwrite: "%s"' % (
+            msg = 'There was already a style named %s in GeoServer, try using another name: "%s"' % (
                 name, str(e))
-            # what are we doing with this var?
-            # style = cat.get_style(name)
-            logger.warn(msg)
-            e.args = (msg,)
+            try:
+                cat.create_style(name + '_layer', sld)
+                style = cat.get_style(name + '_layer')
+            except geoserver.catalog.ConflictingDataError as e:
+                msg = 'There was already a style named %s in GeoServer, cannot overwrite: "%s"' % (
+                    name, str(e))
+                logger.error(msg)
+                e.args = (msg,)
+
+                # what are we doing with this var?
+                msg = 'No style could be created for the layer, falling back to POINT default one'
+                style = cat.get_style('point')
+                logger.warn(msg)
+                e.args = (msg,)
 
         # FIXME: Should we use the fully qualified typename?
-        publishing.default_style = cat.get_style(name)
+        publishing.default_style = style
         _log('default style set to %s', name)
         cat.save(publishing)
 

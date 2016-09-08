@@ -22,6 +22,8 @@
 
   {% if preview == 'geoext' %}
     {% include "layers/layer_geoext_map.html" %}
+  {% elif preview == 'OL3' %}
+    {% include "layers/layer_ol3_map.html" %}
   {% else %}
     {% include "layers/layer_leaflet_map.html" %}
   {% endif %}
@@ -259,7 +261,7 @@
             {% if links %}
             <ul>
               {% for link in links %}
-              <li><a href="{{ link.url }}">{% trans link.name %}</a></li>
+              <li><a href="{{ link.url }}" target="_blank">{% trans link.name %}</a></li>
               {% endfor %}
             </ul>
             {% endif %}
@@ -308,8 +310,8 @@
                   <h4>{% trans "Styles" %}</h4>
                   {% if preview == 'geoext' %}
                   <a class="btn btn-default btn-block btn-xs style-edit" data-dismiss="modal" href="#">{% trans "Edit" %}</a>
-                  {% endif %}
                   <a class="btn btn-default btn-block btn-xs" href="{% url "layer_style_manage" resource.service_typename %}">{% trans "Manage" %}</a>
+                  {% endif %}
                 </div>
                 {% endif %}
               {% endif %}
@@ -371,7 +373,7 @@
 			</h5>
             <ul>
               {% for link in metadata %}
-                <li><a href="{{ link.url }}">{{ link.name }}</a></li>
+                <li><a href="{{ link.url }}" target="_blank">{{ link.name }}</a></li>
               {% endfor %}
             <ul>
           </div>
