@@ -124,6 +124,9 @@ def copy_tree(src, dst, symlinks=False, ignore=None):
         s = os.path.join(src, item)
         d = os.path.join(dst, item)
         if os.path.isdir(s):
+            # shutil.rmtree(d)
+            if os.path.exists(d):
+                os.remove(d)
             shutil.copytree(s, d, symlinks, ignore)
         else:
             shutil.copy2(s, d)

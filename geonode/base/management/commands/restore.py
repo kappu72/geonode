@@ -19,10 +19,14 @@
 
 import traceback
 import os
+import time
 import shutil
+import requests
 import helpers
 import tempfile
+import simplejson as json
 
+from requests.auth import HTTPBasicAuth
 from optparse import make_option
 
 from django.conf import settings
@@ -55,6 +59,9 @@ class Command(BaseCommand):
         if not backup_file or len(backup_file) == 0:
             raise CommandError("Backup archive '--backup-file' is mandatory")
 
+        print "Before proceeding with the Restore, please ensure that:"
+        print " 1. The backend (DB or whatever) is accessible and you have rights"
+        print " 2. The GeoServer is up and running and reachable from this machine"
         message = 'WARNING: The restore will overwrite ALL GeoNode data. You want to proceed?'
         if helpers.confirm(prompt=message, resp=False):
             # Create Target Folder
@@ -64,6 +71,60 @@ class Command(BaseCommand):
 
             # Extract ZIP Archive to Target Folder
             target_folder = helpers.unzip_file(backup_file, restore_folder)
+
+            # Restore GeoServer Catalog
+            url = settings.OGC_SERVER['default']['PUBLIC_LOCATION']
+            user = settings.OGC_SERVER['default']['USER']
+            passwd = settings.OGC_SERVER['default']['PASSWORD']
+            geoserver_bk_file = os.path.join(target_folder, 'geoserver_catalog.zip')
+
+            print "Restoring 'GeoServer Catalog ["+url+"]' into '"+geoserver_bk_file+"'."
+            if not os.path.exists(geoserver_bk_file):
+                raise ValueError('Could not find GeoServer Backup file [' + geoserver_bk_file + ']')
+
+            # Best Effort Restore: 'options': {'option': ['BK_BEST_EFFORT=true']}
+            data = {'restore': {'archiveFile': geoserver_bk_file, 'options': {}}}
+            headers = {'Content-type': 'application/json'}
+            r = requests.post(url + 'rest/br/restore/', data=json.dumps(data),
+                              headers=headers, auth=HTTPBasicAuth(user, passwd))
+            if (r.status_code > 201):
+                gs_backup = r.json()
+                gs_bk_exec_id = gs_backup['restore']['execution']['id']
+                r = requests.get(url + 'rest/br/restore/' + str(gs_bk_exec_id) + '.json',
+                                 auth=HTTPBasicAuth(user, passwd))
+                if (r.status_code == 200):
+                    gs_backup = r.json()
+                    gs_bk_progress = gs_backup['restore']['execution']['progress']
+                    print gs_bk_progress
+
+                raise ValueError('Could not successfully restore GeoServer catalog [' + url +
+                                 'rest/br/restore/]: ' + str(r.status_code) + ' - ' + str(r.text))
+            else:
+                gs_backup = r.json()
+                gs_bk_exec_id = gs_backup['restore']['execution']['id']
+                r = requests.get(url + 'rest/br/restore/' + str(gs_bk_exec_id) + '.json',
+                                 auth=HTTPBasicAuth(user, passwd))
+                if (r.status_code == 200):
+                    gs_bk_exec_status = gs_backup['restore']['execution']['status']
+                    gs_bk_exec_progress = gs_backup['restore']['execution']['progress']
+                    gs_bk_exec_progress_updated = '0/0'
+                    while (gs_bk_exec_status != 'COMPLETED' and gs_bk_exec_status != 'FAILED'):
+                        if (gs_bk_exec_progress != gs_bk_exec_progress_updated):
+                            gs_bk_exec_progress_updated = gs_bk_exec_progress
+                        r = requests.get(url + 'rest/br/restore/' + str(gs_bk_exec_id) + '.json',
+                                         auth=HTTPBasicAuth(user, passwd))
+                        if (r.status_code == 200):
+                            gs_backup = r.json()
+                            gs_bk_exec_status = gs_backup['restore']['execution']['status']
+                            gs_bk_exec_progress = gs_backup['restore']['execution']['progress']
+                            print str(gs_bk_exec_status) + ' - ' + gs_bk_exec_progress
+                            time.sleep(3)
+                        else:
+                            raise ValueError('Could not successfully restore GeoServer catalog [' + url +
+                                             'rest/br/restore/]: ' + str(r.status_code) + ' - ' + str(r.text))
+                else:
+                    raise ValueError('Could not successfully restore GeoServer catalog [' + url +
+                                     'rest/br/restore/]: ' + str(r.status_code) + ' - ' + str(r.text))
 
             # Prepare Target DB
             try:
