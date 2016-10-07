@@ -43,14 +43,17 @@ class LayerAdmin(MediaTranslationAdmin):
         'service_type',
         'title',
         'date',
-        'category')
+        'category',
+        'metadata_is_valid')        
     list_display_links = ('id',)
     list_editable = ('title', 'category')
     list_filter = ('storeType', 'owner', 'category',
-                   'restriction_code_type__identifier', 'date', 'date_type')
+#                   'restriction_code_type__identifier', 'date', 'date_type')
+                   'restriction_code_type__identifier', 'date', 'date_type', 'metadata_is_valid')
     search_fields = ('typename', 'title', 'abstract', 'purpose',)
     filter_horizontal = ('contacts',)
     date_hierarchy = 'date'
+    readonly_fields = ('uuid', 'typename', 'workspace', 'metadata_is_valid')
     readonly_fields = ('uuid', 'typename', 'workspace')
     inlines = [AttributeInline]
     form = LayerAdminForm

@@ -27,6 +27,7 @@ from lxml import etree
 from geonode.layers.models import Layer
 from geonode.documents.models import Document
 from geonode.catalogue import get_catalogue
+from geonode.catalogue.validation import Validators
 from geonode.base.models import Link, ResourceBase
 
 
@@ -78,6 +79,11 @@ def catalogue_post_save(instance, sender, **kwargs):
     else:
         md_doc = catalogue.catalogue.csw_gen_xml(instance, 'catalogue/full_metadata.xml')
 
+    v = Validators(["iso19139"])
+    one_valid, all_valid, details = v.is_valid(etree.fromstring(md_doc))
+    if(not one_valid):
+       LOGGER.info("Metadata for '%s' is not valid", instance.title)
+
     csw_anytext = catalogue.catalogue.csw_gen_anytext(md_doc)
 
     csw_wkt_geometry = instance.geographic_bounding_box.split(';')[-1]
@@ -85,6 +91,7 @@ def catalogue_post_save(instance, sender, **kwargs):
     resources = ResourceBase.objects.filter(id=instance.resourcebase_ptr.id)
 
     resources.update(metadata_xml=md_doc)
+    resources.update(metadata_is_valid=one_valid)
     resources.update(csw_wkt_geometry=csw_wkt_geometry)
     resources.update(csw_anytext=csw_anytext)
 

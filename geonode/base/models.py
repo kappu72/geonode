@@ -253,6 +253,8 @@ class ResourceBase(PolymorphicModel, PermissionLevelMixin):
     temporal_extent_end_help_text = _('time period covered by the content of the dataset (end)')
     data_quality_statement_help_text = _('general explanation of the data producer\'s knowledge about the lineage of a'
                                          ' dataset')
+    metadata_is_valid_help_text = 'metadata is valid against its XSD schema'
+
     # internal fields
     uuid = models.CharField(max_length=36)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name='owned_resource',
@@ -339,7 +341,8 @@ class ResourceBase(PolymorphicModel, PermissionLevelMixin):
     metadata_xml = models.TextField(null=True,
                                     default='<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd"/>',
                                     blank=True)
-
+    metadata_is_valid = models.NullBooleanField('Valid', default=None,
+                                                help_text='The metadata has been validated against its schema')
     popular_count = models.IntegerField(default=0)
     share_count = models.IntegerField(default=0)
 

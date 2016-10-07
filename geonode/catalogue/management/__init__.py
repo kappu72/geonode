@@ -17,10 +17,3 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 #########################################################################
-
-from django.conf.urls import patterns, url
-
-urlpatterns = patterns('geonode.catalogue.views',
-                       url(r'^csw$', 'csw_global_dispatch', name='csw_global_dispatch'),
-                       url(r'^opensearch$', 'opensearch_dispatch', name='opensearch_dispatch'),
-                       url(r'^validate/(?P<resourcename>[^/]*)$',  name="validate_resource_metadata"))
