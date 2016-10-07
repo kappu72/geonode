@@ -234,10 +234,10 @@ def layer_style_manage(request, layername):
             # Save to GeoServer
             cat = gs_catalog
             gs_layer = cat.get_layer(layer.name)
-            gs_layer.default_style = default_style
+            gs_layer.default_style = cat.get_style(default_style)
             styles = []
             for style in selected_styles:
-                styles.append(style)
+                styles.append(cat.get_style(style))
             gs_layer.styles = styles
             cat.save(gs_layer)
 
@@ -313,7 +313,7 @@ def style_change_check(request, path):
             style_name = os.path.splitext(request.path)[0].split('/')[-1]
             try:
                 style = Style.objects.get(name=style_name)
-                for layer in style.LayerStyles.all():
+                for layer in style.layer_styles.all():
                     if not request.user.has_perm('change_layer_style', obj=layer):
                         authorized = False
             except:

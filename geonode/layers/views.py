@@ -24,6 +24,7 @@ import logging
 import shutil
 import traceback
 from guardian.shortcuts import get_perms
+import decimal
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -62,13 +63,11 @@ from geonode.security.views import _perms_info_json
 from geonode.documents.models import get_related_documents
 from geonode.utils import build_social_links
 from geonode.geoserver.helpers import cascading_delete, gs_catalog
-
-CONTEXT_LOG_FILE = None
+from geonode.geoserver.helpers import ogc_server_settings
 
 if 'geonode.geoserver' in settings.INSTALLED_APPS:
     from geonode.geoserver.helpers import _render_thumbnail
-    from geonode.geoserver.helpers import ogc_server_settings
-    CONTEXT_LOG_FILE = ogc_server_settings.LOG_FILE
+CONTEXT_LOG_FILE = ogc_server_settings.LOG_FILE
 
 logger = logging.getLogger("geonode.layers.views")
 
@@ -312,6 +311,10 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
         settings,
         'LAYER_PREVIEW_LIBRARY',
         'leaflet')
+    context_dict["crs"] = getattr(
+        settings,
+        'DEFAULT_MAP_CRS',
+        'EPSG:900913')
 
     if request.user.has_perm('download_resourcebase', layer.get_self_resource()):
         if layer.storeType == 'dataStore':
@@ -383,7 +386,6 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html'):
     ) and attribute_form.is_valid() and category_form.is_valid():
         new_poc = layer_form.cleaned_data['poc']
         new_author = layer_form.cleaned_data['metadata_author']
-        new_keywords = layer_form.cleaned_data['keywords']
 
         if new_poc is None:
             if poc is None:
@@ -429,7 +431,7 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html'):
             la.save()
 
         if new_poc is not None and new_author is not None:
-            new_keywords = layer_form.cleaned_data['keywords']
+            new_keywords = [x.strip() for x in layer_form.cleaned_data['keywords']]
             layer.keywords.clear()
             layer.keywords.add(*new_keywords)
             the_layer = layer_form.save()
@@ -460,11 +462,17 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html'):
         layer_form.fields['poc'].initial = poc.id
         poc_form = ProfileForm(prefix="poc")
         poc_form.hidden = True
+    else:
+        poc_form = ProfileForm(prefix="poc")
+        poc_form.hidden = False
 
     if metadata_author is not None:
         layer_form.fields['metadata_author'].initial = metadata_author.id
         author_form = ProfileForm(prefix="author")
         author_form.hidden = True
+    else:
+        author_form = ProfileForm(prefix="author")
+        author_form.hidden = False
 
     return render_to_response(template, RequestContext(request, {
         "layer": layer,
@@ -651,6 +659,39 @@ def layer_thumbnail(request, layername):
                 status=500,
                 content_type='text/plain'
             )
+
+
+def get_layer(request, layername):
+    """Get Layer object as JSON"""
+
+    # Function to treat Decimal in json.dumps.
+    # http://stackoverflow.com/a/16957370/1198772
+    def decimal_default(obj):
+        if isinstance(obj, decimal.Decimal):
+            return float(obj)
+        raise TypeError
+
+    logger.debug('Call get layer')
+    if request.method == 'GET':
+        layer_obj = _resolve_layer(request, layername)
+        logger.debug(layername)
+        response = {
+            'typename': layername,
+            'name': layer_obj.name,
+            'title': layer_obj.title,
+            'url': layer_obj.get_tiles_url(),
+            'bbox_string': layer_obj.bbox_string,
+            'bbox_x0': layer_obj.bbox_x0,
+            'bbox_x1': layer_obj.bbox_x1,
+            'bbox_y0': layer_obj.bbox_y0,
+            'bbox_y1': layer_obj.bbox_y1,
+        }
+        return HttpResponse(json.dumps(
+            response,
+            ensure_ascii=False,
+            default=decimal_default
+        ),
+            content_type='application/javascript')
 
 
 def layer_metadata_detail(request, layername, template='layers/layer_metadata_detail.html'):

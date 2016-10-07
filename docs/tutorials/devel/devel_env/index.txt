@@ -29,7 +29,7 @@ Summary of the installation steps
 
     .. code-block:: console
 
-        service apahe2 stop
+        service apache2 stop
         service tomcat7 stop
 
 #. If possible log as **root** user, open a terminal and ``cd /home/geonode/dev``
@@ -320,11 +320,12 @@ Summary of the installation steps
 
    .. warning:: If the start fails because of an import error related to osgeo, then please consult the :ref:`install_gdal_devmode`.
 
-   The last step is to compile GeoServer and setup
+   The last step is to compile GeoServer and setup, then initialize the database
 
    .. code-block:: console
 
     $ paver setup
+    $ paver sync
 
 
 #. Now we can start our GeoNode instance
@@ -333,7 +334,7 @@ Summary of the installation steps
 
         .. code-block:: console
 
-            service apahe2 stop
+            service apache2 stop
             service tomcat7 stop
 
    .. code-block:: console
@@ -401,7 +402,7 @@ Start working on Geonode the next day after install
 
             .. code-block:: console
 
-                service apahe2 stop
+                service apache2 stop
                 service tomcat7 stop
 
       .. code-block:: console

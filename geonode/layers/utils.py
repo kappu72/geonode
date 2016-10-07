@@ -35,6 +35,7 @@ from osgeo import gdal
 from django.contrib.auth import get_user_model
 from django.template.defaultfilters import slugify
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.files.storage import default_storage as storage
 from django.core.files import File
 from django.conf import settings
 from django.db.models import Q
@@ -144,13 +145,14 @@ def get_files(filename):
     elif extension.lower() in cov_exts:
         files[extension.lower().replace('.', '')] = filename
 
-    matches = glob.glob(glob_name + ".[sS][lL][dD]")
-    if len(matches) == 1:
-        files['sld'] = matches[0]
-    elif len(matches) > 1:
-        msg = ('Multiple style files for %s exist; they need to be '
-               'distinct by spelling and not just case.') % filename
-        raise GeoNodeException(msg)
+    if 'geonode.geoserver' in settings.INSTALLED_APPS:
+        matches = glob.glob(glob_name + ".[sS][lL][dD]")
+        if len(matches) == 1:
+            files['sld'] = matches[0]
+        elif len(matches) > 1:
+            msg = ('Multiple style files (sld) for %s exist; they need to be '
+                   'distinct by spelling and not just case.') % filename
+            raise GeoNodeException(msg)
 
     matches = glob.glob(base_name + ".[xX][mM][lL]")
 
@@ -165,6 +167,18 @@ def get_files(filename):
         msg = ('Multiple XML files for %s exist; they need to be '
                'distinct by spelling and not just case.') % filename
         raise GeoNodeException(msg)
+
+    if 'geonode_qgis_server' in settings.INSTALLED_APPS:
+        matches = glob.glob(glob_name + ".[qQ][mM][lL]")
+        logger.debug('Checking QML file')
+        logger.debug('Number of matches QML file : %s' % len(matches))
+        logger.debug('glob name: %s' % glob_name)
+        if len(matches) == 1:
+            files['qml'] = matches[0]
+        elif len(matches) > 1:
+            msg = ('Multiple style files (qml) for %s exist; they need to be '
+                   'distinct by spelling and not just case.') % filename
+            raise GeoNodeException(msg)
 
     return files
 
@@ -485,7 +499,8 @@ def file_upload(filename, name=None, user=None, title=None, abstract=None,
     # process the layer again after that by
     # doing a layer.save()
     if not created and overwrite:
-        layer.upload_session.layerfile_set.all().delete()
+        if layer.upload_session:
+            layer.upload_session.layerfile_set.all().delete()
         layer.upload_session = upload_session
         # Pass the parameter overwrite to tell whether the
         # geoserver_post_save_signal should upload the new file or not
@@ -653,51 +668,59 @@ def upload(incoming, user=None, overwrite=False,
     return output
 
 
-def create_thumbnail(instance, thumbnail_remote_url, thumbnail_create_url=None, check_bbox=True, ogc_client=None):
-    if not ogc_client:
-        ogc_client = http_client
-    BBOX_DIFFERENCE_THRESHOLD = 1e-5
+def create_thumbnail(instance, thumbnail_remote_url, thumbnail_create_url=None,
+                     check_bbox=True, ogc_client=None, overwrite=False):
+    thumbnail_dir = os.path.join(settings.MEDIA_ROOT, 'thumbs')
+    thumbnail_name = 'layer-%s-thumb.png' % instance.uuid
+    thumbnail_path = os.path.join(thumbnail_dir, thumbnail_name)
 
-    if not thumbnail_create_url:
-        thumbnail_create_url = thumbnail_remote_url
+    if overwrite is True or storage.exists(thumbnail_path) is False:
+        if not ogc_client:
+            ogc_client = http_client
+        BBOX_DIFFERENCE_THRESHOLD = 1e-5
 
-    if check_bbox:
-        # Check if the bbox is invalid
-        valid_x = (
-            float(
-                instance.bbox_x0) -
-            float(
-                instance.bbox_x1)) ** 2 > BBOX_DIFFERENCE_THRESHOLD
-        valid_y = (
-            float(
-                instance.bbox_y1) -
-            float(
-                instance.bbox_y0)) ** 2 > BBOX_DIFFERENCE_THRESHOLD
-    else:
-        valid_x = True
-        valid_y = True
+        if not thumbnail_create_url:
+            thumbnail_create_url = thumbnail_remote_url
 
-    image = None
+        if check_bbox:
+            # Check if the bbox is invalid
+            valid_x = (
+                float(
+                    instance.bbox_x0) -
+                float(
+                    instance.bbox_x1)) ** 2 > BBOX_DIFFERENCE_THRESHOLD
+            valid_y = (
+                float(
+                    instance.bbox_y1) -
+                float(
+                    instance.bbox_y0)) ** 2 > BBOX_DIFFERENCE_THRESHOLD
+        else:
+            valid_x = True
+            valid_y = True
 
-    if valid_x and valid_y:
-        Link.objects.get_or_create(resource=instance.get_self_resource(),
-                                   url=thumbnail_remote_url,
-                                   defaults=dict(
-                                       extension='png',
-                                       name="Remote Thumbnail",
-                                       mime='image/png',
-                                       link_type='image',
+        image = None
+
+        if valid_x and valid_y:
+            Link.objects.get_or_create(resource=instance.get_self_resource(),
+                                       url=thumbnail_remote_url,
+                                       defaults=dict(
+                                           extension='png',
+                                           name="Remote Thumbnail",
+                                           mime='image/png',
+                                           link_type='image',
+                                           )
                                        )
-                                   )
-        Layer.objects.filter(id=instance.id).update(thumbnail_url=thumbnail_remote_url)
-        # Download thumbnail and save it locally.
-        resp, image = ogc_client.request(thumbnail_create_url)
-        if 'ServiceException' in image or resp.status < 200 or resp.status > 299:
-            msg = 'Unable to obtain thumbnail: %s' % image
-            logger.debug(msg)
-            # Replace error message with None.
-            image = None
+            Layer.objects.filter(id=instance.id) \
+                .update(thumbnail_url=thumbnail_remote_url)
+            # Download thumbnail and save it locally.
+            resp, image = ogc_client.request(thumbnail_create_url)
+            if 'ServiceException' in image or \
+               resp.status < 200 or resp.status > 299:
+                msg = 'Unable to obtain thumbnail: %s' % image
+                logger.debug(msg)
+                # Replace error message with None.
+                image = None
 
-    if image is not None:
-        filename = 'layer-%s-thumb.png' % instance.uuid
-        instance.save_thumbnail(filename, image=image)
+        if image is not None:
+            filename = 'layer-%s-thumb.png' % instance.uuid
+            instance.save_thumbnail(filename, image=image)

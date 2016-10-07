@@ -213,10 +213,11 @@ class PermissionLevelMixin(object):
 
 def set_owner_permissions(resource):
     """assign all admin permissions to the owner"""
-    if resource.polymorphic_ctype.name == 'layer':
-        for perm in LAYER_ADMIN_PERMISSIONS:
-            assign_perm(perm, resource.owner, resource.layer)
-    for perm in ADMIN_PERMISSIONS:
+    if resource.polymorphic_ctype:
+        if resource.polymorphic_ctype.name == 'layer':
+            for perm in LAYER_ADMIN_PERMISSIONS:
+                assign_perm(perm, resource.owner, resource.layer)
+        for perm in ADMIN_PERMISSIONS:
             assign_perm(perm, resource.owner, resource.get_self_resource())
 
 
@@ -225,14 +226,14 @@ def remove_object_permissions(instance):
         If is a layer removes the layer specific permissions then the resourcebase permissions
     """
     from guardian.models import UserObjectPermission, GroupObjectPermission
+    resource = instance.get_self_resource()
 
-    if hasattr(instance, "layer"):
-        UserObjectPermission.objects.filter(content_type=ContentType.objects.get_for_model(instance),
+    if hasattr(resource, "layer"):
+        UserObjectPermission.objects.filter(content_type=ContentType.objects.get_for_model(resource.layer),
                                             object_pk=instance.id).delete()
-        GroupObjectPermission.objects.filter(content_type=ContentType.objects.get_for_model(instance),
+        GroupObjectPermission.objects.filter(content_type=ContentType.objects.get_for_model(resource.layer),
                                              object_pk=instance.id).delete()
 
-    resource = instance.get_self_resource()
     UserObjectPermission.objects.filter(content_type=ContentType.objects.get_for_model(resource),
                                         object_pk=instance.id).delete()
     GroupObjectPermission.objects.filter(content_type=ContentType.objects.get_for_model(resource),

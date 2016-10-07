@@ -21,6 +21,7 @@
 from __future__ import unicode_literals
 
 import json
+import os
 
 from django.db import migrations, models
 
@@ -28,7 +29,8 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     DEFAULT_FA_CLASS = b"fa-times"
-    SQL_UPDATE = "UPDATE base_topiccategory SET fa_class=%s WHERE identifier=%s AND fa_class='"+DEFAULT_FA_CLASS+"';"
+    SQL_UPDATE = "UPDATE base_topiccategory SET fa_class=%s WHERE identifier=%s AND fa_class='" \
+                 + DEFAULT_FA_CLASS + "';"
 
     dependencies = [
         ('base', '0001_initial'),
@@ -42,7 +44,12 @@ class Migration(migrations.Migration):
         )
     ]
 
-    with open('geonode/base/fixtures/initial_data.json') as data_file:
+    current = os.path.dirname(os.path.abspath(__file__))
+    parent = os.path.abspath(os.path.join(current, os.pardir))
+    fixture = os.path.join(parent, 'fixtures/initial_data.json')
+    # geonode/base/fixtures/initial_data.json
+
+    with open(fixture) as data_file:
         data = json.load(data_file)
 
         for record in data:
