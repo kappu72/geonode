@@ -63,6 +63,7 @@ setup(name='GeoNode',
         "nose>=1.3.1",  # python-nose
         "django-nose>=1.4",  # python-django-nose
         "awesome-slugify>=1.6.2",
+        "django-floppyforms>=1.7.0",
 
         # Django Apps
         "django-pagination >=1.0.5, <=1.0.7",  # python-django-pagination

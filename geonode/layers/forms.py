@@ -61,6 +61,21 @@ class LayerForm(ResourceBaseForm):
             'upload_session',
             'service',)
 
+    def __init__(self, *args, **kwargs):
+        super(ResourceBaseForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            help_text = self.fields[field].help_text
+            self.fields[field].help_text = None
+            if help_text != '':
+                self.fields[field].widget.attrs.update(
+                    {
+                        'class': 'has-external-popover',
+                        'data-content': help_text,
+                        'data-placement': 'right',
+                        'data-container': 'body',
+                        'data-html': 'true'
+                    }
+                )
 
 class LayerUploadForm(forms.Form):
     base_file = forms.FileField()
