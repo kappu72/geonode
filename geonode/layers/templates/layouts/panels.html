@@ -22,6 +22,10 @@
     td > input{
         width: 100%;
     }
+    .input-empty{
+        border-color: red;
+        border-style: double;
+    }
 </style>
 
 <br />
@@ -97,7 +101,7 @@
                             <div>
                                 <span><label for="{{ layer_form.thumbnail_url|id }}">{{ layer_form.thumbnail_url.label }}</label></span>
                                 <img src="{{ layer_form.thumbnail_url.value }}" />
-                                <div><a href="metadata_thumbnail">set preview</a></div>
+                                <div><a href="#">set preview</a></div>
                             </div>
                         </div>
                         <div class="col-lg-3">

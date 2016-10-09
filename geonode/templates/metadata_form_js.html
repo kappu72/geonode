@@ -49,6 +49,23 @@
             $(this).popover({'trigger':'hover'});
         });
     });
+    
+    $(document).ready(function() {
+        $('#mandatory').find(":input").each(function(){
+            $(this).change(function(e){
+                if(e.target.value.trim() === ''){
+                    if(!$(e.target).hasClass("input-empty")){
+                        $(e.target).addClass("input-empty");
+                        $(e.target).parent().append("<p class='xxs-font-size mandatory-warning'>&nbsp;&nbsp;&nbsp;<strong>* ISO19139 mandatory field</strong></p>");
+                    }
+                }
+                else{
+                    $(e.target).removeClass("input-empty");
+                    $(e.target).parent().find(".mandatory-warning").remove();
+                }    
+            }).change();
+        })
+    });
 
     $('#id_resource-metadata_author').change(function(){
       if($(this).val() === ''){
