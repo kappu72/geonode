@@ -1,6 +1,7 @@
 {% extends "layers/layer_base.html" %}
 {% load i18n %}
 {% load bootstrap_tags %}
+{% load floppyforms %}
 
 {% block title %}{{ layer.typename }} — {{ block.super }}{% endblock %}
 
@@ -12,7 +13,7 @@
   <h2 class="page-title">{% trans "Edit Metadata" %}</h2>
 </div>
 <div class="row">
-  <div class="col-md-8">
+  <div class="col-md-12">
     <p class="lead">
       {% blocktrans with layer.typename as layer_title %}
         Editing details for {{ layer_title }}
@@ -66,48 +67,13 @@
 
 
         {% csrf_token %}
-        <div class="col-md-6 form-controls">
-          {{ layer_form|as_bootstrap }}
+        <div class="col-md-12 form-controls">
+          {% form layer_form using "layouts/panels.html" %}
+          {# layer_form|as_bootstrap #}
         </div>
         
         <div class="row">
-          <div class="col-md-12">
-            <label class="control-label required-field">{% trans "Category" %}</label>
-            <fieldset id="category_form">
-              {% autoescape off %}
-              {% for choice in category_form.category_choice_field.field.choices %}
-              <div class="radio col-md-6">
-                <input type="radio" name="category_choice_field" value="{{ choice.0 }}"
-                  {% ifequal category_form.initial choice.0 %} checked="checked" {% endifequal %}> 
-                  {{ choice.1 }}
-                </input>
-              </div>
-              {% endfor %}
-              {% endautoescape %}
-            </fieldset>
-          </div>
           <div class="col-md-12 grid-spacer">
-            <h5>{% trans "Attributes" %}</h5>
-            {{ attribute_form.management_form }}
-            <table class="table table-striped table-bordered table-condensed">
-              <tr>
-                <th>{% trans "Attribute" %}</th>
-                <th>{% trans "Label" %}</th>
-                <th>{% trans "Description" %}</th>
-                <th>{% trans "Display Order" %}</th>
-              </tr>
-              {% for form in attribute_form.forms %}
-              {% if form.attribute %}
-              <tr>
-                <td><div style="display:none">{{form.id}}</div>{{form.attribute}}</td>
-                <td>{{form.attribute_label}}</td>
-                <td>{{form.description}}</td>
-                <td>{{form.display_order}}</td>
-              </tr>
-              {% endif %}
-              {% endfor %}
-            </table>
-
             <fieldset class="form-controls modal-forms modal hide fade" id="poc_form" >
               <h2>{% trans "Point of Contact" %}</h2>
               {{ poc_form|as_bootstrap }}

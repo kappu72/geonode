@@ -37,6 +37,19 @@
       }
     });
 
+    $(document).ready(function() {
+        $('.has-external-popover').each(function(){
+            var help_text = $(this).attr("data-content");
+            $(this)
+                .parent()
+                .children("span")
+                .append("<span class='external-popover' data-content='" + help_text + "'><strong><i class='fa fa fa-question-circle fa-1x'></i></strong></span>");
+            });
+        $('.external-popover').each(function(){
+            $(this).popover({'trigger':'hover'});
+        });
+    });
+
     $('#id_resource-metadata_author').change(function(){
       if($(this).val() === ''){
         $('#metadata_form').modal();

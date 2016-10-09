@@ -310,6 +310,7 @@ INSTALLED_APPS = (
     #'modeltranslation',
     'djcelery',
     'storages',
+    'floppyforms',
 
     # Theme
     "pinax_theme_bootstrap_account",
