@@ -214,6 +214,9 @@ def layer_upload(request, template='upload/layer_upload.html'):
             content_type='application/json',
             status=status_code)
 
+def metadata_thumbnail(request, layername, template='layers/metadata_thumbnail.html'):
+    return layer_detail(request, layername, template)
+
 
 def layer_detail(request, layername, template='layers/layer_detail.html'):
     layer = _resolve_layer(
@@ -642,16 +645,21 @@ def layer_granule_remove(request, granule_id, layername, template='layers/layer_
 
 def layer_thumbnail(request, layername):
     if request.method == 'POST':
+        logger.error("aaaaa")
         layer_obj = _resolve_layer(request, layername)
-
+        logger.error("bbbbb")
         try:
+            logger.error("ccccc")
             image = _render_thumbnail(request.body)
-
+            logger.error(not image)
             if not image:
+                logger.error("eee")
                 return
+            logger.error("fff")
             filename = "layer-%s-thumb.png" % layer_obj.uuid
+            logger.error("ggg")
             layer_obj.save_thumbnail(filename, image)
-
+            logger.error("hhhh")
             return HttpResponse('Thumbnail saved')
         except:
             return HttpResponse(
