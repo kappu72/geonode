@@ -1,0 +1,111 @@
+{% load i18n %}
+{% load dialogos_tags %}
+{% load agon_ratings_tags %}
+{% load bootstrap_tags %}
+{% load pagination_tags %}
+{% load url from future %}
+{% load base_tags %}
+{% load guardian_tags %}
+
+{% block head %}
+
+  {% if TWITTER_CARD %}
+    {% include "base/_resourcebase_twittercard.html" %}
+  {% endif %}
+
+  {% if OPENGRAPH_ENABLED %}
+    {% include "base/_resourcebase_opengraph.html" %}
+  {% endif %}
+
+  {% if preview == 'geoext' %}
+    {% include "layers/layer_geoext_map.html" %}
+  {% elif preview == 'OL3' %}
+    {% include "layers/layer_ol3_map.html" %}
+  {% else %}
+    {% include "layers/layer_leaflet_map.html" %}
+  {% endif %}
+
+{% endblock %}
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Set Preview</h4>
+    </div>
+    
+    <div class="modal-body">
+        <div class="row">    
+            <div id="embedded_map" class="mrg-btm">
+                <div id="preview_map"></div>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-sm-3">
+                <i class="fa fa-photo fa-3x"></i>
+                <h4>{% trans "Thumbnail" %}</h4>
+                <a class="btn btn-primary btn-block btn-xs" href="#" id="set_thumbnail">{% trans "Set" %}</a>
+            </div>
+        </div>        
+    </div>
+    
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    </div>
+
+{% block extra_script %}
+
+    {% if GEOGIG_ENABLED and resource.link_set.geogig %}
+        {% with "_geogig_scripts.html" as geogig_scripts_template %}
+            {% include  geogig_scripts_template %}
+        {% endwith %}
+    {% endif %}
+
+    {% if request.user.is_authenticated %}
+        {% user_rating_js request.user resource "layer" %}
+    {% else %}
+      {% overall_rating resource 'layer' as the_layer_rating %}
+    {% endif %}
+    {% include 'rating.html' %}
+    {% include 'request_download.html' %}
+    <script type="text/javascript">
+       $("#comment_submit_btn").click(function(event) {
+            $.ajax({
+              type: "POST",
+              url: $("#form_post_comment").attr('action'),
+              data: $("#form_post_comment").serialize(),
+              success: function() {
+                $('#form_post_comment_div').modal('hide');
+                $('#comments_section').load(window.location.pathname + ' #comments_section',
+                        function(){$(this).children().unwrap()})
+              }
+            });
+            return false;
+          });
+
+    {% if resource.get_legend.link_type == 'json' %}
+    $.getJSON('{{resource.get_legend_url}}', function (data) {
+        var legend = data.layers[0].legend;
+        var items = [];
+        $.each(legend, function (key, dvalue) {
+            items.push('<li><img src="data:image/png;base64,' + dvalue.imageData + '">'+dvalue.label+'</li>');
+        });
+
+        $('<ul/>', {
+            'class': 'arcgis-legend',
+            html: items.join('')
+
+        }).appendTo('#legend_placeholder');
+
+    });
+    {% endif %}
+        </script>
+    <script type="text/javascript">
+      $('#set_thumbnail').click(function(){
+        createMapThumbnail();
+        $('#edit-layer').modal('toggle');
+      });
+    </script>
+    {% if GEONODE_SECURITY_ENABLED %}
+    {% include "_permissions_form_js.html" %}
+    {% endif %}
+{% endblock extra_script %}

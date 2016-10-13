@@ -26,6 +26,10 @@
         border-color: red;
         border-style: double;
     }
+    iframe{
+        width: 100%;
+        height: 100%;
+    }
 </style>
 
 <br />
@@ -101,7 +105,13 @@
                             <div>
                                 <span><label for="{{ layer_form.thumbnail_url|id }}">{{ layer_form.thumbnail_url.label }}</label></span>
                                 <img src="{{ layer_form.thumbnail_url.value }}" />
-                                <div><a href="metadata_thumbnail">set preview</a></div>
+                                <a class="btn btn-primary btn-xs btn-block" data-toggle="modal" href="metadata_thumbnail" data-target="#set_preview">Set preview</a>
+                                <div class="modal fade" id="set_preview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-lg-3">
