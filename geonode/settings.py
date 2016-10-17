@@ -974,3 +974,7 @@ if 'geonode.geoserver' in INSTALLED_APPS:
     baselayers = MAP_BASELAYERS
     MAP_BASELAYERS = [LOCAL_GEOSERVER]
     MAP_BASELAYERS.extend(baselayers)
+
+# Keywords thesauri
+# e.g. THESAURI = [{'name':'inspire_themes', 'required':True}, {'name':'inspire_concepts'}]
+THESAURI = []
