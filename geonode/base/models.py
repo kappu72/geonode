@@ -404,6 +404,8 @@ class ResourceBase(PolymorphicModel, PermissionLevelMixin, ItemBase):
                                         'it is first produced')
     keywords_help_text = _('commonly used word(s) or formalised word(s) or phrase(s) used to describe the subject '
                            '(space or comma-separated')
+    tkeywords_help_text = _('formalised word(s) or phrase(s) from a fixed thesaurus used to describe the subject '
+                           '(space or comma-separated')
     regions_help_text = _('keyword identifies a location')
     restriction_code_type_help_text = _('limitation(s) placed upon the access or use of the data.')
     constraints_other_help_text = _('other restrictions and legal prerequisites for accessing and using the resource or'
@@ -434,6 +436,7 @@ class ResourceBase(PolymorphicModel, PermissionLevelMixin, ItemBase):
 
     keywords = TaggableManager(_('keywords'), through=TaggedContentItem, blank=True, help_text=keywords_help_text,
                                manager=_HierarchicalTagManager)
+    tkeywords = models.ManyToManyField(ThesaurusKeyword, help_text=tkeywords_help_text)
     regions = models.ManyToManyField(Region, verbose_name=_('keywords region'), blank=True,
                                      help_text=regions_help_text)
 
