@@ -152,7 +152,12 @@ class ThesaurusKeywordResource(TypeFilteredResource):
     def build_filters(self, filters={}):
         """adds filtering by current language"""
 
+        id = filters.pop('id', None)
+
         orm_filters = super(ThesaurusKeywordResource, self).build_filters(filters)
+
+        if id is not None:
+            orm_filters['keyword__id'] = id
 
         orm_filters['lang'] = filters['lang'] if 'lang' in filters else get_language()
 
@@ -176,11 +181,12 @@ class ThesaurusKeywordResource(TypeFilteredResource):
         return bundle.obj.keyword.thesaurus.identifier
 
     class Meta:
-        queryset = ThesaurusKeywordLabel.objects.all().order_by('label')
+        queryset = ThesaurusKeywordLabel.objects.all().order_by('label').select_related('keyword').select_related('keyword__thesaurus')
 
         resource_name = 'thesaurus/keywords'
         allowed_methods = ['get']
         filtering = {
+            'id' : ALL,
             'label': ALL,
             'lang': ALL,
             'thesaurus': ALL,
