@@ -19,6 +19,9 @@
 #########################################################################
 
 import autocomplete_light
+from fields import MultiThesauriField
+from widgets import MultiThesauriWidget
+
 from autocomplete_light.contrib.taggit_field import TaggitField, TaggitWidget
 
 from django import forms
@@ -31,33 +34,6 @@ from modeltranslation.forms import TranslationModelForm
 
 from geonode.base.models import TopicCategory, Region
 from geonode.people.models import Profile
-
-
-class CategoryChoiceField(forms.ModelChoiceField):
-    def label_from_instance(self, obj):
-        return '<span class="has-popover" data-container="body" data-toggle="popover" data-placement="top" ' \
-               'data-content="' + obj.description + '" trigger="hover">' \
-               '<div class="fa-stack fa-1g">' \
-               '<i class="fa fa-square-o fa-stack-2x"></i>' \
-               '<i class="fa '+obj.fa_class+' fa-stack-1x"></i></div>' \
-               '&nbsp;' + obj.gn_description + '</span>'
-
-
-class TreeWidget(forms.TextInput):
-        input_type = 'text'
-
-        def __init__(self, attrs=None):
-            super(TreeWidget, self).__init__(attrs)
-
-        def render(self, name, values, attrs=None):
-            if isinstance(values, basestring):
-                vals = values
-            else:
-                vals = ','.join([str(i.tag.name) for i in values])
-            output = ["""<input class='form-control' id='id_resource-keywords' name='resource-keywords'
-                 value='%s'><br/>""" % (vals)]
-            output.append('<div id="treeview" class=""></div>')
-            return mark_safe(u'\n'.join(output))
 
 
 class CategoryForm(forms.Form):
@@ -79,7 +55,20 @@ class CategoryForm(forms.Form):
         # Always return the full collection of cleaned data.
         return cleaned_data
 
-
+class TKeywordForm(forms.Form):
+    
+    tkeywords = MultiThesauriField(
+        label=_("Keywords from Thesauri"),
+        required=False,
+        help_text=_("A space or comma-separated list of keywords"),
+        widget=MultiThesauriWidget())
+    
+    def clean(self):
+        cleaned_data = self.data
+        ccf_data = cleaned_data.get("tkeywords")
+        
+        return cleaned_data
+    
 class ResourceBaseForm(TranslationModelForm):
     """Base form for metadata, should be inherited by childres classes of ResourceBase"""
 
