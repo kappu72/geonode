@@ -22,6 +22,7 @@ import datetime
 import math
 import os
 import logging
+import uuid
 import urllib
 import urllib2
 import cookielib
@@ -882,16 +883,22 @@ def do_login(sender, user, request, **kwargs):
     with GeoServer, and store it into the request.session
     """
     if user and user.is_authenticated():
-        Application = get_application_model()
-        app = Application.objects.get(name="GeoServer")
+        token = None
+        try:
+            Application = get_application_model()
+            app = Application.objects.get(name="GeoServer")
 
-        # Lets create a new one
-        token = generate_token()
+            # Lets create a new one
+            token = generate_token()
 
-        AccessToken.objects.get_or_create(user=user,
-                                          application=app,
-                                          expires=datetime.datetime.now() + datetime.timedelta(days=1),
-                                          token=token)
+            AccessToken.objects.get_or_create(user=user,
+                                              application=app,
+                                              expires=datetime.datetime.now() + datetime.timedelta(days=1),
+                                              token=token)
+        except:
+            u = uuid.uuid1()
+            token = u.hex
+
         # Do GeoServer Login
         url = "%s%s?access_token=%s" % (settings.OGC_SERVER['default']['PUBLIC_LOCATION'], 'ows?service=wms&version=1.3.0&request=GetCapabilities', token)
 
@@ -905,7 +912,8 @@ def do_login(sender, user, request, **kwargs):
                 if c.name == "JSESSIONID":
                     jsessionid = c.value
         except:
-            pass
+            u = uuid.uuid1()
+            jsessionid = u.hex
 
         request.session['access_token'] = token
         request.session['JSESSIONID'] = jsessionid
