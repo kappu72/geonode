@@ -62,11 +62,17 @@ class TreeWidget(forms.TextInput):
 
 class CategoryForm(forms.Form):
     # With the new layout the CategoryChoiceField is too big to be properly visualized... switched back to a select box   
-    category_choice_field = forms.ModelChoiceField(required=False,
+    category_choice_field = CategoryChoiceField(required=False,
                                                 label='*' + _('Category'),
                                                 empty_label=None,
                                                 queryset=TopicCategory.objects.filter(is_choice=True)
                                                 .extra(order_by=['description']))
+
+#    category_choice_field = forms.ModelChoiceField(required=False,
+#                                                label='*' + _('Category'),
+#                                                empty_label=None,
+#                                                queryset=TopicCategory.objects.filter(is_choice=True)
+#                                                .extra(order_by=['description']))
 
     def clean(self):
         cleaned_data = self.data
