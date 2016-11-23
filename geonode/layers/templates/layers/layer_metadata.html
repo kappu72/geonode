@@ -61,7 +61,9 @@
 
         {% if not layer.metadata_uploaded_preserve %}
         <div class="form-actions">
-          <input type="submit" class="btn btn-primary" value="{% trans "Update" %}"/>
+			  <input type="button" id="btn_back_up" class="btn btn-primary" value="{% trans "<< Back" %}"/>
+              <input type="submit" class="btn btn-primary" value="{% trans "Update" %}"/>
+              <input type="button" id="btn_next_up" class="btn btn-primary" value="{% trans "Next >>" %}"/>
         </div>
         {% endif %}
 
@@ -87,7 +89,9 @@
 
             {% if not layer.metadata_uploaded_preserve %}
             <div class="form-actions">
+			  <input type="button" id="btn_back_dwn" class="btn btn-primary" value="{% trans "<< Back" %}"/>
               <input type="submit" class="btn btn-primary" value="{% trans "Update" %}"/>
+              <input type="button" id="btn_next_dwn" class="btn btn-primary" value="{% trans "Next >>" %}"/>
             </div>
             {% endif %}
           </div>
