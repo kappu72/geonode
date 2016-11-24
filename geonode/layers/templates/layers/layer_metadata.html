@@ -101,5 +101,10 @@
 </div>
 {% endblock %}
 {% block extra_script %}
- {% include 'metadata_form_js.html' %} 
+ {% include 'metadata_form_js.html' %}
+
+{% if GEONODE_SECURITY_ENABLED %}
+ {% include "_permissions_form_js.html" %}
+{% endif %}
+
 {% endblock %}
