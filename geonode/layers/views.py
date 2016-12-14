@@ -375,6 +375,48 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html'):
     poc = layer.poc
     metadata_author = layer.metadata_author
 
+    # assert False, str(layer_bbox)
+    config = layer.attribute_config()
+
+    # Add required parameters for GXP lazy-loading
+    layer_bbox = layer.bbox
+    bbox = [float(coord) for coord in list(layer_bbox[0:4])]
+    config["srs"] = getattr(settings, 'DEFAULT_MAP_CRS', 'EPSG:900913')
+    config["bbox"] = bbox if config["srs"] != 'EPSG:900913' \
+        else llbbox_to_mercator([float(coord) for coord in bbox])
+    config["title"] = layer.title
+    config["queryable"] = True
+
+    if layer.storeType == "remoteStore":
+        service = layer.service
+        source_params = {
+            "ptype": service.ptype,
+            "remote": True,
+            "url": service.base_url,
+            "name": service.name}
+        maplayer = GXPLayer(
+            name=layer.typename,
+            ows_url=layer.ows_url,
+            layer_params=json.dumps(config),
+            source_params=json.dumps(source_params))
+    else:
+        maplayer = GXPLayer(
+            name=layer.typename,
+            ows_url=layer.ows_url,
+            layer_params=json.dumps(config))
+
+    # Update count for popularity ranking,
+    # but do not includes admins or resource owners
+    if request.user != layer.owner and not request.user.is_superuser:
+        Layer.objects.filter(
+            id=layer.id).update(popular_count=F('popular_count') + 1)
+
+    # center/zoom don't matter; the viewer will center on the layer bounds
+    map_obj = GXPMap(projection=getattr(settings, 'DEFAULT_MAP_CRS', 'EPSG:900913'))
+
+    NON_WMS_BASE_LAYERS = [
+        la for la in default_map_config(request)[1] if la.ows_url is None]
+        
     if request.method == "POST":
         if layer.metadata_uploaded_preserve:  # layer metadata cannot be edited
             out = {
@@ -500,13 +542,26 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html'):
         author_form = ProfileForm(prefix="author")
         author_form.hidden = False
 
+    if 'access_token' in request.session:
+        access_token = request.session['access_token']
+    else:
+        u = uuid.uuid1()
+        access_token = u.hex
+
+    viewer = json.dumps(
+        map_obj.viewer_json(request.user, access_token, * (NON_WMS_BASE_LAYERS + [maplayer])))
+
     return render_to_response(template, RequestContext(request, {
+        "resource": layer,
         "layer": layer,
         "layer_form": layer_form,
         "poc_form": poc_form,
         "author_form": author_form,
         "attribute_form": attribute_form,
         "category_form": category_form,
+        "viewer": viewer,
+        "preview":  getattr(settings, 'LAYER_PREVIEW_LIBRARY', 'leaflet'),
+        "crs":  getattr(settings, 'DEFAULT_MAP_CRS', 'EPSG:900913')
     }))
 
 

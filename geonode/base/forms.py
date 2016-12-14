@@ -35,12 +35,11 @@ from geonode.people.models import Profile
 
 class CategoryChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
-        return '<span class="has-popover" data-container="body" data-toggle="popover" data-placement="top" ' \
+        return '<i class="fa '+obj.fa_class+' fa-4x unchecked"></i>' \
+               '<i class="fa '+obj.fa_class+' fa-4x checked"></i>' \
+               '<span class="has-popover" data-container="body" data-toggle="popover" data-placement="top" ' \
                'data-content="' + obj.description + '" trigger="hover">' \
-               '<div class="fa-stack fa-1g">' \
-               '<i class="fa fa-square-o fa-stack-2x"></i>' \
-               '<i class="fa '+obj.fa_class+' fa-stack-1x"></i></div>' \
-               '&nbsp;' + obj.gn_description + '</span>'
+               '<h4>' + obj.gn_description + '</h4></span>'
 
 
 class TreeWidget(forms.TextInput):

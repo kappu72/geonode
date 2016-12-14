@@ -15,6 +15,7 @@ var createMapThumbnail = function(obj_id) {
     });
 
     var url = window.location.pathname.replace('/view', '');
+        url = url.replace('/metadata', '');
 
     if (typeof obj_id != 'undefined' && url.indexOf('new')){
         url = url.replace('new', obj_id);
