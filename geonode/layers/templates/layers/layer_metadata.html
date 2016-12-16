@@ -115,4 +115,23 @@
       });
     </script>
 
+    <!-- script type="text/javascript">
+        $(document).ready(function() {
+            $('#id_resource-regions').multiselect({
+                enableClickableOptGroups: true,
+                enableCollapsibleOptGroups: true,
+                enableFiltering: true,
+                includeSelectAllOption: true
+            });
+        });
+    </script -->
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#id_resource-regions').treeMultiselect({
+                startCollapsed: true
+            });
+        });
+    </script>
+
 {% endblock %}
