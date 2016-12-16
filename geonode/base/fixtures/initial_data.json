@@ -491,7 +491,7 @@
       "rght": 433,
       "code": "EUR",
       "name": "Europe",
-      "parent": 1,
+      "parent": null,
       "level": 1,
       "lft": 318,
       "tree_id": 90
@@ -504,7 +504,7 @@
       "rght": 317,
       "code": "ASI",
       "name": "Asia",
-      "parent": 1,
+      "parent": null,
       "level": 1,
       "lft": 246,
       "tree_id": 90
@@ -556,7 +556,7 @@
       "rght": 127,
       "code": "AFR",
       "name": "Africa",
-      "parent": 1,
+      "parent": null,
       "level": 1,
       "lft": 2,
       "tree_id": 90
@@ -621,7 +621,7 @@
       "rght": 463,
       "code": "MES",
       "name": "Middle East",
-      "parent": 1,
+      "parent": null,
       "level": 1,
       "lft": 434,
       "tree_id": 90
@@ -634,7 +634,7 @@
       "rght": 245,
       "code": "ANT",
       "name": "Antarctica",
-      "parent": 1,
+      "parent": null,
       "level": 1,
       "lft": 244,
       "tree_id": 90
@@ -3728,7 +3728,7 @@
       "rght": 243,
       "code": "AME",
       "name": "Americas",
-      "parent": 1,
+      "parent": null,
       "level": 1,
       "lft": 128,
       "tree_id": 90
@@ -3754,7 +3754,7 @@
       "rght": 515,
       "code": "PAC",
       "name": "Pacific",
-      "parent": 1,
+      "parent": null,
       "level": 1,
       "lft": 464,
       "tree_id": 90

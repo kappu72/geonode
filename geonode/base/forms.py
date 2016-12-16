@@ -18,12 +18,21 @@
 #
 #########################################################################
 
+import copy
+import datetime
+import re
 import autocomplete_light
 from autocomplete_light.contrib.taggit_field import TaggitField, TaggitWidget
 
 from django import forms
+from django.forms.utils import flatatt, to_current_timezone
+from django.utils.html import conditional_escape, format_html, html_safe
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
+
+from django.utils.encoding import (
+    force_str, force_text, python_2_unicode_compatible,
+)
 
 from mptt.forms import TreeNodeMultipleChoiceField
 from bootstrap3_datetime.widgets import DateTimePicker
@@ -31,6 +40,38 @@ from modeltranslation.forms import TranslationModelForm
 
 from geonode.base.models import TopicCategory, Region
 from geonode.people.models import Profile
+
+
+def get_tree_data():
+    def rectree(parent, path):
+        children_list_of_tuples = list()
+        c = Region.objects.filter(parent=parent)
+        for child in c:
+            childrens = rectree(child, parent.name + '/')
+            if childrens:
+                children_list_of_tuples.append(
+                    tuple((child.name, tuple(childrens)))
+                )
+            else:
+                children_list_of_tuples.append(
+                    tuple((path + parent.name, tuple((child.id, child.name))))
+                )
+
+        return children_list_of_tuples
+
+    data = list()
+    t = Region.objects.filter(level=0)
+    for toplevel in t:
+        childrens = rectree(toplevel, '')
+        if childrens:
+            data.append(
+                tuple((toplevel.name, childrens))
+            )
+        else:
+            data.append(
+                tuple((toplevel.id, toplevel.name))
+            )
+    return tuple(data)
 
 
 class CategoryChoiceField(forms.ModelChoiceField):
@@ -59,6 +100,73 @@ class TreeWidget(forms.TextInput):
             return mark_safe(u'\n'.join(output))
 
 
+class RegionsMultipleChoiceField(forms.MultipleChoiceField):
+    def validate(self, value):
+        """
+        Validates that the input is a list or tuple.
+        """
+        if self.required and not value:
+            raise ValidationError(self.error_messages['required'], code='required')
+
+
+class RegionsSelect(forms.Select):
+    allow_multiple_selected = True
+
+    def render(self, name, value, attrs=None):
+        if value is None:
+            value = []
+        final_attrs = self.build_attrs(attrs, name=name)
+        output = [format_html('<select multiple="multiple"{}>', flatatt(final_attrs))]
+        options = self.render_options(value)
+        if options:
+            output.append(options)
+        output.append('</select>')
+        return mark_safe('\n'.join(output))
+
+    def value_from_datadict(self, data, files, name):
+        try:
+            getter = data.getlist
+        except AttributeError:
+            getter = data.get
+        return getter(name)
+
+    def render_option(self, selected_choices, option_value, option_label, data_section=None):
+        if option_value is None:
+            option_value = ''
+        option_value = force_text(option_value)
+        if option_value in selected_choices:
+            selected_html = mark_safe(' selected')
+            if not self.allow_multiple_selected:
+                # Only allow for a single selection.
+                selected_choices.remove(option_value)
+        else:
+            selected_html = ''
+        if data_section is None:
+            data_section = ''
+        data_section = force_text(data_section)
+        return format_html('<option data-section="{}" value="{}"{}>{}</option>', data_section, option_value, selected_html, force_text(option_label))
+
+    def render_options(self, selected_choices):
+        # Normalize to strings.
+        selected_choices = set(force_text(v) for v in selected_choices)
+        output = []
+        for option_value, option_label in self.choices:
+            if isinstance(option_label, (list, tuple)):
+                # output.append(format_html('<optgroup label="{}">', force_text(option_value)))
+                for option in option_label:
+                    if isinstance(option, (list, tuple)):
+                        if isinstance(option[1][0], (list, tuple)):
+                            output.append(self.render_option(selected_choices, option[1][0][1][0], option[1][0][1][1], data_section=force_text(option[1][0][0])))
+                        else:
+                            output.append(self.render_option(selected_choices, option[1][0], option[1][1], data_section=force_text(option[0])))
+                    else:
+                        output.append(self.render_option(selected_choices, *option, data_section=force_text(option_value)))
+                # output.append('</optgroup>')
+            else:
+                output.append(self.render_option(selected_choices, option_value, option_label))
+        return '\n'.join(output)
+
+
 class CategoryForm(forms.Form):
     # With the new layout the CategoryChoiceField is too big to be properly visualized... switched back to a select box   
     category_choice_field = CategoryChoiceField(required=False,
@@ -83,6 +191,7 @@ class CategoryForm(forms.Form):
 
         # Always return the full collection of cleaned data.
         return cleaned_data
+
 
 
 class ResourceBaseForm(TranslationModelForm):
@@ -150,11 +259,18 @@ class ResourceBaseForm(TranslationModelForm):
         help_text=_("A space or comma-separated list of keywords"),
         widget=TaggitWidget('HierarchicalKeywordAutocomplete'))
 
+    """
     regions = TreeNodeMultipleChoiceField(
         label=_("Regions"),
         required=False,
         queryset=Region.objects.all(),
         level_indicator=u'___')
+    """
+    regions = RegionsMultipleChoiceField(
+        label=_("Regions"),
+        required=False,
+        choices=get_tree_data(),
+        widget=RegionsSelect)
     regions.widget.attrs = {"size": 20}
 
     def __init__(self, *args, **kwargs):
@@ -197,3 +313,4 @@ class ResourceBaseForm(TranslationModelForm):
             'rating',
             'detail_url'
             )
+
