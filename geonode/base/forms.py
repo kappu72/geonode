@@ -50,10 +50,6 @@ def get_tree_data():
             childrens = rectree(child, parent.name + '/')
             if childrens:
                 children_list_of_tuples.extend(childrens)
-                #children_list_of_tuples.append(
-                #    # tuple((child.name, tuple(childrens)))
-                #    tuple((child.name, childrens))
-                #)
             else:
                 children_list_of_tuples.append(
                     tuple((path + parent.name, tuple((child.id, child.name))))
@@ -148,37 +144,31 @@ class RegionsSelect(forms.Select):
         data_section = force_text(data_section)
         return format_html('<option data-section="{}" value="{}"{}>{}</option>', data_section, option_value, selected_html, force_text(option_label))
 
-    def render_option(self, selected_choices, option, option_value, data_section=None):
-        if isinstance(option, list):
-            for child_option in option:
-                self.render_option(selected_choices, child_option, option_value)
-        # elif isinstance(option, tuple):
-        #     if isinstance(option[1], tuple):
-        #         self.render_option(selected_choices, option[1], option_value, data_section=force_text(option[0]))
-        #     else:
-        #         self.render_option_value(selected_choices, option[0], option[1], data_section=data_section)
-
-        return self.render_option_value(selected_choices, option_value, option)
-
     def render_options(self, selected_choices):
         # Normalize to strings.
         selected_choices = set(force_text(v) for v in selected_choices)
         output = []
         for option_value, option_label in self.choices:
-            output.append(self.render_option(selected_choices, option_label, option_value))
-            # if isinstance(option_label, (list, tuple)):
+            if isinstance(option_label, (list, tuple)) and not isinstance(option_label, basestring):
                 # output.append(format_html('<optgroup label="{}">', force_text(option_value)))
-                # for option in option_label:
-                    # if isinstance(option, (list, tuple)):
-                    #     if isinstance(option[1][0], (list, tuple)):
-                    #         output.append(self.render_option_value(selected_choices, option[1][0][1][0], option[1][0][1][1], data_section=force_text(option[1][0][0])))
-                    #     else:
-                    #         output.append(self.render_option_value(selected_choices, option[1][0], option[1][1], data_section=force_text(option[0])))
-                    # else:
-                    #     output.append(self.render_option_value(selected_choices, *option, data_section=force_text(option_value)))
+                for option in option_label:
+                    if isinstance(option, (list, tuple)) and not isinstance(option, basestring):
+                        if isinstance(option[1][0], (list, tuple)) and not isinstance(option[1][0], basestring):
+                            for option_child in option[1][0]:
+                                try:
+                                    output.append(self.render_option_value(selected_choices, *option_child, data_section=force_text(option[1][0][0])))
+                                except:
+                                    pass
+                            # output.append(self.render_option_value(selected_choices, option[1][0][1][0], option[1][0][1][1], data_section=force_text(option[1][0][0])))
+                        else:
+                            output.append(self.render_option_value(selected_choices, *option[1], data_section=force_text(option[0])))
+                            # output.append(self.render_option_value(selected_choices, option[1][0], option[1][1], data_section=force_text(option[0])))
+                    else:
+                        output.append(self.render_option_value(selected_choices, *option, data_section=force_text(option_value)))
                 # output.append('</optgroup>')
-            # else:
-            #   output.append(self.render_option_value(selected_choices, option_value, option_label))
+            else:
+                output.append(self.render_option_value(selected_choices, option_value, option_label))
+
         return '\n'.join(output)
 
 
