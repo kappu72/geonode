@@ -37,8 +37,6 @@ import dj_database_url
 # GeoNode Version
 VERSION = get_version()
 
-CORS_ORIGIN_ALLOW_ALL = True
-
 # Defines the directory that contains the settings file as the PROJECT_ROOT
 # It is used for relative settings elsewhere.
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -339,7 +337,6 @@ INSTALLED_APPS = (
     'polymorphic',
     'guardian',
     'oauth2_provider',
-    'corsheaders',
 
 ) + GEONODE_APPS
 
@@ -443,7 +440,6 @@ MIDDLEWARE_CLASSES = (
     # SessionAuthenticationMiddleware is NOT required for using django-oauth-toolkit.
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'oauth2_provider.middleware.OAuth2TokenMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 )
 
 
