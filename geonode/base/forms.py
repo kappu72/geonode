@@ -47,27 +47,25 @@ def get_tree_data():
         children_list_of_tuples = list()
         c = Region.objects.filter(parent=parent)
         for child in c:
+            children_list_of_tuples.append(
+                tuple((path + parent.name, tuple((child.id, child.name))))
+            )
             childrens = rectree(child, parent.name + '/')
             if childrens:
                 children_list_of_tuples.extend(childrens)
-            else:
-                children_list_of_tuples.append(
-                    tuple((path + parent.name, tuple((child.id, child.name))))
-                )
 
         return children_list_of_tuples
 
     data = list()
     t = Region.objects.filter(level=0)
     for toplevel in t:
+        data.append(
+            tuple((toplevel.id, toplevel.name))
+        )
         childrens = rectree(toplevel, '')
         if childrens:
             data.append(
                 tuple((toplevel.name, childrens))
-            )
-        else:
-            data.append(
-                tuple((toplevel.id, toplevel.name))
             )
     return tuple(data)
 
@@ -139,35 +137,42 @@ class RegionsSelect(forms.Select):
                 selected_choices.remove(option_value)
         else:
             selected_html = ''
+
+        label = force_text(option_label)
+
         if data_section is None:
             data_section = ''
-        data_section = force_text(data_section)
-        return format_html('<option data-section="{}" value="{}"{}>{}</option>', data_section, option_value, selected_html, force_text(option_label))
+        else:
+            data_section = force_text(data_section)
+            if '/' in data_section:
+                label = format_html('{} [{}]', label, data_section.rsplit('/', 1)[1])
+
+        return format_html('<option data-section="{}" value="{}"{}>{}</option>', data_section, option_value, selected_html, label)
 
     def render_options(self, selected_choices):
         # Normalize to strings.
         selected_choices = set(force_text(v) for v in selected_choices)
         output = []
+        
+        output.append(format_html('<optgroup label="{}">', 'Global'))
+        for option_value, option_label in self.choices:
+            if not isinstance(option_label, (list, tuple)) and isinstance(option_label, basestring):
+                output.append(self.render_option_value(selected_choices, option_value, option_label))
+        output.append('</optgroup>')
+        
         for option_value, option_label in self.choices:
             if isinstance(option_label, (list, tuple)) and not isinstance(option_label, basestring):
-                # output.append(format_html('<optgroup label="{}">', force_text(option_value)))
+                output.append(format_html('<optgroup label="{}">', force_text(option_value)))
                 for option in option_label:
                     if isinstance(option, (list, tuple)) and not isinstance(option, basestring):
                         if isinstance(option[1][0], (list, tuple)) and not isinstance(option[1][0], basestring):
                             for option_child in option[1][0]:
-                                try:
-                                    output.append(self.render_option_value(selected_choices, *option_child, data_section=force_text(option[1][0][0])))
-                                except:
-                                    pass
-                            # output.append(self.render_option_value(selected_choices, option[1][0][1][0], option[1][0][1][1], data_section=force_text(option[1][0][0])))
+                                output.append(self.render_option_value(selected_choices, *option_child, data_section=force_text(option[1][0][0])))
                         else:
                             output.append(self.render_option_value(selected_choices, *option[1], data_section=force_text(option[0])))
-                            # output.append(self.render_option_value(selected_choices, option[1][0], option[1][1], data_section=force_text(option[0])))
                     else:
                         output.append(self.render_option_value(selected_choices, *option, data_section=force_text(option_value)))
-                # output.append('</optgroup>')
-            else:
-                output.append(self.render_option_value(selected_choices, option_value, option_label))
+                output.append('</optgroup>')
 
         return '\n'.join(output)
 

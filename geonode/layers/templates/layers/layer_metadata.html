@@ -115,7 +115,7 @@
       });
     </script>
 
-    <!-- script type="text/javascript">
+    <!-- <script type="text/javascript">
         $(document).ready(function() {
             $('#id_resource-regions').multiselect({
                 enableClickableOptGroups: true,
@@ -124,12 +124,20 @@
                 includeSelectAllOption: true
             });
         });
-    </script -->
+    </script> -->
     
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
         $(document).ready(function() {
             $('#id_resource-regions').treeMultiselect({
                 startCollapsed: true
+            });
+        });
+    </script> -->
+    
+    <!-- Doc & Examples: http://dbrekalo.github.io/fastselect/ -->
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#id_resource-regions').fastselect({
             });
         });
     </script>
