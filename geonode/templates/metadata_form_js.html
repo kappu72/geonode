@@ -87,26 +87,102 @@
     });
     
     $(document).ready(function() {
+        var prevNum = 0, totalNum = 0;
+        var empty = 0;
+
+        $('#mandatory').find(":input").each(function(){
+            if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button') {
+                prevNum++;
+            }
+            
+            $(this).change(function(e){
+                if(e.target.value.trim() === ''){
+                    if(!$(e.target).hasClass("input-empty")){
+                        $(e.target).addClass("input-empty");
+                        if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button') {
+                            empty++;
+                        }
+                    }
+                }
+                else{
+                    if($(e.target).hasClass("input-empty")){
+                        if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button') {
+                            empty--;
+                        }
+                    }
+                    $(e.target).removeClass("input-empty");
+                    $(e.target).parent().find(".mandatory-warning").remove();
+                }
+                if(totalNum == prevNum && this.type !== 'radio'  && this.type !== 'button') {
+                    $('#liquidPieChart').waterbubble({
+                        radius: 30,
+                        txt: parseFloat(((totalNum-empty)/totalNum)*100).toFixed(2) + '%',
+                        data: ((totalNum-empty)/totalNum)
+                    });
+                }
+
+            }).change();
+
+            if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button'){
+                totalNum++;
+            }
+        });
+
         $('#mdinfo').find(":input").each(function(){
+            if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button') {
+                prevNum++;
+            }
+            
             $(this).change(function(e){
                 if(e.target.value.trim() === ''){
                     if(!$(e.target).hasClass("input-empty")){
                         $(e.target).addClass("input-empty");
                         $(e.target).parent().append("<p class='xxs-font-size mandatory-warning'>&nbsp;&nbsp;&nbsp;<strong>* ISO mandatory field</strong></p>");
+                        if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button') {
+                            empty++;
+                        }
                     }
                 }
                 else{
+                    if($(e.target).hasClass("input-empty")){
+                        if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button') {
+                            empty--;
+                        }
+                    }
                     $(e.target).removeClass("input-empty");
                     $(e.target).parent().find(".mandatory-warning").remove();
-                }    
-            }).change();
-        });
+                }
 
+                console.log(prevNum + ":" + totalNum + " / " + empty);
+                
+                if(totalNum == prevNum) {
+                    $('#liquidPieChart').waterbubble({
+                        radius: 30,
+                        txt: parseFloat(((totalNum-empty)/totalNum)*100).toFixed(2) + '%',
+                        data: ((totalNum-empty)/totalNum)
+                    });
+                }
+
+            }).change();
+
+            if(this.id.indexOf("autocomplete") < 0){
+                totalNum++;
+            }
+        });
+        
         $('#btn_back_up').click(function(){getPrevTab()});
         $('#btn_back_dwn').click(function(){getPrevTab()});
 
         $('#btn_next_up').click(function(){getNextTab()});
         $('#btn_next_dwn').click(function(){getNextTab()});
+        
+        if(totalNum == prevNum) {
+            $('#liquidPieChart').waterbubble({
+                radius: 30,
+                txt: parseFloat(((totalNum-empty)/totalNum)*100).toFixed(2) + '%',
+                data: ((totalNum-empty)/totalNum)
+            });
+        }
     });
 
     $('#id_resource-metadata_author').change(function(){
