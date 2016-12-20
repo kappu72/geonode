@@ -257,26 +257,28 @@
                                     {{ layer_form.supplemental_information }}
                                 </div>
                             </div>
-                            <div class="col-xs-6 col-lg-4">
-                                <div>
-                                    <span><label for="{{ layer_form.temporal_extent_start|id }}">{{ layer_form.temporal_extent_start.label }}</label></span>
-                                    <!--<p class="xxs-font-size">(When a given event occurred on the resource)</p>-->
-                                    {{ layer_form.temporal_extent_start }}
+                            <div class="col-xs-6 col-lg-6">
+                                <div class="row">
+                                    <div class="col-xs-6 col-lg-6">
+                                        <span><label for="{{ layer_form.temporal_extent_start|id }}">{{ layer_form.temporal_extent_start.label }}</label></span>
+                                        <!--<p class="xxs-font-size">(When a given event occurred on the resource)</p>-->
+                                        {{ layer_form.temporal_extent_start }}
+                                        <span><label for="{{ layer_form.temporal_extent_end|id }}">{{ layer_form.temporal_extent_end.label }}</label></span>
+                                        <!--<p class="xxs-font-size">(Identification of when a given event occurred)</p>-->
+                                        {{ layer_form.temporal_extent_end }}
+                                    </div>
                                 </div>
-                                <div>
-                                    <span><label for="{{ layer_form.temporal_extent_end|id }}">{{ layer_form.temporal_extent_end.label }}</label></span>
-                                    <!--<p class="xxs-font-size">(Identification of when a given event occurred)</p>-->
-                                    {{ layer_form.temporal_extent_end }}
-                                </div>
-                                <div>
-                                    <span><label for="{{ layer_form.maintenance_frequency|id }}">{{ layer_form.maintenance_frequency.label }}</label></span>
-                                    <!--<p class="xxs-font-size">(Identification of when a given event occurred)</p>-->
-                                    {{ layer_form.maintenance_frequency }}
-                                </div>
-                                <div>
-                                    <span><label for="{{ layer_form.spatial_representation_type|id }}">{{ layer_form.spatial_representation_type.label }}</label></span>
-                                    <!--<p class="xxs-font-size">(Method used to represent geographic information in the dataset)</p>-->
-                                    {{ layer_form.spatial_representation_type }}
+                                <div class="row">
+                                    <div>
+                                        <span><label for="{{ layer_form.maintenance_frequency|id }}">{{ layer_form.maintenance_frequency.label }}</label></span>
+                                        <!--<p class="xxs-font-size">(Identification of when a given event occurred)</p>-->
+                                        {{ layer_form.maintenance_frequency }}
+                                    </div>
+                                    <div>
+                                        <span><label for="{{ layer_form.spatial_representation_type|id }}">{{ layer_form.spatial_representation_type.label }}</label></span>
+                                        <!--<p class="xxs-font-size">(Method used to represent geographic information in the dataset)</p>-->
+                                        {{ layer_form.spatial_representation_type }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
