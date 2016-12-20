@@ -60,6 +60,9 @@ class LayerForm(ResourceBaseForm):
             'styles',
             'upload_session',
             'service',)
+        # widgets = {
+        #     'title': forms.TextInput({'placeholder': title_help_text})
+        # }
 
     def __init__(self, *args, **kwargs):
         super(ResourceBaseForm, self).__init__(*args, **kwargs)
@@ -71,6 +74,7 @@ class LayerForm(ResourceBaseForm):
                     {
                         'class': 'has-external-popover',
                         'data-content': help_text,
+                        'placeholder': help_text,
                         'data-placement': 'right',
                         'data-container': 'body',
                         'data-html': 'true'
