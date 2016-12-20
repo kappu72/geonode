@@ -23,9 +23,13 @@
 {% block body_class %}data{% endblock %}
 
 {% block body_outer %}
-<div class="container-fluid page-header">
+<div class="container-fluid page-header" style="position: relative;">
   <!--<a href="{% url "layer_browse" %}" class="btn btn-primary pull-right">{% trans "Explore Layers" %}</a>-->
   <h2 class="page-title">{% trans "Edit Metadata" %}&nbsp;{% blocktrans with layer.typename as layer_title %}for {{ layer_title }}{% endblocktrans %}</h2>
+      <div id="profileCompleteness" style="position: absolute; right: 0%; top: 0%">
+        <canvas id="liquidPieChart"></canvas>
+      </div>
+  </h2>
 </div>
 
 <!--<div class="row">-->

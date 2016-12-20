@@ -104,7 +104,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col">
-                            <div class="container-fluid">
+                            <div id="basicInfo" class="container-fluid">
                                 <div class="col-lg-8">
                                     <span><label for="{{ layer_form.title|id }}">{{ layer_form.title.label }}</label></span>
                                     <!--<p class="xxs-font-size">(Name by which the cited resource is known)</p>-->
@@ -126,7 +126,7 @@
                     <hr/>
                     <div class="row">
                         <div class="col" style="font-size:10px">
-                            <div class="container-fluid">
+                            <div id="basicDescriptiveInfo" class="container-fluid">
                                 <div class="col-lg-3">
                                     <div id="embedded_map" class="mrg-btm">
                                       <div id="preview_map" style="height:250px;"></div>
@@ -148,7 +148,7 @@
                     <hr/>
                     <div class="row">
                         <div class="col" style="font-size:10px">
-                            <div class="container-fluid text-center">
+                            <div id="basicCategoryInfo" class="container-fluid text-center">
                                 <!-- span><label class="control-label required-field">{% trans "Category" %}</label></span -->
 								<fieldset id="category_form">
 								  {% autoescape off %}
@@ -229,15 +229,15 @@
 		                            {{ layer_form.data_quality_statement }}
 		                        </div>
 		                    </div>
-		                </div>
-		                <div class="row">
-		                    <div class="col-lg-10">
-		                        <div>
-		                            <span><label for="{{ layer_form.regions|id }}">{{ layer_form.regions.label }}</label></span>
-		                            {{ layer_form.regions }}
-		                        </div>
+                            <div class="row">
+                                <div class="col-lg-10">
+                                    <div>
+                                        <span><label for="{{ layer_form.regions|id }}">{{ layer_form.regions.label }}</label></span>
+                                        {{ layer_form.regions }}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+		                </div>
                         <hr/>
                         <div class="row">
                             <div class="col-xs-6 col-lg-4">
