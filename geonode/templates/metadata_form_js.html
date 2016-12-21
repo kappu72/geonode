@@ -8,23 +8,6 @@
 <script src="{% static "lib/js/waterbubble.min.js" %}" type="text/javascript"></script>
 <script type="text/javascript">
 {% autoescape off %}
-    $(function() {
-      var pickerOptions = {
-          format: 'YYYY-MM-DD hh:mm A',
-          pickDate: true,
-          pickTime: true,
-          language: 'en',
-          icons: {
-              time: 'fa fa-clock-o',
-              date: 'fa fa-calendar',
-              up: 'fa fa-chevron-up',
-              down: 'fa fa-chevron-down'
-          }
-      };
-      $('#id_resource-date_picker').datetimepicker(pickerOptions);
-      $('#id_resource-temporal_extent_start_picker').datetimepicker(pickerOptions);
-      $('#id_resource-temporal_extent_end_picker').datetimepicker(pickerOptions);
-    });
 
     $('.modal-forms').css('max-height', '500px').css('overflow-y', 'scroll');    
     $('.modal-cloose-btn').css('margin','20px');
@@ -39,52 +22,67 @@
       }
     });
 
-		function getPrevTab(){
-            var activeTab = $("ul#md_tabs li.active");
-            if (activeTab && activeTab[0].id === 'second') {
-                var prevTab = $("ul#md_tabs li#first");
-                if (prevTab && prevTab.children()) {
-                	prevTab.children().trigger("click");
- 				}
+    function getPrevTab(){
+        var activeTab = $("ul#md_tabs li.active");
+        if (activeTab && activeTab[0].id === 'second') {
+            var prevTab = $("ul#md_tabs li#first");
+            if (prevTab && prevTab.children()) {
+                prevTab.children().trigger("click");
             }
+        }
+        if (activeTab && activeTab[0].id === 'last') {
+            var prevTab = $("ul#md_tabs li#second");
+            if (prevTab && prevTab.children()) {
+                prevTab.children().trigger("click");
+            }
+        }
+    };
 
-            if (activeTab && activeTab[0].id === 'last') {
-                var prevTab = $("ul#md_tabs li#second");
-                if (prevTab && prevTab.children()) {
-                	prevTab.children().trigger("click");
- 				}
+    function getNextTab(){
+        var activeTab = $("ul#md_tabs li.active");
+        if (activeTab && activeTab[0].id === 'first') {
+            var nextTab = $("ul#md_tabs li#second");
+            if (nextTab && nextTab.children()) {
+                nextTab.children().trigger("click");
             }
-		};
+        }
+        if (activeTab && activeTab[0].id === 'second') {
+            var nextTab = $("ul#md_tabs li#last");
+            if (nextTab && nextTab.children()) {
+                nextTab.children().trigger("click");
+            }
+        }
+    };
 
-		function getNextTab(){
-            var activeTab = $("ul#md_tabs li.active");
-            if (activeTab && activeTab[0].id === 'first') {
-                var nextTab = $("ul#md_tabs li#second");
-                if (nextTab && nextTab.children()) {
-                	nextTab.children().trigger("click");
- 				}
-            }
+    $(document).ready(
+        function() {
+          var pickerOptions = {
+              format: 'YYYY-MM-DD',
+              icons: {
+                  time: 'fa fa-clock-o',
+                  date: 'fa fa-calendar',
+                  up: 'fa fa-chevron-up',
+                  down: 'fa fa-chevron-down'
+              }
+          };
 
-            if (activeTab && activeTab[0].id === 'second') {
-                var nextTab = $("ul#md_tabs li#last");
-                if (nextTab && nextTab.children()) {
-                	nextTab.children().trigger("click");
- 				}
-            }
-		};
+          $('#id_resource-date_picker').datetimepicker(pickerOptions);
+          $('#id_resource-temporal_extent_start_picker').datetimepicker(pickerOptions);
+          $('#id_resource-temporal_extent_end_picker').datetimepicker(pickerOptions);          
+        });
 
     $(document).ready(function() {
-        $('.has-external-popover').each(function(){
-            var help_text = $(this).attr("data-content");
-            $(this)
-                .parent()
-                .children("span")
-                .append("<span class='external-popover' data-content='" + help_text + "'><strong><i class='fa fa fa-question-circle fa-1x'></i></strong></span>");
+            $('.has-external-popover').each(function(){
+                var help_text = $(this).attr("data-content");
+                $(this)
+                    .parent()
+                    .children("span")
+                    .append("<span class='external-popover' data-content='" + help_text + "'><strong><i class='fa fa fa-question-circle fa-1x'></i></strong></span>");
+                });
+            $('.external-popover').each(function(){
+                $(this).popover({'trigger':'hover'});
             });
-        $('.external-popover').each(function(){
-            $(this).popover({'trigger':'hover'});
         });
-    });
     
     $(document).ready(function() {
         var prevNum = 0, totalNum = 0;
@@ -152,8 +150,6 @@
                     $(e.target).removeClass("input-empty");
                     $(e.target).parent().find(".mandatory-warning").remove();
                 }
-
-                console.log(prevNum + ":" + totalNum + " / " + empty);
                 
                 if(totalNum == prevNum) {
                     $('#liquidPieChart').waterbubble({
