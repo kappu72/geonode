@@ -72,11 +72,11 @@ def get_tree_data():
 
 class CategoryChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
-        return '<i class="fa '+obj.fa_class+' fa-4x unchecked"></i>' \
-               '<i class="fa '+obj.fa_class+' fa-4x checked"></i>' \
+        return '<i class="fa '+obj.fa_class+' fa-2x unchecked"></i>' \
+               '<i class="fa '+obj.fa_class+' fa-2x checked"></i>' \
                '<span class="has-popover" data-container="body" data-toggle="popover" data-placement="top" ' \
                'data-content="' + obj.description + '" trigger="hover">' \
-               '<h4>' + obj.gn_description + '</h4></span>'
+               '<br/><strong>' + obj.gn_description + '</strong></span>'
 
 
 class TreeWidget(forms.TextInput):
