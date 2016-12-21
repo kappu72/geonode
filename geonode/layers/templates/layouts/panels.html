@@ -56,7 +56,7 @@
     
     .tokenfield,
     #id_resource-title {
-        width: 75% !important;
+        width: 95% !important;
     }
     
     .leaflet-container { /* all maps */
@@ -105,42 +105,15 @@
                     <div class="row">
                         <div class="col">
                             <div id="basicInfo" class="container-fluid">
-                                <div class="col-lg-8">
+                                <div class="col-lg-6">
                                     <span><label for="{{ layer_form.title|id }}">{{ layer_form.title.label }}</label></span>
                                     <!--<p class="xxs-font-size">(Name by which the cited resource is known)</p>-->
                                     {{ layer_form.title }}
                                 </div>
-                                <div class="col-lg-3">
-                                    <span><label for="{{ layer_form.date|id }}">{{ layer_form.date.label }}</label></span>
-                                    <!--<p class="xxs-font-size">(When a given event occurred on the resource)</p>-->
-                                    {{ layer_form.date }}
-                                </div>
-                                <div class="hidden">
-                                    <span><label for="{{ layer_form.date_type|id }}">{{ layer_form.date_type.label }}</label></span>
-                                    <!--<p class="xxs-font-size">(Identification of when a given event occurred)</p>-->
-                                    {{ layer_form.date_type }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col" style="font-size:10px">
-                            <div id="basicDescriptiveInfo" class="container-fluid">
-                                <div class="col-lg-3">
-                                    <div id="embedded_map" class="mrg-btm">
-                                      <div id="preview_map" style="height:250px;"></div>
-                                    </div>
-                                    <!-- span><label for="{{ layer_form.thumbnail_url|id }}">{{ layer_form.thumbnail_url.label }}</label></span>
-                                    <img src="{{ layer_form.thumbnail_url.value }}" / -->
-                                    <div><a class="btn btn-default btn-block btn-xs" href="#" id="set_thumbnail">{% trans "Set" %}</a></div>
-                                </div>
-                                <div class="col-lg-8">
-                                    <div>
-                                        <span><label for="{{ layer_form.abstract|id }}">{{ layer_form.abstract.label }}</label></span>
-                                        <!--<p class="xxs-font-size">(Brief narrative summary of the content of the resource/s)</p>-->
-                                        {{ layer_form.abstract }}
-                                    </div>
+                                <div class="col-lg-6">
+                                    <span><label for="{{ layer_form.keywords|id }}">{{ layer_form.keywords.label }}</label></span>
+                                    <!--<p class="xxs-font-size">(A space or comma separated list of keywords)</p>-->
+                                    {{ layer_form.keywords }}
                                 </div>
                             </div>
                         </div>
@@ -148,10 +121,38 @@
                     <hr/>
                     <div class="row">
                         <div class="col">
-                            <div>
-                                <span><label for="{{ layer_form.keywords|id }}">{{ layer_form.keywords.label }}</label></span>
-                                <!--<p class="xxs-font-size">(A space or comma separated list of keywords)</p>-->
-                                {{ layer_form.keywords }}
+                            <div id="basicDescriptiveInfo" class="container-fluid">
+                                <div class="col-lg-3">
+                                    <span><label for="{{ layer_form.thumbnail_url|id }}">{% trans "Thumbnail" %}</label></span>
+                                    <!-- <img src="{{ layer_form.thumbnail_url.value }}" / -->
+                                    <div id="embedded_map" class="mrg-btm">
+                                      <div id="preview_map" style="height:250px;"></div>
+                                    </div>
+                                    <div><a class="btn btn-default btn-block btn-xs" href="#" id="set_thumbnail">{% trans "Set" %}</a></div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div>
+                                        <span><label for="{{ layer_form.abstract|id }}">{{ layer_form.abstract.label }}</label></span>
+                                        <!--<p class="xxs-font-size">(Brief narrative summary of the content of the resource/s)</p>-->
+                                        {{ layer_form.abstract }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <span><label for="{{ layer_form.date|id }}">{{ layer_form.date.label }}</label></span>
+                                            <!--<p class="xxs-font-size">(When a given event occurred on the resource)</p>-->
+                                            {{ layer_form.date }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <span><label for="{{ layer_form.date_type|id }}">{{ layer_form.date_type.label }}</label></span>
+                                            <!--<p class="xxs-font-size">(Identification of when a given event occurred)</p>-->
+                                            {{ layer_form.date_type }}
+                                        </div>
+                                    </div>                                    
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -242,50 +243,6 @@
                                 </div>
                             </div>
 		                </div>
-                        <hr/>
-                        <div class="row">
-                            <div class="col-xs-6 col-lg-4">
-                                <div>
-                                    <span><label for="{{ layer_form.edition|id }}">{{ layer_form.edition.label }}</label></span>
-                                    <!--<p class="xxs-font-size">(Version of the cited resource)</p>-->
-                                    {{ layer_form.edition }}
-                                </div>
-                                <div>
-                                    <span><label for="{{ layer_form.purpose|id }}">{{ layer_form.purpose.label }}</label></span>
-                                    <!--<p class="xxs-font-size">(Brief narrative summary of the intentions with which the resource/s ...)</p>-->
-                                    {{ layer_form.purpose }}
-                                </div>
-                                <div>
-                                    <span><label for="{{ layer_form.supplemental_information|id }}">{{ layer_form.supplemental_information.label }}</label></span>
-                                    <!--<p class="xxs-font-size">(Any other descriptive information about the dataset)</p>-->
-                                    {{ layer_form.supplemental_information }}
-                                </div>
-                            </div>
-                            <div class="col-xs-6 col-lg-6">
-                                <div class="row">
-                                    <div class="col-xs-6 col-lg-6">
-                                        <span><label for="{{ layer_form.temporal_extent_start|id }}">{{ layer_form.temporal_extent_start.label }}</label></span>
-                                        <!--<p class="xxs-font-size">(When a given event occurred on the resource)</p>-->
-                                        {{ layer_form.temporal_extent_start }}
-                                        <span><label for="{{ layer_form.temporal_extent_end|id }}">{{ layer_form.temporal_extent_end.label }}</label></span>
-                                        <!--<p class="xxs-font-size">(Identification of when a given event occurred)</p>-->
-                                        {{ layer_form.temporal_extent_end }}
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div>
-                                        <span><label for="{{ layer_form.maintenance_frequency|id }}">{{ layer_form.maintenance_frequency.label }}</label></span>
-                                        <!--<p class="xxs-font-size">(Identification of when a given event occurred)</p>-->
-                                        {{ layer_form.maintenance_frequency }}
-                                    </div>
-                                    <div>
-                                        <span><label for="{{ layer_form.spatial_representation_type|id }}">{{ layer_form.spatial_representation_type.label }}</label></span>
-                                        <!--<p class="xxs-font-size">(Method used to represent geographic information in the dataset)</p>-->
-                                        {{ layer_form.spatial_representation_type }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
         </div>
@@ -295,46 +252,88 @@
         <br />
         <p>Other, Optional, Metadata</p>
         <div class="row">
-            <div class="col-lg-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Responsible Parties</div>
-                    <div class="panel-body">
-                        <span><label for="{{ layer_form.poc|id }}">{{ layer_form.poc.label }}</label></span>
-                        {{ layer_form.poc }}
-                    </div>
+            <div class="col-xs-6 col-lg-4">
+                <div>
+                    <span><label for="{{ layer_form.edition|id }}">{{ layer_form.edition.label }}</label></span>
+                    <!--<p class="xxs-font-size">(Version of the cited resource)</p>-->
+                    {{ layer_form.edition }}
+                </div>
+                <div>
+                    <span><label for="{{ layer_form.purpose|id }}">{{ layer_form.purpose.label }}</label></span>
+                    <!--<p class="xxs-font-size">(Brief narrative summary of the intentions with which the resource/s ...)</p>-->
+                    {{ layer_form.purpose }}
+                </div>
+                <div>
+                    <span><label for="{{ layer_form.supplemental_information|id }}">{{ layer_form.supplemental_information.label }}</label></span>
+                    <!--<p class="xxs-font-size">(Any other descriptive information about the dataset)</p>-->
+                    {{ layer_form.supplemental_information }}
                 </div>
             </div>
-            <div class="col-lg-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Owner and Permissions</div>
-                    <div class="panel-body">
-                        <div>
-                            <span><label for="{{ layer_form.owner|id }}">{{ layer_form.owner.label }}</label></span>
-                            <!--<p class="xxs-font-size">(Owner of the cited resource)</p>-->
-                            {{ layer_form.owner }}
+            <div class="col-xs-6 col-lg-6">
+                <div class="row">
+                    <div class="col-xs-6 col-lg-6">
+                        <span><label for="{{ layer_form.temporal_extent_start|id }}">{{ layer_form.temporal_extent_start.label }}</label></span>
+                        <!--<p class="xxs-font-size">(When a given event occurred on the resource)</p>-->
+                        {{ layer_form.temporal_extent_start }}
+                        <span><label for="{{ layer_form.temporal_extent_end|id }}">{{ layer_form.temporal_extent_end.label }}</label></span>
+                        <!--<p class="xxs-font-size">(Identification of when a given event occurred)</p>-->
+                        {{ layer_form.temporal_extent_end }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <span><label for="{{ layer_form.maintenance_frequency|id }}">{{ layer_form.maintenance_frequency.label }}</label></span>
+                        <!--<p class="xxs-font-size">(Identification of when a given event occurred)</p>-->
+                        {{ layer_form.maintenance_frequency }}
+                    </div>
+                    <div>
+                        <span><label for="{{ layer_form.spatial_representation_type|id }}">{{ layer_form.spatial_representation_type.label }}</label></span>
+                        <!--<p class="xxs-font-size">(Method used to represent geographic information in the dataset)</p>-->
+                        {{ layer_form.spatial_representation_type }}
+                    </div>
+                    <hr/>
+                    <div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Responsible Parties</div>
+                            <div class="panel-body">
+                                <span><label for="{{ layer_form.poc|id }}">{{ layer_form.poc.label }}</label></span>
+                                {{ layer_form.poc }}
+                            </div>
                         </div>
-                       {% if GEONODE_SECURITY_ENABLED %}
-                        <!--<hr />
-                        <div class="modal-body" id="_permissions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                            {# include "_permissions.html" #}
-	                    </div>
-						<div class="modal fade" id="_permissions_feedbacks" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-						  <div class="modal-dialog" role="document">
-							<div class="modal-content">
-							  <div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-								<h4 class="modal-title" id="exampleModalLabel">Message box</h4>
-							  </div>
-							  <div class="modal-body">
-								...
-							  </div>
-							  <div class="modal-footer">
-								<button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
-							  </div>
-							</div>
-						  </div>
-						</div>-->
-                       {% endif %}
+                    </div>
+                    <div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Owner and Permissions</div>
+                            <div class="panel-body">
+                                <div>
+                                    <span><label for="{{ layer_form.owner|id }}">{{ layer_form.owner.label }}</label></span>
+                                    <!--<p class="xxs-font-size">(Owner of the cited resource)</p>-->
+                                    {{ layer_form.owner }}
+                                </div>
+                               {% if GEONODE_SECURITY_ENABLED %}
+                                <!--<hr />
+                                <div class="modal-body" id="_permissions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    {# include "_permissions.html" #}
+                                </div>
+                                <div class="modal fade" id="_permissions_feedbacks" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title" id="exampleModalLabel">Message box</h4>
+                                      </div>
+                                      <div class="modal-body">
+                                        ...
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>-->
+                               {% endif %}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
