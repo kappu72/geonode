@@ -67,6 +67,10 @@
         display: none !important;
     }
     
+    #regions_multiselect_container.content {
+        position: absolute;
+    }
+    
     .fstControls {
         width: 100% !important;
     }
@@ -193,50 +197,52 @@
 		        <div class="panel panel-default">
 		            <!-- div class="panel-heading">Metadata info</div -->
 		            <div class="panel-body">
-		                <div class="row" id="mdinfo">
-		                    <div class="col-lg-3">
-		                        <div>
-		                            <span><label for="{{ layer_form.language|id }}">{{ layer_form.language.label }}</label></span>
-		                            <!--<p class="xxs-font-size">(Language used within the dataset)</p>-->
-		                            {{ layer_form.language }}
-		                        </div>
-		                        <hr />
-		                        <div>
-		                            <span><label for="{{ layer_form.restriction_code_type|id }}">{{ layer_form.restriction_code_type.label }}</label></span>
-		                            <!--<p class="xxs-font-size">(Limitation/s placed upon the access or use of data)</p>-->
-		                            {{ layer_form.restriction_code_type }}
-		                        </div>
-		                    </div>
-		                    <div class="col-lg-3">
-		                        <div>
-		                            <span><label for="{{ layer_form.constraints_other|id }}">{{ layer_form.constraints_other.label }}</label></span>
-		                            <!--<p class="xxs-font-size">(Other restrictions and legal prerequisites for accessing or use data and metadata)</p>-->
-		                            {{ layer_form.constraints_other }}
-		                        </div>
-		                    </div>
-		                    <div class="col-lg-3">
-		                        <div>
-		                            <span><label for="{{ layer_form.license|id }}">{{ layer_form.license.label }}</label></span>
-		                            <!--<p class="xxs-font-size">(License of the dataset)</p>-->
-		                            {{ layer_form.license }}
-		                        </div>
-		                        <hr />
-		                        <div>
-		                            <span><label for="{{ layer_form.metadata_author|id }}">{{ layer_form.metadata_author.label }}</label></span>
-		                            <!--<p class="xxs-font-size">(Author of the metadata)</p>-->
-		                            {{ layer_form.metadata_author }}
-		                        </div>
-		                    </div>
-		                    <div class="col-lg-3">
-		                        <div>
-		                            <span><label for="{{ layer_form.data_quality_statement|id }}">{{ layer_form.data_quality_statement.label }}</label></span>
-		                            <!--<p class="xxs-font-size">(General explanation of the data producer's knowledge about the lineage)</p>-->
-		                            {{ layer_form.data_quality_statement }}
-		                        </div>
-		                    </div>
+		                <div class="row" id="mdinfo" style="height: 590px">
                             <div class="row">
-                                <div class="col-lg-10">
+                                <div class="col-lg-3">
                                     <div>
+                                        <span><label for="{{ layer_form.language|id }}">{{ layer_form.language.label }}</label></span>
+                                        <!--<p class="xxs-font-size">(Language used within the dataset)</p>-->
+                                        {{ layer_form.language }}
+                                    </div>
+                                    <hr />
+                                    <div>
+                                        <span><label for="{{ layer_form.restriction_code_type|id }}">{{ layer_form.restriction_code_type.label }}</label></span>
+                                        <!--<p class="xxs-font-size">(Limitation/s placed upon the access or use of data)</p>-->
+                                        {{ layer_form.restriction_code_type }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div>
+                                        <span><label for="{{ layer_form.constraints_other|id }}">{{ layer_form.constraints_other.label }}</label></span>
+                                        <!--<p class="xxs-font-size">(Other restrictions and legal prerequisites for accessing or use data and metadata)</p>-->
+                                        {{ layer_form.constraints_other }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div>
+                                        <span><label for="{{ layer_form.license|id }}">{{ layer_form.license.label }}</label></span>
+                                        <!--<p class="xxs-font-size">(License of the dataset)</p>-->
+                                        {{ layer_form.license }}
+                                    </div>
+                                    <hr />
+                                    <div>
+                                        <span><label for="{{ layer_form.metadata_author|id }}">{{ layer_form.metadata_author.label }}</label></span>
+                                        <!--<p class="xxs-font-size">(Author of the metadata)</p>-->
+                                        {{ layer_form.metadata_author }}
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div>
+                                        <span><label for="{{ layer_form.data_quality_statement|id }}">{{ layer_form.data_quality_statement.label }}</label></span>
+                                        <!--<p class="xxs-font-size">(General explanation of the data producer's knowledge about the lineage)</p>-->
+                                        {{ layer_form.data_quality_statement }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="position:absolute">
+                                <div class="col-lg-10">
+                                    <div id="regions_multiselect_container">
                                         <span><label for="{{ layer_form.regions|id }}">{{ layer_form.regions.label }}</label></span>
                                         {{ layer_form.regions }}
                                     </div>
