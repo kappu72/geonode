@@ -32,8 +32,6 @@
   </h2>
 </div>
 
-<!--<div class="row">-->
-  <!--<div class="col-md-12">-->
     <form id="layer_metadata_update" class="form-horizontal" action="{% url "layer_metadata" layer.service_typename %}" method="POST">
       {% if layer.metadata_uploaded_preserve %}
         <p class="bg-warning">{% blocktrans %}Note: this layer's orginal metadata was populated and preserved by importing a metadata XML file.
@@ -75,7 +73,7 @@
         {% endif %}
 
         {% csrf_token %}
-        <div class="col-md-12 form-controls">
+        <div id="mdeditor_form" class="col-md-12 form-controls">
           {% form layer_form using "layouts/panels.html" %}
           {# layer_form|as_bootstrap #}
         </div>
@@ -103,8 +101,6 @@
           </div>
         </div>
       </form>
-  <!--</div>-->
-<!--</div>-->
 {% endblock %}
 {% block extra_script %}
  {% include 'metadata_form_js.html' %}
