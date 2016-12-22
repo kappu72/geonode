@@ -112,11 +112,15 @@
                     $(e.target).parent().find(".mandatory-warning").remove();
                 }
                 if(totalNum == prevNum && this.type !== 'radio'  && this.type !== 'button') {
-                    $('#liquidPieChart').waterbubble({
-                        radius: 30,
-                        txt: parseFloat(((totalNum-empty)/totalNum)*100).toFixed(2) + '%',
-                        data: ((totalNum-empty)/totalNum)
-                    });
+                    try {
+                        $('#liquidPieChart').waterbubble({
+                            radius: 30,
+                            txt: parseFloat(((totalNum-empty)/totalNum)*100).toFixed(2) + '%',
+                            data: ((totalNum-empty)/totalNum)
+                        });
+                    } catch(err) {
+                        // Log error
+                    }
                 }
 
             }).change();
@@ -152,11 +156,15 @@
                 }
                 
                 if(totalNum == prevNum) {
-                    $('#liquidPieChart').waterbubble({
-                        radius: 30,
-                        txt: parseFloat(((totalNum-empty)/totalNum)*100).toFixed(2) + '%',
-                        data: ((totalNum-empty)/totalNum)
-                    });
+                    try {
+                        $('#liquidPieChart').waterbubble({
+                            radius: 30,
+                            txt: parseFloat(((totalNum-empty)/totalNum)*100).toFixed(2) + '%',
+                            data: ((totalNum-empty)/totalNum)
+                        });
+                    } catch(err) {
+                        // Log error
+                    }
                 }
 
             }).change();
@@ -172,31 +180,46 @@
         $('#btn_next_up').click(function(){getNextTab()});
         $('#btn_next_dwn').click(function(){getNextTab()});
 
+        $('#btn_upd_md_up').click(function(){$('#preview_pleaseWaitDialog').modal();});
+        $('#btn_upd_md_dwn').click(function(){$('#preview_pleaseWaitDialog').modal();});
+
         $('#preview_tab').click(function(){
             $('#preview_pleaseWaitDialog').modal();
-            $('#preview_encoder_iframe')[0].style.width='0';
-            $('#preview_encoder_iframe')[0].style.height='0';            
-            $('#layer_metadata_update').submit();
+            try {
+                $('#preview_encoder_iframe')[0].style.width='0';
+                $('#preview_encoder_iframe')[0].style.height='0';
+                $('#layer_metadata_update').submit();
+            } catch(err) {
+                // Log error
+            }            
         });
 
         $('#layer_metadata_update').submit(function(e){
             $.post('metadata', $(this).serialize(), function(data){
                 // Do something more fancy with your respone
                 // $('.message').html(data.message);
-                $('#preview_encoder_iframe')[0].style.width='100%';
-                $('#preview_encoder_iframe')[0].style.height='100%';
-                $('#preview_encoder_iframe')[0].contentWindow.location.reload(true);
+                try {
+                    $('#preview_encoder_iframe')[0].style.width='100%';
+                    $('#preview_encoder_iframe')[0].style.height='100%';
+                    $('#preview_encoder_iframe')[0].contentWindow.location.reload(true);
+                } catch(err) {
+                    // Log error
+                }
                 $('#preview_pleaseWaitDialog').modal('hide');
             });
             e.preventDefault();
         });
 
         if(totalNum == prevNum) {
-            $('#liquidPieChart').waterbubble({
-                radius: 30,
-                txt: parseFloat(((totalNum-empty)/totalNum)*100).toFixed(2) + '%',
-                data: ((totalNum-empty)/totalNum)
-            });
+            try {
+                $('#liquidPieChart').waterbubble({
+                    radius: 30,
+                    txt: parseFloat(((totalNum-empty)/totalNum)*100).toFixed(2) + '%',
+                    data: ((totalNum-empty)/totalNum)
+                });
+            } catch(err) {
+                // Log error
+            }
         }
     });
 
