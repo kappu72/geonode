@@ -32,6 +32,7 @@ urlpatterns = patterns(
     url(r'^upload$', 'layer_upload', name='layer_upload'),
     url(r'^(?P<layername>[^/]*)$', 'layer_detail', name="layer_detail"),
     url(r'^(?P<layername>[^/]*)/metadata$', 'layer_metadata', name="layer_metadata"),
+    url(r'^(?P<layername>[^/]*)/metadata_advanced$', 'layer_metadata_advanced', name="layer_metadata_advanced"),
     url(r'^(?P<layername>[^/]*)/remove$', 'layer_remove', name="layer_remove"),
     url(r'^(?P<granule_id>[^/]*)/(?P<layername>[^/]*)/granule_remove$', 'layer_granule_remove',
         name="layer_granule_remove"),

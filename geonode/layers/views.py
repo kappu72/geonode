@@ -358,7 +358,7 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
 
 
 @login_required
-def layer_metadata(request, layername, template='layers/layer_metadata.html'):
+def layer_metadata(request, layername, template='layers/layer_metadata.html', ajax=True):
     layer = _resolve_layer(
         request,
         layername,
@@ -519,12 +519,13 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html'):
                 except:
                     print "Could not send slack message."
 
-            # return HttpResponseRedirect(
-            #     reverse(
-            #         'layer_detail',
-            #         args=(
-            #             layer.service_typename,
-            #         )))
+            if not ajax:
+                return HttpResponseRedirect(
+                    reverse(
+                        'layer_detail',
+                        args=(
+                            layer.service_typename,
+                        )))
 
         message = layer.typename
 
@@ -567,6 +568,11 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html'):
         "preview":  getattr(settings, 'LAYER_PREVIEW_LIBRARY', 'leaflet'),
         "crs":  getattr(settings, 'DEFAULT_MAP_CRS', 'EPSG:900913')
     }))
+
+
+@login_required
+def layer_metadata_advanced(request, layername):
+    return layer_metadata(request, layername, template='layers/layer_metadata_advanced.html')
 
 
 @login_required
