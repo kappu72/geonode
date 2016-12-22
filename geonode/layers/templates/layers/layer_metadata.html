@@ -17,6 +17,89 @@
   {% else %}
     {% include "layers/layer_leaflet_map.html" %}
   {% endif %}
+
+    <style>
+        .xxs-font-size{
+            font-size: 10px;    
+        }
+        textarea{
+            width:100%;
+        }
+        select{
+            width:100%;
+        }
+        .test-class{
+            background-color: red; 
+        }
+        table{
+            table-layout:fixed;
+            width: 100%;
+        }
+        td > input{
+            width: 100%;
+        }
+        .input-empty{
+            border-color: red;
+            border-style: double;
+        }
+
+        input[type="text"] {
+            width: 200px !important;
+            left: 0;
+            right: 0;
+        }
+
+        .tab-pane{
+            height:650px;
+            overflow-y:scroll;
+        }
+        
+        .fancy-checkbox input[type="radio"],
+        .fancy-checkbox input[type="checkbox"],
+        .fancy-checkbox .checked {
+            display: none;
+        }
+         
+        .fancy-checkbox input[type="radio"]:checked ~ .checked,
+        .fancy-checkbox input[type="checkbox"]:checked ~ .checked {
+            display: inline-block;
+            color:red;
+        }
+         
+        .fancy-checkbox input[type="radio"]:checked ~ .unchecked,
+        .fancy-checkbox input[type="checkbox"]:checked ~ .unchecked {
+            display: none;
+        }
+        
+        .tokenfield,
+        #id_resource-title {
+            width: 95% !important;
+        }
+        
+        .leaflet-container { /* all maps */
+            height: 250px !important;
+        }
+        
+        .map-overlay {
+            display: none !important;
+        }
+        
+        #regions_multiselect_container.content {
+            position: absolute;
+        }
+        
+        .fstControls {
+            width: 100% !important;
+        }
+        
+        .fstElement {
+            font-size: 0.8em !important;
+        }
+        
+        .fstResultItem {
+            font-size: 1.2em !important;
+        }    
+    </style>
 {{ block.super }}
 {% endblock %}
 
