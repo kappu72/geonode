@@ -519,12 +519,16 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html'):
                 except:
                     print "Could not send slack message."
 
-            return HttpResponseRedirect(
-                reverse(
-                    'layer_detail',
-                    args=(
-                        layer.service_typename,
-                    )))
+            # return HttpResponseRedirect(
+            #     reverse(
+            #         'layer_detail',
+            #         args=(
+            #             layer.service_typename,
+            #         )))
+
+        message = layer.typename
+
+        return HttpResponse(json.dumps({'message': message}))
 
     if poc is not None:
         layer_form.fields['poc'].initial = poc.id
