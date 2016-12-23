@@ -791,3 +791,11 @@ def layer_metadata_detail(request, layername, template='layers/layer_metadata_de
         "layer": layer,
         'SITEURL': settings.SITEURL[:-1]
     }))
+
+
+def layer_metadata_upload(request, layername, template='layers/layer_metadata_upload.html'):
+    layer = _resolve_layer(request, layername, 'view_resourcebase', _PERMISSION_MSG_METADATA)
+    return render_to_response(template, RequestContext(request, {
+        "layer": layer,
+        'SITEURL': settings.SITEURL[:-1]
+    }))
