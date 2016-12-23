@@ -30,6 +30,7 @@ urlpatterns = patterns(
     'geonode.layers.views',
     url(r'^$', TemplateView.as_view(template_name='layers/layer_list.html'), {'is_layer': True}, name='layer_browse'),
     url(r'^upload$', 'layer_upload', name='layer_upload'),
+    url(r'^upload_metadata$', 'layer_metadata_upload', name='layer_metadata_upload'),
     url(r'^(?P<layername>[^/]*)$', 'layer_detail', name="layer_detail"),
     url(r'^(?P<layername>[^/]*)/metadata$', 'layer_metadata', name="layer_metadata"),
     url(r'^(?P<layername>[^/]*)/metadata_advanced$', 'layer_metadata_advanced', name="layer_metadata_advanced"),
@@ -40,6 +41,7 @@ urlpatterns = patterns(
     url(r'^(?P<layername>[^/]*)/thumbnail$', 'layer_thumbnail', name='layer_thumbnail'),
     url(r'^(?P<layername>[^/]*)/get$', 'get_layer', name='get_layer'),
     url(r'^(?P<layername>[^/]*)/metadata_detail$', 'layer_metadata_detail', name='layer_metadata_detail'),
+    url(r'^(?P<layername>[^/]*)/metadata_upload$', 'layer_metadata_upload', name='layer_metadata_upload'),
 
     # url(r'^api/batch_permissions/?$', 'batch_permissions',
     #    name='batch_permssions'),
