@@ -49,7 +49,7 @@ from django.forms.util import ErrorList
 from geonode.tasks.deletion import delete_layer
 from geonode.services.models import Service
 from geonode.layers.forms import LayerForm, LayerUploadForm, NewLayerUploadForm, LayerAttributeForm
-from geonode.base.forms import CategoryForm
+from geonode.base.forms import CategoryForm, TKeywordForm
 from geonode.layers.models import Layer, Attribute, UploadSession
 from geonode.base.enumerations import CHARSETS
 from geonode.base.models import TopicCategory
@@ -439,6 +439,9 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html', aj
             prefix="category_choice_field",
             initial=int(
                 request.POST["category_choice_field"]) if "category_choice_field" in request.POST else None)
+        tkeywords_form = TKeywordForm(
+            request.POST,
+            prefix="tkeywords")
 
     else:
         layer_form = LayerForm(instance=layer, prefix="resource")
@@ -449,9 +452,11 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html', aj
         category_form = CategoryForm(
             prefix="category_choice_field",
             initial=topic_category.id if topic_category else None)
+        tkeywords_form = TKeywordForm(
+            prefix="tkeywords")
 
     if request.method == "POST" and layer_form.is_valid(
-    ) and attribute_form.is_valid() and category_form.is_valid():
+    ) and attribute_form.is_valid() and category_form.is_valid() and tkeywords_form.is_valid():
         new_poc = layer_form.cleaned_data['poc']
         new_author = layer_form.cleaned_data['metadata_author']
 
@@ -564,6 +569,7 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html', aj
         "author_form": author_form,
         "attribute_form": attribute_form,
         "category_form": category_form,
+		"tkeywords_form": tkeywords_form,
         "viewer": viewer,
         "preview":  getattr(settings, 'LAYER_PREVIEW_LIBRARY', 'leaflet'),
         "crs":  getattr(settings, 'DEFAULT_MAP_CRS', 'EPSG:900913')

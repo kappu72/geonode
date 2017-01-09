@@ -22,6 +22,10 @@ import copy
 import datetime
 import re
 import autocomplete_light
+
+from fields import MultiThesauriField
+from widgets import MultiThesauriWidget
+
 from autocomplete_light.contrib.taggit_field import TaggitField, TaggitWidget
 
 from django import forms
@@ -202,6 +206,19 @@ class CategoryForm(forms.Form):
         # Always return the full collection of cleaned data.
         return cleaned_data
 
+class TKeywordForm(forms.Form):
+    
+    tkeywords = MultiThesauriField(
+        label=_("Keywords from Thesauri"),
+        required=False,
+        help_text=_("A space or comma-separated list of keywords"),
+        widget=MultiThesauriWidget())
+    
+    def clean(self):
+        cleaned_data = self.data
+        ccf_data = cleaned_data.get("tkeywords")
+        
+        return cleaned_data
 
 
 class ResourceBaseForm(TranslationModelForm):
