@@ -221,6 +221,7 @@ class TKeywordForm(forms.Form):
         return cleaned_data
 
 
+
 class ResourceBaseForm(TranslationModelForm):
     """Base form for metadata, should be inherited by childres classes of ResourceBase"""
 

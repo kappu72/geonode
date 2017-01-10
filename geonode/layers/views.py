@@ -569,7 +569,7 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html', aj
         "author_form": author_form,
         "attribute_form": attribute_form,
         "category_form": category_form,
-		"tkeywords_form": tkeywords_form,
+        "tkeywords_form": tkeywords_form,
         "viewer": viewer,
         "preview":  getattr(settings, 'LAYER_PREVIEW_LIBRARY', 'leaflet'),
         "crs":  getattr(settings, 'DEFAULT_MAP_CRS', 'EPSG:900913')
