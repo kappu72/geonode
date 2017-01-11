@@ -31,7 +31,13 @@ def prefix_xsl_line(req, id):
 
     catalogue = get_catalogue()
     record = catalogue.get_record(resource.uuid)
-    xml = record.xml
+
+    try:
+        xml = record.xml
+    except:
+        return HttpResponse(
+            "Resource Metadata not available!"
+        )
 
     xsl_path = '{}/static/metadataxsl/metadata.xsl'.format(settings.SITEURL)
     xsl_line = '<?xml-stylesheet type="text/xsl" href="{}"?>'.format(xsl_path)

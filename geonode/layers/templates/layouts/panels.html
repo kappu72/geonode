@@ -155,9 +155,12 @@
                                     </div>
                                     <hr />
                                     <div>
-                                        <span><label for="{{ layer_form.metadata_author|id }}">{{ layer_form.metadata_author.label }}</label></span>
-                                        <!--<p class="xxs-font-size">(Author of the metadata)</p>-->
-                                        {{ layer_form.metadata_author }}
+                                        <span><label for="{{ layer_form.is_published|id }}">{{ layer_form.is_published.label }}</label></span>
+                                        {{ layer_form.is_published }}
+                                    </div>
+                                    <div>
+                                        <span><label for="{{ layer_form.featured|id }}">{{ layer_form.featured.label }}</label></span>
+                                        {{ layer_form.featured }}
                                     </div>
                                 </div>
                                 <div class="col-lg-3">
@@ -244,6 +247,11 @@
                                     <!--<p class="xxs-font-size">(Owner of the cited resource)</p>-->
                                     {{ layer_form.owner }}
                                 </div>
+                                <div>
+                                    <span><label for="{{ layer_form.metadata_author|id }}">{{ layer_form.metadata_author.label }}</label></span>
+                                    <!--<p class="xxs-font-size">(Author of the metadata)</p>-->
+                                    {{ layer_form.metadata_author }}
+                                </div>
                                {% if GEONODE_SECURITY_ENABLED %}
                                 <!--<hr />
                                 <div class="modal-body" id="_permissions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -305,8 +313,12 @@
     </div>
 
     <div id="preview" class="tab-pane fade" style="overflow: hidden;">
-        <!-- iframe id="preview_encoder_iframe" height="100%" width="100%" style="width:0;height:0;border:0;border:none;" src="{% url 'layer_metadata_detail' resource.typename %}"></iframe -->
-        <iframe id="preview_encoder_iframe" height="100%" width="100%" style="width:0;height:0;border:0;border:none;" src="/catalogue/csw_to_extra_format/{{resource.uuid}}/{{resource.title}}.html"></iframe>
+        <!-- <iframe id="preview_encoder_iframe" height="100%" width="100%" style="width:0;height:0;border:0;border:none;" src="{% url 'layer_metadata_detail' resource.typename %}"></iframe> -->
+        {% if metadataxsl %}
+            <iframe id="preview_encoder_iframe" height="100%" width="100%" style="width:0;height:0;border:0;border:none;" src="/showmetadata/xsl/{{resource.id}}"></iframe>
+        {% else %}
+            <iframe id="preview_encoder_iframe" height="100%" width="100%" style="width:0;height:0;border:0;border:none;" src="/catalogue/csw_to_extra_format/{{resource.uuid}}/{{resource.title}}.html"></iframe>
+        {% endif %}
     </div>
 
 </div>

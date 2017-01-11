@@ -561,6 +561,10 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html', aj
     viewer = json.dumps(
         map_obj.viewer_json(request.user, access_token, * (NON_WMS_BASE_LAYERS + [maplayer])))
 
+    metadataxsl = False
+    if "geonode.contrib.metadataxsl" in settings.INSTALLED_APPS:
+        metadataxsl = True
+
     return render_to_response(template, RequestContext(request, {
         "resource": layer,
         "layer": layer,
@@ -572,7 +576,8 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html', aj
         "tkeywords_form": tkeywords_form,
         "viewer": viewer,
         "preview":  getattr(settings, 'LAYER_PREVIEW_LIBRARY', 'leaflet'),
-        "crs":  getattr(settings, 'DEFAULT_MAP_CRS', 'EPSG:900913')
+        "crs":  getattr(settings, 'DEFAULT_MAP_CRS', 'EPSG:900913'),
+        "metadataxsl": metadataxsl
     }))
 
 
