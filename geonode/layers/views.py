@@ -334,10 +334,10 @@ def layer_detail(request, layername, template='layers/layer_detail.html'):
     links_download = [item for idx, item in enumerate(links) if
                       item.url and 'wms' not in item.url and 'gwc' not in item.url]
     for item in links_view:
-        if item.url and access_token:
+        if item.url and access_token and 'access_token' not in item.url:
             item.url = "%s&access_token=%s" % (item.url, access_token)
     for item in links_download:
-        if item.url and access_token:
+        if item.url and access_token and 'access_token' not in item.url:
             item.url = "%s&access_token=%s" % (item.url, access_token)
 
     if request.user.has_perm('view_resourcebase', layer.get_self_resource()):

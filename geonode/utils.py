@@ -371,7 +371,7 @@ class GXPLayerBase(object):
             cfg = dict(ptype="gxp_wmscsource", restUrl="/gs/rest")
 
         if self.ows_url:
-            if access_token:
+            if access_token and 'access_token' not in self.ows_url:
                 cfg["url"] = self.ows_url+'?access_token='+access_token
             else:
                 cfg["url"] = self.ows_url
