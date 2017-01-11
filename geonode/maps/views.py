@@ -572,6 +572,7 @@ def new_map_config(request):
 
                 if layer.storeType == "remoteStore":
                     service = layer.service
+                    # Probably not a good idea to send the access token to every remote service
                     if access_token and 'access_token' not in service.base_url:
                         url = service.base_url+'?access_token='+access_token
                     else:
