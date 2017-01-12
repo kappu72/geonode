@@ -39,7 +39,7 @@ define(['underscore',
 
     templates.infoTemplate = _.template($('#infoTemplate').html());
 
-    /** Function to log errors to the #global-errors div 
+    /** Function to log errors to the #global-errors div
      *
      *  @params {options}
      *  @returns {string}
@@ -76,7 +76,7 @@ define(['underscore',
 
     /** Function to ...
      *
-     *  @params  
+     *  @params
      *  @returns
      */
     buildFileInfo = function (files) {
@@ -108,17 +108,17 @@ define(['underscore',
 
     /** Function to ...
      *
-     *  @params  
+     *  @params
      *  @returns
      */
     displayFiles = function (file_queue) {
         file_queue.empty();
-        
+
         var permission_edit = $("#permission-edit")
 
         permission_edit.show();
         var hasFullPermissionsWidget = false;
-        
+
         $.each(layers, function (name, info) {
             if (!info.type) {
                 log_error({
@@ -133,13 +133,13 @@ define(['underscore',
                 };
             }
         });
-        
+
         if(!hasFullPermissionsWidget){permission_edit.hide()};
     };
 
     /** Function to ...
      *
-     *  @params  
+     *  @params
      *  @returns
      */
     checkFiles = function(){
@@ -155,7 +155,7 @@ define(['underscore',
 
             var mosaic_is_valid = true;
             var is_granule = $('#' + base_name + '-mosaic').is(':checked');
-            
+
             var is_time_enabled = $('#' + base_name + '-timedim').is(':checked');
             var is_time_valid = is_time_enabled && !$('#' + base_name + '-timedim-value-valid').is(':visible');
 
@@ -165,12 +165,12 @@ define(['underscore',
 
             var is_adv_options_enabled = $('#' + base_name + '-timedim-presentation').is(':checked');
             var default_value = $('#' + base_name + '-timedim-defaultvalue-format-select').val();
-            
+
             if (default_value == 'NEAREST' || default_value == 'FIXED') {
                 var is_reference_value_valid = is_adv_options_enabled && !$('#' + base_name + '-timedim-defaultvalue-ref-value-valid').is(':visible')
                 mosaic_is_valid = is_time_valid && is_reference_value_valid;
             }
-            
+
             if (is_granule && !mosaic_is_valid) {
                 return false;
             }
@@ -193,21 +193,24 @@ define(['underscore',
     /** Function to check that a geogig repo has been named, or that
      *  "Import to Geogig" is not checked.
      *
-     *  @params  
+     *  @params
      *  @returns {boolean}
      */
     checkGeogig = function() {
-        try {
-            geogig_store = $('#' + base_name + '\\:geogig_store').val();
-            geogig = $('#' + base_name + '\\:geogig_toggle').is(':checked');
-            if (geogig) {
-                return geogig_store.length != 0;
-            } else {
-                return true;
+        if(geogig_enabled) {
+            var files = layers[Object.keys(layers)[0]]['files'];
+            for (var i = 0; i<files.length; i++){
+                var base_name = files[i].name.split('.')[0];
+                var geogig_store = $('#' + base_name + '\\:geogig_store').val();
+                var geogig = $('#' + base_name + '\\:geogig_toggle').is(':checked');
+                if (geogig) {
+                    if (geogig_store.length == 0) {
+                        return false;
+                    }
+                }
             }
-        } catch(err) {
-            return true;
         }
+        return true;
     }
 
     doDelete = function(event) {
@@ -279,7 +282,7 @@ define(['underscore',
                         }
                     });
                 } else if ('url' in data) {
-                    window.location = data.url; 
+                    window.location = data.url;
                 } else {
                     common.logError("unexpected response");
                 }
@@ -288,7 +291,7 @@ define(['underscore',
                 common.logError(resp);
            }
         });
-        return false; 
+        return false;
     };
 
 
@@ -326,13 +329,13 @@ define(['underscore',
             geogig_stores = JSON.parse(resp);
         }).fail(function (resp) {
             //
-        });        
+        });
     };
 
 
-    /** Initialization function. Called from main.js 
+    /** Initialization function. Called from main.js
      *
-     *  @params  
+     *  @params
      *  @returns
      */
     initialize = function (options) {
