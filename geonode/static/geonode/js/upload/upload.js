@@ -197,11 +197,15 @@ define(['underscore',
      *  @returns {boolean}
      */
     checkGeogig = function() {
-        geogig_store = $('#' + base_name + '\\:geogig_store').val();
-        geogig = $('#' + base_name + '\\:geogig_toggle').is(':checked');
-        if (geogig) {
-            return geogig_store.length != 0;
-        } else {
+        try {
+            geogig_store = $('#' + base_name + '\\:geogig_store').val();
+            geogig = $('#' + base_name + '\\:geogig_toggle').is(':checked');
+            if (geogig) {
+                return geogig_store.length != 0;
+            } else {
+                return true;
+            }
+        } catch(err) {
             return true;
         }
     }

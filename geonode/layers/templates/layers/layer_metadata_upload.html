@@ -74,33 +74,12 @@
       </div>
     </section>
 
-    <section class="charset">
-      <p>{% trans "Select the charset or leave default" %}</p>
-      <select id="charset">
-        {% for charset in charsets %}
-        {% if charset.0 == 'UTF-8' %}
-        <option selected='selected' value={{ charset.0 }}>{{ charset.1 }}</option>
-        {% else %}
-        <option value={{ charset.0 }}>{{ charset.1 }}</option>
-        {% endif %}
-        {% endfor %}
-      </select>
-    </section>
-
     <section>
-      <a href="{% url "layer_upload" %}" id="clear-button" class="btn btn-default">{% trans "Clear" %}</a>
+      <a href="{% url "layer_metadata_upload" resource.typename %}" id="clear-button" class="btn btn-default">{% trans "Clear" %}</a>
       <a href="#" id="upload-button" class="btn btn-danger">{% trans "Upload files" %}</a>
     </section>
   </div>
 
-  {% if GEONODE_SECURITY_ENABLED %}
-  <div class="col-md-4">
-    <h3>{% trans "Permissions"  %}</h3>
-    <form id="permission_form">
-      {% include "_permissions.html" %}
-    </form>
-  </div>
-  {% endif %}
 </div>
 {% endblock %}
 
