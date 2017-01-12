@@ -267,6 +267,9 @@ define(function (require, exports) {
         }
 
         form_data.append('charset', $('#charset').val());
+        if ($('#id_metadata_upload_form').prop('checked')) {
+             form_data.append('metadata_upload_form', true);
+        }
         if ($('#id_metadata_uploaded_preserve').prop('checked')) {
              form_data.append('metadata_uploaded_preserve', true);
         }

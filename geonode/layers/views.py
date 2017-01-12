@@ -167,7 +167,8 @@ def layer_upload(request, template='upload/layer_upload.html'):
                     charset=form.cleaned_data["charset"],
                     abstract=form.cleaned_data["abstract"],
                     title=form.cleaned_data["layer_title"],
-                    metadata_uploaded_preserve=form.cleaned_data["metadata_uploaded_preserve"]
+                    metadata_uploaded_preserve=form.cleaned_data["metadata_uploaded_preserve"],
+                    metadata_upload_form=form.cleaned_data["metadata_upload_form"]
                 )
             except Exception as e:
                 exception_type, error, tb = sys.exc_info()

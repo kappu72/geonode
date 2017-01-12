@@ -372,7 +372,8 @@ def extract_tarfile(upload_file, extension='.shp', tempdir=None):
 def file_upload(filename, name=None, user=None, title=None, abstract=None,
                 keywords=None, category=None, regions=None, date=None,
                 skip=True, overwrite=False, charset='UTF-8',
-                metadata_uploaded_preserve=False):
+                metadata_uploaded_preserve=False,
+                metadata_upload_form=False):
     """Saves a layer in GeoNode asking as little information as possible.
        Only filename is required, user and title are optional.
     """
@@ -494,10 +495,16 @@ def file_upload(filename, name=None, user=None, title=None, abstract=None,
         defaults['storeType'] = 'coverageStore'
 
     # Create a Django object.
-    layer, created = Layer.objects.get_or_create(
-        name=valid_name,
-        defaults=defaults
-    )
+    if not metadata_upload_form:
+        layer, created = Layer.objects.get_or_create(
+            name=valid_name,
+            defaults=defaults
+        )
+    elif identifier:
+        layer, created = Layer.objects.get_or_create(
+            uuid=identifier,
+            defaults=defaults
+        )
 
     # Delete the old layers if overwrite is true
     # and the layer was not just created
