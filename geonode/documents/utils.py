@@ -18,23 +18,29 @@
 #
 #########################################################################
 
+"""Utilities for managing GeoNode documents
+"""
+
+# Standard Modules
 import os
 
-__version__ = (2, 5, 8, 'alpha', 0)
+# Django functionality
+from django.conf import settings
+
+# Geonode functionality
+from geonode.documents.models import Document
 
 
-class GeoNodeException(Exception):
-    """Base class for exceptions in this module."""
-    pass
-
-
-def get_version():
-    import geonode.version
-    return geonode.version.get_version(__version__)
-
-
-def main(global_settings, **settings):
-    from django.core.wsgi import get_wsgi_application
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', settings.get('django_settings'))
-    app = get_wsgi_application()
-    return app
+def delete_orphaned_document_files():
+    """
+    Deletes orphaned files of deleted documents.
+    """
+    documents_path = os.path.join(settings.MEDIA_ROOT, 'documents')
+    for filename in os.listdir(documents_path):
+        fn = os.path.join(documents_path, filename)
+        if Document.objects.filter(doc_file__contains=filename).count() == 0:
+            print 'Removing orphan document %s' % fn
+            try:
+                os.remove(fn)
+            except OSError:
+                print 'Could not delete file %s' % fn

@@ -18,23 +18,12 @@
 #
 #########################################################################
 
-import os
-
-__version__ = (2, 5, 8, 'alpha', 0)
-
-
-class GeoNodeException(Exception):
-    """Base class for exceptions in this module."""
-    pass
+from django.core.management.base import BaseCommand
+from geonode.documents.utils import delete_orphaned_document_files
 
 
-def get_version():
-    import geonode.version
-    return geonode.version.get_version(__version__)
+class Command(BaseCommand):
+    help = ("Delete orphaned files of already deleted documents.")
 
-
-def main(global_settings, **settings):
-    from django.core.wsgi import get_wsgi_application
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', settings.get('django_settings'))
-    app = get_wsgi_application()
-    return app
+    def handle(self, *args, **options):
+        delete_orphaned_document_files()
