@@ -18,8 +18,10 @@
 #
 #########################################################################
 
+import re
 import uuid
 import logging
+import traceback
 
 from datetime import datetime
 
@@ -31,12 +33,14 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.core.files.storage import FileSystemStorage
+from django.contrib.gis.geos import GEOSGeometry
 
 from geonode.base.models import ResourceBase, ResourceBaseManager, resourcebase_post_save
 from geonode.people.utils import get_valid_user
 from agon_ratings.models import OverallRating
 from geonode.utils import check_shp_columnnames
 from geonode.security.models import remove_object_permissions
+from geonode.base.models import Region
 
 logger = logging.getLogger("geonode.layers.models")
 
@@ -494,6 +498,57 @@ def pre_save_layer(instance, sender, **kwargs):
         instance.bbox_y1]
 
     instance.set_bounds_from_bbox(bbox)
+
+    if instance.regions and instance.regions.all():
+        """
+        try:
+            queryset = instance.regions.all().order_by('name')
+            for region in queryset:
+                print ("%s : %s" % (region.name, region.geographic_bounding_box))
+        except:
+            tb = traceback.format_exc()
+        else:
+            tb = None
+        finally:
+            if tb:
+                logger.debug(tb)
+        """
+        pass
+    else:
+        try:
+            srid1, wkt1 = instance.geographic_bounding_box.split(";")
+            srid1 = re.findall(r'\d+', srid1)
+
+            poly1 = GEOSGeometry(wkt1, srid=int(srid1[0])) # WKT
+            poly1.transform(4326)
+
+            queryset = Region.objects.all().order_by('name')
+            regions_to_add = []
+            for region in queryset:
+                try:
+                    srid2, wkt2 = region.geographic_bounding_box.split(";")
+                    srid2 = re.findall(r'\d+', srid2)
+
+                    poly2 = GEOSGeometry(wkt2, srid=int(srid2[0])) # WKT
+                    poly2.transform(4326)
+
+                    if poly2.intersection(poly1):
+                        regions_to_add.append(region)
+                except:
+                    tb = traceback.format_exc()
+                    if tb:
+                        logger.debug(tb)
+            if regions_to_add:
+                if len(regions_to_add) <= 30:
+                    instance.regions.add(*regions_to_add)
+                    instance.save
+                else:
+                    instance.regions.add(Region.objects.filter(Q(level=0) | Q(parent=None)))
+                    instance.save
+        except:
+            tb = traceback.format_exc()
+            if tb:
+                logger.debug(tb)
 
 
 def pre_delete_layer(instance, sender, **kwargs):

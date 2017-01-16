@@ -33,6 +33,7 @@ from django.forms.utils import flatatt, to_current_timezone
 from django.utils.html import conditional_escape, format_html, html_safe
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
+from django.db.models import Q
 
 from django.utils.encoding import (
     force_str, force_text, python_2_unicode_compatible,
@@ -61,7 +62,7 @@ def get_tree_data():
         return children_list_of_tuples
 
     data = list()
-    t = Region.objects.filter(level=0)
+    t = Region.objects.filter(Q(level=0) | Q(parent=None))
     for toplevel in t:
         data.append(
             tuple((toplevel.id, toplevel.name))

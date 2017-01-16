@@ -155,8 +155,28 @@ class Region(MPTTModel):
     name = models.CharField(max_length=255)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
 
+    # Save bbox values in the database.
+    # This is useful for spatial searches and for generating thumbnail images and metadata records.
+    bbox_x0 = models.DecimalField(max_digits=19, decimal_places=10, blank=True, null=True)
+    bbox_x1 = models.DecimalField(max_digits=19, decimal_places=10, blank=True, null=True)
+    bbox_y0 = models.DecimalField(max_digits=19, decimal_places=10, blank=True, null=True)
+    bbox_y1 = models.DecimalField(max_digits=19, decimal_places=10, blank=True, null=True)
+    srid = models.CharField(max_length=255, default='EPSG:4326')
+
     def __unicode__(self):
         return self.name
+
+    @property
+    def bbox(self):
+        return [self.bbox_x0, self.bbox_y0, self.bbox_x1, self.bbox_y1, self.srid]
+
+    @property
+    def bbox_string(self):
+        return ",".join([str(self.bbox_x0), str(self.bbox_y0), str(self.bbox_x1), str(self.bbox_y1)])
+
+    @property
+    def geographic_bounding_box(self):
+        return bbox_to_wkt(self.bbox_x0, self.bbox_x1, self.bbox_y0, self.bbox_y1, srid=self.srid)
 
     class Meta:
         ordering = ("name",)
