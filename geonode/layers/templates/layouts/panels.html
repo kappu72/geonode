@@ -1,37 +1,135 @@
 {% load floppyforms %}
 {% load i18n %}
 <style>
-#mdeditor_form > .tab-content > .tab-pane {
-  overflow: auto;
-  height: auto;
-  overflow-x: hidden;
-}
-
 #regions_multiselect_container .fstElement {
   min-width: 300px;
 }
 </style>
+<style>
+/* metadata edit workflow wizard */
+.wizard--progress {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  color: #849397;
+}
+.wizard--progress > li {
+  position: relative;
+  display: table-cell;
+  text-align: center;
+  font-size: 0.8em;
+}
+.wizard--progress > li:hover {
+  cursor: pointer;
+}
+.wizard--progress > li:before {
+  transition: background 0.5s ease 0.1s;
+  content: attr(data-step);
+  display: block;
+  margin: 0 auto;
+  background: #DFE3E4;
+  width: 3em;
+  height: 3em;
+  text-align: center;
+  margin-bottom: 0.25em;
+  line-height: 3em;
+  border-radius: 100%;
+  position: relative;
+  z-index: 1000;
+}
+.wizard--progress > li:after {
+  transition: background 1s ease;
+  content: '';
+  position: absolute;
+  display: block;
+  background: #DFE3E4;
+  width: 100%;
+  height: 0.5em;
+  top: 1.25em;
+  left: 50%;
+  margin-left: 1.5em\9;
+  z-index: -1;
+}
+.wizard--progress > li:last-child:after {
+  display: none;
+}
+.wizard--progress > li.is-complete {
+  color: #2ECC71;
+}
+.wizard--progress > li.is-complete:before, .wizard--progress > li.is-complete:after {
+  color: #FFF;
+  background: #2ECC71;
+}
+.wizard--progress > li.is-complete:before {
+  z-index: 1;
+}
+.wizard--progress > li.is-complete:after {
+  z-index: 0;
+}
+.wizard--progress > li.is-active {
+  color: #3498DB;
+}
+.wizard--progress > li.is-active:before {
+  color: #FFF;
+  background: #3498DB;
+}
 
+/**
+ * Needed for IE8
+ */
+.wizard--progress__last:after {
+  display: none !important;
+}
+
+/**
+ * Size Extensions
+ */
+.wizard--progress--medium {
+  font-size: 1.5em;
+}
+
+.wizard--progress--large {
+  font-size: 2em;
+}
+
+.wizard--progress a {
+  text-decoration: none;
+}
+.wizard--progress li:hover {
+  text-decoration: underline;
+}
+
+</style>
 <ul id="md_tabs" class="nav nav-tabs">
-    <li id="first" class="active">
-        <a data-toggle="tab" href="#mandatory">Let's start > </a>
+    <li id="metadata_edit_tab" class="active">
+        <a data-toggle="tab" href="#edit-metadata">Edit</a>
     </li>
-    <li id="second">
-        <a data-toggle="tab" href="#advanced">Almost there... > </a>
-    </li>
-    <li id="last">
-        <a data-toggle="tab" href="#ownership">Done!</a>
-    </li>
-    <li id="preview_tab">
+    <li id="preview_tab" data-toggle="tab" dhref="#preview">
         <a data-toggle="tab" href="#preview">Preview</a>
     </li>
 </ul>
 
 
+
+
 {% block body_outer %}
 <div class="tab-content">
-
-    <div id="mandatory" class="tab-pane fade in active" style="">
+<div id="edit-metadata" class="tab-content tab-pane fade in active">
+  <ul class="wizard--progress wizard--progress--medium">
+      <li data-step="1" id="first" class="is-active" data-toggle="tab" href="#mandatory">
+          <a>Let's start</a>
+      </li>
+      <li data-step="2" id="second"  data-toggle="tab" href="#advanced">
+          <a>Almost there... </a>
+      </li>
+      <li data-step="3" id="last" data-toggle="tab" href="#ownership">
+          <a>Done!</a>
+      </li>
+  </ul>
+    <div id="mandatory" class="tab-pane fade in active">
         <!--<br />-->
         <div class="panel-group">
             <div class="panel panel-default">
@@ -43,9 +141,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class = "row">
-                    </div>
-                    <hr/>
                     <div class="row">
                         <div class="col">
                             <div id="basicDescriptiveInfo" class="container-fluid">
@@ -122,7 +217,7 @@
                 <div class="panel panel-default">
                     <!-- div class="panel-heading">Metadata info</div -->
                     <div class="panel-body">
-                        <div class="row" id="mdinfo" style="max-height: 590px">
+                        <div class="row" id="mdinfo">
                             <div class="row">
                                 <div class="col-lg-4">
                                     <div>
@@ -183,7 +278,7 @@
         <br />
         <p>Other, Optional, Metadata</p>
         <div class="row">
-            <div class="col-xs-6 col-lg-5">
+            <div class="col-xs-12 col-lg-5">
                 <div>
                     <span><label for="{{ layer_form.edition|id }}">{{ layer_form.edition.label }}</label></span>
                     <!--<p class="xxs-font-size">(Version of the cited resource)</p>-->
@@ -200,7 +295,7 @@
                     {{ layer_form.supplemental_information }}
                 </div>
             </div>
-            <div class="col-xs-6 col-lg-6">
+            <div class="col-xs-12 col-lg-6">
 
                     <div class="col-xs-12 col-lg-6">
                       <div class="input-group date">
@@ -309,15 +404,14 @@
             </div>
         </div>
     </div>
-
-    <div id="preview" class="tab-pane fade" style="overflow: hidden;">
-        <!-- <iframe id="preview_encoder_iframe" height="100%" width="100%" style="width:0;height:0;border:0;border:none;" src="{% url 'layer_metadata_detail' resource.typename %}"></iframe> -->
-        {% if metadataxsl %}
-            <iframe id="preview_encoder_iframe" height="100%" width="100%" style="width:0;height:0;border:0;border:none;" src="/showmetadata/xsl/{{resource.id}}"></iframe>
-        {% else %}
-            <iframe id="preview_encoder_iframe" height="100%" width="100%" style="width:0;height:0;border:0;border:none;" src="/catalogue/csw_to_extra_format/{{resource.uuid}}/{{resource.title}}.html"></iframe>
-        {% endif %}
-    </div>
-
+</div>
+<div id="preview" class="tab-pane fade" style="overflow: hidden;">
+    <!-- <iframe id="preview_encoder_iframe" height="100%" width="100%" style="width:0;height:0;border:0;border:none;" src="{% url 'layer_metadata_detail' resource.typename %}"></iframe> -->
+    {% if metadataxsl %}
+        <iframe id="preview_encoder_iframe" frameborder="0" scrolling="no" onload="if(this.contentWindow.document.body) {$('#preview').height(this.contentWindow.document.body.scrollHeight)}" src="/showmetadata/xsl/{{resource.id}}"></iframe>
+    {% else %}
+        <iframe id="preview_encoder_iframe" frameborder="0" scrolling="no" onload="if(this.contentWindow.document.body) {$('#preview').height(this.contentWindow.document.body.scrollHeight)}" src="/catalogue/csw_to_extra_format/{{resource.uuid}}/{{resource.title}}.html"></iframe>
+    {% endif %}
+</div>
 </div>
 {% endblock %}
