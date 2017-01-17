@@ -20,7 +20,7 @@
 
     <style>
         .xxs-font-size{
-            font-size: 10px;    
+            font-size: 10px;
         }
         textarea{
             width:100%;
@@ -29,7 +29,7 @@
             width:100%;
         }
         .test-class{
-            background-color: red; 
+            background-color: red;
         }
         table{
             table-layout:fixed;
@@ -49,56 +49,51 @@
             right: 0;
         }
 
-        .tab-pane{
-            height:650px;
-            overflow-y:scroll;
-        }
-        
         .fancy-checkbox input[type="radio"],
         .fancy-checkbox input[type="checkbox"],
         .fancy-checkbox .checked {
             display: none;
         }
-         
+
         .fancy-checkbox input[type="radio"]:checked ~ .checked,
         .fancy-checkbox input[type="checkbox"]:checked ~ .checked {
             display: inline-block;
             color:red;
         }
-         
+
         .fancy-checkbox input[type="radio"]:checked ~ .unchecked,
         .fancy-checkbox input[type="checkbox"]:checked ~ .unchecked {
             display: none;
         }
-        
+
         .tokenfield,
         #id_resource-title {
             width: 95% !important;
         }
-        
+
         .leaflet-container { /* all maps */
             height: 250px !important;
         }
-        
+
         .map-overlay {
             display: none !important;
         }
-        
+
         #regions_multiselect_container.content {
             position: absolute;
         }
-        
+
         .fstControls {
             width: 100% !important;
         }
-        
+
         .fstElement {
             font-size: 0.8em !important;
         }
-        
+
         .fstResultItem {
             font-size: 1.2em !important;
-        }    
+        }
     </style>
 {{ block.super }}
 {% endblock %}
@@ -178,7 +173,7 @@
           {% form layer_form using "layouts/panels.html" %}
           {# layer_form|as_bootstrap #}
         </div>
-        
+
         <div class="row">
           <div class="col-md-12 grid-spacer">
             <fieldset class="form-controls modal-forms modal hide fade" id="poc_form" >
@@ -194,7 +189,7 @@
 
             {% if not layer.metadata_uploaded_preserve %}
             <div class="form-actions">
-			  <input type="button" id="btn_back_dwn" class="btn btn-primary" value="{% trans "<< Back" %}"/>
+              <input type="button" id="btn_back_dwn" class="btn btn-primary" style="display: none" value="{% trans "<< Back" %}"/>
               <input type="submit" id="btn_upd_md_dwn" class="btn btn-primary" value="{% trans "Update" %}"/>
               <input type="button" id="btn_next_dwn" class="btn btn-primary" value="{% trans "Next >>" %}"/>
             </div>
@@ -226,7 +221,7 @@
             });
         });
     </script> -->
-    
+
     <!-- <script type="text/javascript">
         $(document).ready(function() {
             $('#id_resource-regions').treeMultiselect({
@@ -234,7 +229,7 @@
             });
         });
     </script> -->
-    
+
     <!-- Doc & Examples: http://dbrekalo.github.io/fastselect/ -->
     <script type="text/javascript">
         $(document).ready(function() {
