@@ -6,6 +6,7 @@
 <!--<script src="{% static "lib/js/jquery.tree-multiselect.min.js" %}" type="text/javascript"></script>-->
 <script src="{% static "lib/js/fastselect.standalone.min.js" %}" type="text/javascript"></script>
 <script src="{% static "lib/js/waterbubble.min.js" %}" type="text/javascript"></script>
+<script src="{% static "lib/js/bootstrap-select.min.js" %}" type="text/javascript"></script>
 <script type="text/javascript">
 {% autoescape off %}
 
@@ -111,9 +112,13 @@
         var empty = 0;
 
         $('#mandatory').find(":input").each(function(){
+
             if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button') {
                 prevNum++;
             }
+            $('#category_form').on('rendered.bs.select', function() {
+              $('.has-popover').popover({'trigger':'hover'});
+            });
 
             $(this).change(function(e){
                 if(e.target.value.trim() === ''){
