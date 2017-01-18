@@ -121,7 +121,7 @@
 
 <div class="container-fluid page-header" style="position: relative;">
   <!--<a href="{% url "layer_browse" %}" class="btn btn-primary pull-right">{% trans "Explore Layers" %}</a>-->
-  <h2 class="page-title">{% trans "Edit Metadata" %}&nbsp;{% blocktrans with layer.typename as layer_title %}for {{ layer_title }}{% endblocktrans %}</h2>
+  <h2 class="page-title">{% trans "Metadata" %}&nbsp;{% blocktrans with layer.typename as layer_title %}for {{ layer_title }}{% endblocktrans %}</h2>
       <div id="profileCompleteness" style="position: absolute; right: 0%; top: 0%">
         <canvas id="liquidPieChart"></canvas>
       </div>
@@ -189,7 +189,7 @@
 
             {% if not layer.metadata_uploaded_preserve %}
             <div class="form-actions">
-              <input type="button" id="btn_back_dwn" class="btn btn-primary" style="display: none" value="{% trans "<< Back" %}"/>
+              <input type="button" id="btn_back_dwn" class="btn btn-primary" style="display" value="{% trans "<< Back" %}"/>
               <input type="submit" id="btn_upd_md_dwn" class="btn btn-primary" value="{% trans "Update" %}"/>
               <input type="button" id="btn_next_dwn" class="btn btn-primary" value="{% trans "Next >>" %}"/>
             </div>
