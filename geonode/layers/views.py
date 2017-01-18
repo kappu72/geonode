@@ -457,9 +457,25 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html', aj
         category_form = CategoryForm(
             prefix="category_choice_field",
             initial=topic_category.id if topic_category else None)
-        print layer.tkeywords
+
+        # Keywords from THESAURI management
+        layer_tkeywords = layer.tkeywords.all()
+        tkeywords_list = ''
+        lang = 'en'  # TODO: use user's language
+        if layer_tkeywords and len(layer_tkeywords)>0:
+            tkeywords_ids = layer_tkeywords.values_list('id', flat=True)
+            if hasattr(settings, 'THESAURI'):
+                for el in settings.THESAURI:
+                    thesaurus_name = el['name'];
+                    t = Thesaurus.objects.get(identifier=thesaurus_name)
+                    for tk in t.thesaurus.filter(pk__in=tkeywords_ids):
+                        tkl = tk.keyword.filter(lang=lang)
+                        if len(tkl) > 0:
+                            tkl_ids = ",".join(map(str, tkl.values_list('id', flat=True)))
+                            tkeywords_list += "," + tkl_ids if len(tkeywords_list)>0 else tkl_ids
         tkeywords_form = TKeywordForm(
-            prefix="tkeywords")
+            prefix="tkeywords",
+            initial={'tkeywords':tkeywords_list})
 
     if request.method == "POST" and layer_form.is_valid(
     ) and attribute_form.is_valid() and category_form.is_valid() and tkeywords_form.is_valid():
@@ -546,22 +562,33 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html', aj
         message = layer.typename
 
         try:
-            # TODO: For all Thesauri
-            tkeywords_ids = map(int, tkeywords_form.clean()[0]['tkeywords-tkeywords_0'])
-            tkeywords_to_add = []
-            if hasattr(settings, 'THESAURI'):
-                for el in settings.THESAURI:
-                    choices_list = []
-                    thesaurus_name = el['name'];
-                    t = Thesaurus.objects.get(identifier=thesaurus_name)
-                    for tk in t.thesaurus.all():
-                        tkl = tk.keyword.filter(pk__in=tkeywords_ids)
-                        if len(tkl) > 0:
-                            tkeywords_to_add.append(tkl[0].keyword_id)
+            # Keywords from THESAURI management
+            tkeywords_cleaned = tkeywords_form.clean()
+            if tkeywords_cleaned and len(tkeywords_cleaned)>0:
+                tkeywords_ids = []
+                for i, val in enumerate(tkeywords_cleaned):
+                    try:
+                        cleaned_data = [value for key, value
+                                        in tkeywords_cleaned[i].items()
+                                        if 'tkeywords-tkeywords' in key.lower()
+                                           and 'autocomplete' not in key.lower()]
+                    except:
+                        pass
+                    tkeywords_ids.extend(map(int, cleaned_data[0]))
+
+                tkeywords_to_add = []
+                if hasattr(settings, 'THESAURI'):
+                    for el in settings.THESAURI:
+                        choices_list = []
+                        thesaurus_name = el['name'];
+                        t = Thesaurus.objects.get(identifier=thesaurus_name)
+                        for tk in t.thesaurus.all():
+                            tkl = tk.keyword.filter(pk__in=tkeywords_ids)
+                            if len(tkl) > 0:
+                                tkeywords_to_add.append(tkl[0].keyword_id)
 
             layer.tkeywords.add(*tkeywords_to_add)
         except:
-            import traceback
             tb = traceback.format_exc()
             logger.error(tb)
 

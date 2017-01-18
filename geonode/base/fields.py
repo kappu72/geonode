@@ -28,7 +28,6 @@ from geonode.base.models import ThesaurusKeywordLabel
 
 class MultiThesauriField(forms.MultiValueField):
     def __init__(self, label=None, required=True, help_text=None, widget=None):
-        
         fields_list = []
         for el in settings.THESAURI:
             choices_list = []
@@ -38,14 +37,12 @@ class MultiThesauriField(forms.MultiValueField):
                 tkl = tk.keyword.filter(lang='en')
                 choices_list.append((tkl[0].id, tkl[0].label))
             fields_list.append(forms.MultipleChoiceField(choices = tuple(choices_list)))
-        
+
         fields = tuple(fields_list)
-        
+
         super(MultiThesauriField, self).__init__(fields, required, widget, label)
         
-    def compress(selfself, data_list):
+    def compress(self, data_list):
         if data_list:
-            # print "**************** FIELD ************************" + str(data_list[0]);
-            #return '%s,%s,%s' % (data_list[0], data_list[1], data_list[2])
             return '%s' % (data_list[0])
         return None

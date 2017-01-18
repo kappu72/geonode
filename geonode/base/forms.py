@@ -205,7 +205,7 @@ class TKeywordForm(forms.Form):
     tkeywords = MultiThesauriField(
         label=_("Keywords from Thesauri"),
         required=False,
-        help_text=_("A space or comma-separated list of keywords"),
+        help_text=_("List of keywords from Thesauri"),
         widget=MultiThesauriWidget())
     
     def clean(self):

@@ -26,7 +26,6 @@ import autocomplete_light
 
 class MultiThesauriWidget(forms.MultiWidget):
     def __init__(self, attrs=None):
-
         widget_list = []
         for el in settings.THESAURI:
             cleaned_name = el['name'].replace("-", " ").replace("_", " ").title()
@@ -37,16 +36,13 @@ class MultiThesauriWidget(forms.MultiWidget):
 
         super(MultiThesauriWidget, self).__init__(widgets, attrs)
 
-    def decompress(selfself, value):
+    def decompress(self, value):
         if value:
-            data = value.split(',')
-            return [data[0], data[1], data[2]]
+            return [map(int, value.split(','))]
         return [None, None, None]
 
-    def compress(selfself, data_list):
+    def compress(self, data_list):
         if data_list:
-            # print "**************** FIELD ************************" + str(data_list[0]);
-            #return '%s,%s,%s' % (data_list[0], data_list[1], data_list[2])
             return '%s' % (data_list[0])
         return None
 
