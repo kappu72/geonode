@@ -30,6 +30,8 @@ from widgets import MultiThesauriWidget
 from autocomplete_light.contrib.taggit_field import TaggitField, TaggitWidget
 
 from django import forms
+from django.forms import models
+from django.forms.fields import ChoiceField
 from django.forms.utils import flatatt, to_current_timezone
 from django.utils.html import conditional_escape, format_html, html_safe
 from django.utils.safestring import mark_safe
@@ -75,15 +77,25 @@ def get_tree_data():
             )
     return tuple(data)
 
+class AdvancedModelChoiceIterator(models.ModelChoiceIterator):
+    def choice(self, obj):
+        return (self.field.prepare_value(obj), self.field.label_from_instance(obj), obj)
 
 class CategoryChoiceField(forms.ModelChoiceField):
+    def _get_choices(self):
+        if hasattr(self, '_choices'):
+            return self._choices
+
+        return AdvancedModelChoiceIterator(self)
+
+    choices = property(_get_choices, ChoiceField._set_choices)
+
     def label_from_instance(self, obj):
         return '<i class="fa '+obj.fa_class+' fa-2x unchecked"></i>' \
                '<i class="fa '+obj.fa_class+' fa-2x checked"></i>' \
                '<span class="has-popover" data-container="body" data-toggle="popover" data-placement="top" ' \
                'data-content="' + obj.description + '" trigger="hover">' \
                '<br/><strong>' + obj.gn_description + '</strong></span>'
-
 
 class TreeWidget(forms.TextInput):
         input_type = 'text'
@@ -342,4 +354,3 @@ class ResourceBaseForm(TranslationModelForm):
             'rating',
             'detail_url'
             )
-
