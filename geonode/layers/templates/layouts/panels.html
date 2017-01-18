@@ -3,15 +3,20 @@
 <link href="{{ STATIC_URL }}lib/css/bootstrap-select.min.css?v={{ VERSION }}" rel="stylesheet" />
 <style>
 #regions_multiselect_container .fstElement {
-  min-width: 300px;
+  width: 100%;
 }
 #mdeditor_form .panel-group .panel{
   overflow: visible;
 }
-
+#mdeditor_form .input-group.date {
+  width: 100%;
+}
 #mdeditor_form textarea {
   resize: vertical;
-  min-height: 100px;
+  height: 120px;
+}
+form #mdeditor_form label{
+  margin-right: 0.3em;
 }
 #mdeditor_form .tokenfield.form-control {
   height: auto;
@@ -190,7 +195,7 @@
                                     <div>
                                           {{ tkeywords_form }}
                                     </div>
-                                    <div class="col-lg-5 col-xs-12">
+                                    <div class="col-lg-6 col-xs-12">
                                         <span><label for="{{ layer_form.date_type|id }}">{{ layer_form.date_type.label }}</label></span>
                                         <!--<p class="xxs-font-size">(Identification of when a given event occurred)</p>-->
                                         {{ layer_form.date_type }}
@@ -327,27 +332,26 @@
                         {{ layer_form.temporal_extent_end }}
                         </div>
                     </div>
-                <div class="row">
-                    <div>
+                <div class="col-xs-12">
+                    <div style="margin-top: 5px">
                         <span><label for="{{ layer_form.maintenance_frequency|id }}">{{ layer_form.maintenance_frequency.label }}</label></span>
                         <!--<p class="xxs-font-size">(Identification of when a given event occurred)</p>-->
                         {{ layer_form.maintenance_frequency }}
                     </div>
-                    <div>
+                    <div style="margin-top: 5px">
                         <span><label for="{{ layer_form.spatial_representation_type|id }}">{{ layer_form.spatial_representation_type.label }}</label></span>
                         <!--<p class="xxs-font-size">(Method used to represent geographic information in the dataset)</p>-->
                         {{ layer_form.spatial_representation_type }}
                     </div>
-                    <div>
-                        <div class="panel panel-default">
+                    
+                        <div class="panel panel-default" style="margin-top: 5px">
                             <div class="panel-heading">Responsible Parties</div>
                             <div class="panel-body">
                                 <span><label for="{{ layer_form.poc|id }}">{{ layer_form.poc.label }}</label></span>
                                 {{ layer_form.poc }}
                             </div>
                         </div>
-                    </div>
-                    <div>
+                    
                         <div class="panel panel-default">
                             <div class="panel-heading">Owner and Permissions</div>
                             <div class="panel-body">
@@ -385,7 +389,7 @@
                                {% endif %}
                             </div>
                         </div>
-                    </div>
+                    
                 </div>
             </div>
         </div>
