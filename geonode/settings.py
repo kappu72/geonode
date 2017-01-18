@@ -1065,4 +1065,3 @@ if 'geonode.geoserver' in INSTALLED_APPS:
 # Filter: (boolean, optional, default false) a filter option on that thesaurus will appear in the main search page
 # THESAURI = [{'name':'inspire_themes', 'required':True, 'filter':True}]
 THESAURI = []
-

@@ -66,6 +66,10 @@ from geonode.utils import build_social_links
 from geonode.geoserver.helpers import cascading_delete, gs_catalog
 from geonode.geoserver.helpers import ogc_server_settings
 
+from geonode.base.models import Thesaurus
+from geonode.base.models import ThesaurusKeyword
+from geonode.base.models import ThesaurusKeywordLabel
+
 if 'geonode.geoserver' in settings.INSTALLED_APPS:
     from geonode.geoserver.helpers import _render_thumbnail
 CONTEXT_LOG_FILE = ogc_server_settings.LOG_FILE
@@ -453,6 +457,7 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html', aj
         category_form = CategoryForm(
             prefix="category_choice_field",
             initial=topic_category.id if topic_category else None)
+        print layer.tkeywords
         tkeywords_form = TKeywordForm(
             prefix="tkeywords")
 
@@ -508,32 +513,57 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html', aj
             new_keywords = [x.strip() for x in layer_form.cleaned_data['keywords']]
             layer.keywords.clear()
             layer.keywords.add(*new_keywords)
-            the_layer = layer_form.save()
-            up_sessions = UploadSession.objects.filter(layer=the_layer.id)
-            if up_sessions.count() > 0 and up_sessions[0].user != the_layer.owner:
-                up_sessions.update(user=the_layer.owner)
-            the_layer.poc = new_poc
-            the_layer.metadata_author = new_author
-            Layer.objects.filter(id=the_layer.id).update(
-                category=new_category
-                )
+            try:
+                the_layer = layer_form.save()
+                up_sessions = UploadSession.objects.filter(layer=the_layer.id)
+                if up_sessions.count() > 0 and up_sessions[0].user != the_layer.owner:
+                    up_sessions.update(user=the_layer.owner)
+                the_layer.poc = new_poc
+                the_layer.metadata_author = new_author
+                Layer.objects.filter(id=the_layer.id).update(
+                    category=new_category
+                    )
 
-            if getattr(settings, 'SLACK_ENABLED', False):
-                try:
-                    from geonode.contrib.slack.utils import build_slack_message_layer, send_slack_messages
-                    send_slack_messages(build_slack_message_layer("layer_edit", the_layer))
-                except:
-                    print "Could not send slack message."
+                if getattr(settings, 'SLACK_ENABLED', False):
+                    try:
+                        from geonode.contrib.slack.utils import build_slack_message_layer, send_slack_messages
+                        send_slack_messages(build_slack_message_layer("layer_edit", the_layer))
+                    except:
+                        print "Could not send slack message."
 
-            if not ajax:
-                return HttpResponseRedirect(
-                    reverse(
-                        'layer_detail',
-                        args=(
-                            layer.service_typename,
-                        )))
+                if not ajax:
+                    return HttpResponseRedirect(
+                        reverse(
+                            'layer_detail',
+                            args=(
+                                layer.service_typename,
+                            )))
+            except:
+                tb = traceback.format_exc()
+                if tb:
+                    logger.error(tb)
 
         message = layer.typename
+
+        try:
+            # TODO: For all Thesauri
+            tkeywords_ids = map(int, tkeywords_form.clean()[0]['tkeywords-tkeywords_0'])
+            tkeywords_to_add = []
+            if hasattr(settings, 'THESAURI'):
+                for el in settings.THESAURI:
+                    choices_list = []
+                    thesaurus_name = el['name'];
+                    t = Thesaurus.objects.get(identifier=thesaurus_name)
+                    for tk in t.thesaurus.all():
+                        tkl = tk.keyword.filter(pk__in=tkeywords_ids)
+                        if len(tkl) > 0:
+                            tkeywords_to_add.append(tkl[0].keyword_id)
+
+            layer.tkeywords.add(*tkeywords_to_add)
+        except:
+            import traceback
+            tb = traceback.format_exc()
+            logger.error(tb)
 
         return HttpResponse(json.dumps({'message': message}))
 

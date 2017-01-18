@@ -21,6 +21,7 @@
 import copy
 import datetime
 import re
+import json
 import autocomplete_light
 
 from fields import MultiThesauriField
@@ -201,7 +202,6 @@ class CategoryForm(forms.Form):
         return cleaned_data
 
 class TKeywordForm(forms.Form):
-    
     tkeywords = MultiThesauriField(
         label=_("Keywords from Thesauri"),
         required=False,
@@ -209,8 +209,15 @@ class TKeywordForm(forms.Form):
         widget=MultiThesauriWidget())
     
     def clean(self):
-        cleaned_data = self.data
-        ccf_data = cleaned_data.get("tkeywords")
+        cleaned_data = None
+        if self.data:
+            try:
+                cleaned_data = [{key: self.data.getlist(key)} for key, value
+                                in self.data.items()
+                                if 'tkeywords-tkeywords' in key.lower()
+                                   and 'autocomplete' not in key.lower()]
+            except:
+                pass
         
         return cleaned_data
 

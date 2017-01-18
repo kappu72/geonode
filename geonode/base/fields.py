@@ -45,7 +45,7 @@ class MultiThesauriField(forms.MultiValueField):
         
     def compress(selfself, data_list):
         if data_list:
-            print "**************** FIELD ************************" + str(data_list[0]);
+            # print "**************** FIELD ************************" + str(data_list[0]);
             #return '%s,%s,%s' % (data_list[0], data_list[1], data_list[2])
             return '%s' % (data_list[0])
         return None
