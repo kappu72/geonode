@@ -5,7 +5,6 @@
 <!--<script src="{% static "lib/js/bootstrap-multiselect.js" %}" type="text/javascript"></script>-->
 <!--<script src="{% static "lib/js/jquery.tree-multiselect.min.js" %}" type="text/javascript"></script>-->
 <script src="{% static "lib/js/fastselect.standalone.min.js" %}" type="text/javascript"></script>
-<script src="{% static "lib/js/waterbubble.min.js" %}" type="text/javascript"></script>
 <script src="{% static "lib/js/bootstrap-select.min.js" %}" type="text/javascript"></script>
 <script type="text/javascript">
 {% autoescape off %}
@@ -49,32 +48,50 @@
         }
       }
     }
+    var updateCompleteness = function(completeness) {
+      $('#profileCompleteness .progress-bar').html(parseFloat(((completeness)*100).toFixed(2)) + ' %').width(parseFloat(((completeness)*100).toFixed(2)) + '%');
+      $('#profileCompleteness .completed').toggle(completeness === 1);
+      $('#profileCompleteness .not-completed').toggle(completeness !== 1);
+      var mandatoryMissing =  $('#mandatory').find('.input-empty').length > 0;
+      var advancedMissing = $('#advanced').find('.input-empty').length > 0;
+      $('#completeness-hints .mandatory-hint')
+        .toggleClass('progress-bar-danger', mandatoryMissing)
+        .toggleClass('progress-bar-success', !mandatoryMissing)
+        .attr('title', mandatoryMissing ? "some mandatory fields are missing" : "Mandatory fields completed" )
+        .tooltip('fixTitle');
+      $('#completeness-hints .advanced-hint')
+        .toggleClass('progress-bar-danger', advancedMissing)
+        .toggleClass('progress-bar-success', !advancedMissing)
+        .attr('title', advancedMissing ? "some mandatory fields are missing" : "Mandatory fields completed" )
+        .tooltip('fixTitle');
+        $('.metadata-edit-done').animate(completeness === 1 ? {width: '100px', opacity: 1} : {width: 0, opacity: 0});
+    }
+    function getTab(number) {
+      var activeTab = $("#edit-metadata .wizard--progress li.is-active");
+      var tabIndex = activeTab && $(activeTab[0]).data("step");
+      var nextTab = $("#edit-metadata .wizard--progress li[data-step=" + number + "]");
+      if (nextTab) {
+        activeTab.toggleClass('is-active');
+        nextTab.tab('show');
+        nextTab.toggleClass('is-active');
+      }
+      updateWizard();
+    }
     function getPrevTab(){
       var activeTab = $("#edit-metadata .wizard--progress li.is-active");
       var tabIndex = activeTab && $(activeTab[0]).data("step");
       if (tabIndex >= 0) {
-          var nextTab = $("#edit-metadata .wizard--progress li[data-step=" + (tabIndex - 1) + "]");
-          if (nextTab) {
-            activeTab.toggleClass('is-active');
-            nextTab.tab('show');
-            nextTab.toggleClass('is-active');
-          }
+          getTab( tabIndex - 1 );
       }
-      updateWizard();
+    
     };
 
     function getNextTab(){
         var activeTab = $("#edit-metadata .wizard--progress li.is-active");
         var tabIndex = activeTab && $(activeTab[0]).data("step");
         if (tabIndex >= 0) {
-            var nextTab = $("#edit-metadata .wizard--progress li[data-step=" + (tabIndex + 1) + "]");
-            if (nextTab) {
-                activeTab.toggleClass('is-active');
-                nextTab.tab('show');
-                nextTab.toggleClass('is-active');
-            }
+            getTab( tabIndex + 1 );
         }
-        updateWizard();
     };
 
     $(document).ready(
@@ -110,7 +127,8 @@
     $(document).ready(function() {
         var prevNum = 0, totalNum = 0;
         var empty = 0;
-
+        $('#completeness-hints .mandatory-hint').click(getTab.bind(null, 1));
+        $('#completeness-hints .advanced-hint').click(getTab.bind(null, 2));
         $('#mandatory').find(":input").each(function(){
 
             if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button') {
@@ -126,6 +144,10 @@
                         $(e.target).addClass("input-empty");
                         if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button') {
                             empty++;
+                            // display error status for token fields if not completed
+                            if($(this).parent().hasClass('tokenfield')) {
+                              $(this).parent().parent().toggleClass('has-error', true)
+                            }
                         }
                     }
                 }
@@ -133,6 +155,10 @@
                     if($(e.target).hasClass("input-empty")){
                         if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button') {
                             empty--;
+                            // display error status for token fields if not completed
+                            if($(this).parent().hasClass('tokenfield')) {
+                              $(this).parent().parent().toggleClass('has-error', false)
+                            }
                         }
                     }
                     $(e.target).removeClass("input-empty");
@@ -140,11 +166,7 @@
                 }
                 if(totalNum == prevNum && this.type !== 'radio'  && this.type !== 'button') {
                     try {
-                        $('#liquidPieChart').waterbubble({
-                            radius: 30,
-                            txt: parseFloat(((totalNum-empty)/totalNum)*100).toFixed(2) + '%',
-                            data: ((totalNum-empty)/totalNum)
-                        });
+                        updateCompleteness((totalNum-empty)/totalNum);
                     } catch(err) {
                         // Log error
                     }
@@ -184,11 +206,7 @@
 
                 if(totalNum == prevNum) {
                     try {
-                        $('#liquidPieChart').waterbubble({
-                            radius: 30,
-                            txt: parseFloat(((totalNum-empty)/totalNum)*100).toFixed(2) + '%',
-                            data: ((totalNum-empty)/totalNum)
-                        });
+                        updateCompleteness((totalNum-empty)/totalNum);
                     } catch(err) {
                         // Log error
                     }
@@ -255,11 +273,7 @@
 
         if(totalNum == prevNum) {
             try {
-                $('#liquidPieChart').waterbubble({
-                    radius: 30,
-                    txt: parseFloat(((totalNum-empty)/totalNum)*100).toFixed(2) + '%',
-                    data: ((totalNum-empty)/totalNum)
-                });
+                updateCompleteness((totalNum-empty)/totalNum);
             } catch(err) {
                 // Log error
             }

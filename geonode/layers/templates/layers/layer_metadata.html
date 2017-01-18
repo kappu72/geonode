@@ -44,11 +44,10 @@
         }
 
         input[type="text"] {
-            width: 200px !important;
+            width: 100%;
             left: 0;
             right: 0;
         }
-
         .fancy-checkbox input[type="radio"],
         .fancy-checkbox input[type="checkbox"],
         .fancy-checkbox .checked {
@@ -68,7 +67,7 @@
 
         .tokenfield,
         #id_resource-title {
-            width: 95% !important;
+            width: 100% !important;
         }
 
         .leaflet-container { /* all maps */
@@ -122,8 +121,17 @@
 <div class="container-fluid page-header" style="position: relative;">
   <!--<a href="{% url "layer_browse" %}" class="btn btn-primary pull-right">{% trans "Explore Layers" %}</a>-->
   <h2 class="page-title">{% trans "Metadata" %}&nbsp;{% blocktrans with layer.typename as layer_title %}for {{ layer_title }}{% endblocktrans %}</h2>
-      <div id="profileCompleteness" style="position: absolute; right: 0%; top: 0%">
-        <canvas id="liquidPieChart"></canvas>
+      <div id="profileCompleteness" class="alert alert-info" style="position: absolute; right: 0; top: 0; padding: 4px; width: 300px">
+        <strong>Completeness</strong>
+        <div style="padding: 2px;">
+          <small class="completed text-success" style="display: none; "><i class="fa fa-check"></i>Mandatory fields completed</small>
+          <small class="not-completed text-danger" style="display: none; "><i class="fa fa-remove"></i>Some manadatory fields missing</small>
+        </div>
+        <div class="progress" style="margin-bottom:2px;">
+        <div class="progress-bar progress-bar-striped" role="progress-bar" >
+          70%
+        </div>
+        </div>
       </div>
   </h2>
 </div>
