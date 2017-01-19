@@ -218,7 +218,48 @@
                 totalNum++;
             }
         });
-
+        // Dataset attributes sorting
+        $(document).ready(function() {
+            //Helper function to keep table row from collapsing when being sorted
+            var fixHelperModified = function(e, tr) {
+                var $originals = tr.children();
+                var $helper = tr.clone();
+                $helper.children().each(function(index) {
+                  $(this).width($originals.eq(index).width())
+                });
+                return $helper;
+            };
+            //Renumber table rows
+            function renumber_table(tableID) {
+                $(tableID + " input[name$=display_order]").each(function() {
+                    //note: index 0 is for the header
+                    count = $(this).closest('tr').index(tableID +' tr');
+                    $(this).val(count);
+                });
+            }
+            //Make table sortable
+            $("#dataset tbody").sortable({
+                items: "tr:not(.table-header)",
+                helper: fixHelperModified,
+                stop: function(event,ui) {renumber_table('#dataset table')}
+            }).disableSelection();
+            
+            //change position on display_order field change
+            $("#dataset table input[name$=display_order]").change(function(e) {
+              if (e.originalEvent) {
+                // user-triggered event
+                var nextIndex = $( this ).val();
+                if(nextIndex > 0) {
+                  var to = $('#dataset tbody');
+                  var currentPosition = $(this).closest('tr').index('#dataset tbody tr');
+                  if(currentPosition > nextIndex) { nextIndex--; }
+                  $(this).closest('tr').insertAfter(to.children().eq(nextIndex));
+                }
+                renumber_table('#dataset table')
+                
+              }
+            });
+        });
         $(".wizard--progress li").click(function(){
           $(this).tab('show');
           $(".wizard--progress li.is-active").toggleClass('is-active', false);
