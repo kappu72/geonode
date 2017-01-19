@@ -26,6 +26,9 @@ form #mdeditor_form label{
   background-color: #2c689c;
   border: #2c689c;
 }
+#mdeditor_form .mandatory-hint,#mdeditor_form .advanced-hint {
+  cursor: pointer;
+}
 </style>
 <style>
 /* metadata edit workflow wizard */
@@ -125,6 +128,15 @@ form #mdeditor_form label{
 }
 
 </style>
+
+<style>
+
+
+    
+
+</style>
+<button class="btn btn-success metadata-edit-done" type="submit" style="float:right" >Done!</button>
+
 <ul id="md_tabs" class="nav nav-tabs">
     <li id="metadata_edit_tab" class="active">
         <a data-toggle="tab" href="#edit-metadata">Edit</a>
@@ -134,12 +146,22 @@ form #mdeditor_form label{
     </li>
 </ul>
 
-
-
-
 {% block body_outer %}
 <div class="tab-content">
 <div id="edit-metadata" class="tab-content tab-pane fade in active">
+  <div id="completeness-hints" class="progress">
+  
+  <div class="mandatory-hint progress-bar" role="progressbar" style="width:25%">
+    Mandatory
+  </div>
+  <div class="advanced-hint progress-bar" role="progressbar" style="width:25%">
+    Mandatory
+  </div>
+  <div class="progress-bar" role="progressbar" style="width:50%">
+    Optional
+  </div>
+    15 %
+</div>
   <ul class="wizard--progress wizard--progress--medium">
       <li data-step="1" id="first" class="is-active" data-toggle="tab" href="#mandatory">
           <a>Data Info</a>
