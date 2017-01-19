@@ -3,34 +3,61 @@
 <link href="{{ STATIC_URL }}lib/css/bootstrap-select.min.css?v={{ VERSION }}" rel="stylesheet" />
 <script type="text/javascript" src="{{ STATIC_URL}}geonode/js/utils/thumbnail.js"></script>
 <style>
-#regions_multiselect_container .fstElement {
-  width: 100%;
-}
+/* general panel styles */
 #mdeditor_form .panel-group .panel{
   overflow: visible;
 }
+/* date fields proper sizes */
 #mdeditor_form .input-group.date {
   width: 100%;
 }
+
+/* resizable text-areas */
 #mdeditor_form textarea {
   resize: vertical;
   height: 120px;
 }
+
+/* question mark (info) distance fom label*/
 form #mdeditor_form label{
   margin-right: 0.3em;
 }
-#mdeditor_form .tokenfield.form-control {
-  height: auto;
+/* regions */
+#regions_multiselect_container .fstElement {
+  width: 100%;
 }
 #regions_multiselect_container .fstChoiceItem {
   background-color: #2c689c;
   border: #2c689c;
 }
+
 #mdeditor_form .mandatory-hint,#mdeditor_form .advanced-hint {
   cursor: pointer;
 }
-#mdeditor #id_resource-featured {
-  margin-right: 21px;
+
+/* owner checkboxes */
+#mdeditor_form #id_resource-is_published, #mdeditor_form #id_resource-featured  {
+  float: right;
+}
+/* keywords */
+#mdeditor_form .tokenfield.form-control {
+  height: auto;
+}
+/* fixes for thesauri style
+#mdeditor_form .thesauri_keywords .input-empty {
+  border: 1px solid #ccc;
+}
+
+#mdeditor_form .thesauri_keywords.has-error .input-empty {
+  border-color: red;
+  border-style: double;
+}
+ */
+#mdeditor_form .thesauri_keywords label {
+  display: block;
+}
+#mdeditor_form span.autocomplete-light-widget {
+  width: 100%;
 }
 </style>
 <style>
@@ -55,6 +82,7 @@ form #mdeditor_form label{
 }
 .wizard--progress > li:before {
   transition: background 0.5s ease 0.1s;
+  box-shadow: 5px 5px 5px rgba(0,0,0,.5);
   content: attr(data-step);
   display: block;
   margin: 0 auto;
@@ -69,18 +97,20 @@ form #mdeditor_form label{
   z-index: 1000;
 }
 .wizard--progress > li:after {
-  transition: background 1s ease;
+  transition: background 1s ease, width 1s ease;
+  width: 0px;
+  box-shadow: 5px 5px 5px rgba(0,0,0,.5);
   content: '';
   position: absolute;
   display: block;
   background: #DFE3E4;
-  width: 100%;
   height: 0.5em;
   top: 1.25em;
   left: 50%;
   margin-left: 1.5em\9;
   z-index: -1;
 }
+
 .wizard--progress > li:last-child:after {
   display: none;
 }
@@ -95,7 +125,9 @@ form #mdeditor_form label{
   z-index: 1;
 }
 .wizard--progress > li.is-complete:after {
+  transition: background 1s ease, width 1s ease;
   z-index: 0;
+  width: 100%;
 }
 .wizard--progress > li.is-active {
   color: #3498DB;
@@ -123,11 +155,11 @@ form #mdeditor_form label{
   font-size: 2em;
 }
 
-.wizard--progress a {
-  text-decoration: none;
-}
 .wizard--progress li:hover {
   text-decoration: underline;
+}
+.wizard--progress a, .wizard--progress li:hover::before {
+  text-decoration: none;
 }
 
 </style>
@@ -237,7 +269,7 @@ span.grippy::after {
                                     <!--<p class="xxs-font-size">(A space or comma separated list of keywords)</p>-->
                                     {{ layer_form.keywords }}
                                   </div>
-                                    <div class="col-lg-12">
+                                    <div class="col-lg-12 thesauri_keywords">
                                           {{ tkeywords_form }}
                                     </div>
                                     <div class="col-lg-6 col-xs-12">

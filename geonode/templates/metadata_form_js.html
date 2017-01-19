@@ -52,7 +52,7 @@
       $('#profileCompleteness .progress-bar').html(parseFloat(((completeness)*100).toFixed(2)) + ' %').width(parseFloat(((completeness)*100).toFixed(2)) + '%');
       $('#profileCompleteness .completed').toggle(completeness === 1);
       $('#profileCompleteness .not-completed').toggle(completeness !== 1);
-      var mandatoryMissing =  $('#mandatory').find('.input-empty').length > 0;
+      var mandatoryMissing =  $('#mandatory').find('.input-empty:not([id^=autocomlete])').length > 0;
       var advancedMissing = $('#advanced').find('.input-empty').length > 0;
       $('#completeness-hints .mandatory-hint')
         .toggleClass('progress-bar-danger', mandatoryMissing)
@@ -129,6 +129,21 @@
         var empty = 0;
         $('#completeness-hints .mandatory-hint').click(getTab.bind(null, 1));
         $('#completeness-hints .advanced-hint').click(getTab.bind(null, 2));
+        // set proper class
+        var setInputEmpty = function( target, empty ) {
+          if($(target).hasClass('value-select')) {
+            $(target).toggleClass("input-empty", empty);
+            $(target).parent().find('input.autocomplete').toggleClass("input-empty", empty);
+          } else if( !$(target).hasClass('autocomplete') ){
+            // display error status for token fields if not completed
+            
+            $(target).toggleClass("input-empty", empty);
+          } else if($(target).parent().hasClass('tokenfield')) {
+            $(target).parent().parent().toggleClass('has-error', empty)
+            $(target).toggleClass("input-empty", empty);
+          }
+        }
+        
         $('#mandatory').find(":input").each(function(){
 
             if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button') {
@@ -141,13 +156,9 @@
             $(this).change(function(e){
                 if(e.target.value.trim() === ''){
                     if(!$(e.target).hasClass("input-empty")){
-                        $(e.target).addClass("input-empty");
+                        setInputEmpty(e.target, true);
                         if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button') {
                             empty++;
-                            // display error status for token fields if not completed
-                            if($(this).parent().hasClass('tokenfield')) {
-                              $(this).parent().parent().toggleClass('has-error', true)
-                            }
                         }
                     }
                 }
@@ -155,13 +166,9 @@
                     if($(e.target).hasClass("input-empty")){
                         if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button') {
                             empty--;
-                            // display error status for token fields if not completed
-                            if($(this).parent().hasClass('tokenfield')) {
-                              $(this).parent().parent().toggleClass('has-error', false)
-                            }
                         }
                     }
-                    $(e.target).removeClass("input-empty");
+                    setInputEmpty(e.target, false);
                     $(e.target).parent().find(".mandatory-warning").remove();
                 }
                 if(totalNum == prevNum && this.type !== 'radio'  && this.type !== 'button') {
@@ -187,7 +194,7 @@
             $(this).change(function(e){
                 if(e.target.value.trim() === ''){
                     if(!$(e.target).hasClass("input-empty")){
-                        $(e.target).addClass("input-empty");
+                        setInputEmpty(e.target, true);
                         $(e.target).parent().append("<p class='xxs-font-size mandatory-warning'>&nbsp;&nbsp;&nbsp;<strong>* ISO mandatory field</strong></p>");
                         if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button') {
                             empty++;
@@ -200,7 +207,7 @@
                             empty--;
                         }
                     }
-                    $(e.target).removeClass("input-empty");
+                    setInputEmpty(e.target, false);
                     $(e.target).parent().find(".mandatory-warning").remove();
                 }
 
