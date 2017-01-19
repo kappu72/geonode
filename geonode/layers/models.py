@@ -499,23 +499,23 @@ def pre_save_layer(instance, sender, **kwargs):
 
     instance.set_bounds_from_bbox(bbox)
 
-    if instance.regions and instance.regions.all():
-        """
-        try:
-            queryset = instance.regions.all().order_by('name')
-            for region in queryset:
-                print ("%s : %s" % (region.name, region.geographic_bounding_box))
-        except:
-            tb = traceback.format_exc()
+    try:
+        if instance.regions and instance.regions.all():
+            """
+            try:
+                queryset = instance.regions.all().order_by('name')
+                for region in queryset:
+                    print ("%s : %s" % (region.name, region.geographic_bounding_box))
+            except:
+                tb = traceback.format_exc()
+            else:
+                tb = None
+            finally:
+                if tb:
+                    logger.debug(tb)
+            """
+            pass
         else:
-            tb = None
-        finally:
-            if tb:
-                logger.debug(tb)
-        """
-        pass
-    else:
-        try:
             srid1, wkt1 = instance.geographic_bounding_box.split(";")
             srid1 = re.findall(r'\d+', srid1)
 
@@ -545,10 +545,10 @@ def pre_save_layer(instance, sender, **kwargs):
                 else:
                     instance.regions.add(Region.objects.filter(Q(level=0) | Q(parent=None)))
                     instance.save
-        except:
-            tb = traceback.format_exc()
-            if tb:
-                logger.debug(tb)
+    except:
+        tb = traceback.format_exc()
+        if tb:
+            logger.debug(tb)
 
 
 def pre_delete_layer(instance, sender, **kwargs):

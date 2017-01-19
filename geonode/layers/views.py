@@ -467,12 +467,17 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html', aj
             if hasattr(settings, 'THESAURI'):
                 for el in settings.THESAURI:
                     thesaurus_name = el['name'];
-                    t = Thesaurus.objects.get(identifier=thesaurus_name)
-                    for tk in t.thesaurus.filter(pk__in=tkeywords_ids):
-                        tkl = tk.keyword.filter(lang=lang)
-                        if len(tkl) > 0:
-                            tkl_ids = ",".join(map(str, tkl.values_list('id', flat=True)))
-                            tkeywords_list += "," + tkl_ids if len(tkeywords_list)>0 else tkl_ids
+                    try:
+                        t = Thesaurus.objects.get(identifier=thesaurus_name)
+                        for tk in t.thesaurus.filter(pk__in=tkeywords_ids):
+                            tkl = tk.keyword.filter(lang=lang)
+                            if len(tkl) > 0:
+                                tkl_ids = ",".join(map(str, tkl.values_list('id', flat=True)))
+                                tkeywords_list += "," + tkl_ids if len(tkeywords_list)>0 else tkl_ids
+                    except:
+                        tb = traceback.format_exc()
+                        logger.error(tb)
+
         tkeywords_form = TKeywordForm(
             prefix="tkeywords",
             initial={'tkeywords':tkeywords_list})
@@ -581,11 +586,15 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html', aj
                     for el in settings.THESAURI:
                         choices_list = []
                         thesaurus_name = el['name'];
-                        t = Thesaurus.objects.get(identifier=thesaurus_name)
-                        for tk in t.thesaurus.all():
-                            tkl = tk.keyword.filter(pk__in=tkeywords_ids)
-                            if len(tkl) > 0:
-                                tkeywords_to_add.append(tkl[0].keyword_id)
+                        try:
+                            t = Thesaurus.objects.get(identifier=thesaurus_name)
+                            for tk in t.thesaurus.all():
+                                tkl = tk.keyword.filter(pk__in=tkeywords_ids)
+                                if len(tkl) > 0:
+                                    tkeywords_to_add.append(tkl[0].keyword_id)
+                        except:
+                            tb = traceback.format_exc()
+                            logger.error(tb)
 
             layer.tkeywords.add(*tkeywords_to_add)
         except:

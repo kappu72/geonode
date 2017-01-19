@@ -143,7 +143,6 @@ define(['underscore',
      *  @returns
      */
     checkFiles = function(){
-        debugger;
         var files = layers[Object.keys(layers)[0]]['files'];
         var types = [];
         for (var i = 0; i<files.length; i++){

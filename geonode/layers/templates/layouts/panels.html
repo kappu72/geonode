@@ -29,6 +29,9 @@ form #mdeditor_form label{
 #mdeditor_form .mandatory-hint,#mdeditor_form .advanced-hint {
   cursor: pointer;
 }
+#mdeditor #id_resource-featured {
+  margin-right: 21px;
+}
 </style>
 <style>
 /* metadata edit workflow wizard */
@@ -154,7 +157,7 @@ span.grippy::after {
     
 
 </style>
-<button class="btn btn-success metadata-edit-done" type="submit" style="float:right" >Done!</button>
+<button class="btn btn-success metadata-edit-done" type="submit" style="float:right; opacity: 0;" >Done!</button>
 
 <ul id="md_tabs" class="nav nav-tabs">
     <li id="metadata_edit_tab" class="active">
@@ -234,7 +237,7 @@ span.grippy::after {
                                     <!--<p class="xxs-font-size">(A space or comma separated list of keywords)</p>-->
                                     {{ layer_form.keywords }}
                                   </div>
-                                    <div>
+                                    <div class="col-lg-12">
                                           {{ tkeywords_form }}
                                     </div>
                                     <div class="col-lg-6 col-xs-12">
