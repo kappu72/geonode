@@ -38,6 +38,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.storage import default_storage as storage
 from django.core.files import File
 from django.conf import settings
+from django.db import transaction
 from django.db.models import Q
 
 # Geonode functionality
@@ -495,16 +496,17 @@ def file_upload(filename, name=None, user=None, title=None, abstract=None,
         defaults['storeType'] = 'coverageStore'
 
     # Create a Django object.
-    if not metadata_upload_form:
-        layer, created = Layer.objects.get_or_create(
-            name=valid_name,
-            defaults=defaults
-        )
-    elif identifier:
-        layer, created = Layer.objects.get_or_create(
-            uuid=identifier,
-            defaults=defaults
-        )
+    with transaction.atomic():
+        if not metadata_upload_form:
+            layer, created = Layer.objects.get_or_create(
+                name=valid_name,
+                defaults=defaults
+            )
+        elif identifier:
+            layer, created = Layer.objects.get_or_create(
+                uuid=identifier,
+                defaults=defaults
+            )
 
     # Delete the old layers if overwrite is true
     # and the layer was not just created
