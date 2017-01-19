@@ -21,6 +21,9 @@
         $('#poc_form').modal();
       }
     });
+    
+    var layer_metadata_update_done = false;
+    
     var updateWizard = function() {
       var activeTab = $("#edit-metadata .wizard--progress li.is-active");
       var first = $("#edit-metadata .wizard--progress li:first-child");
@@ -275,6 +278,12 @@
         $('#btn_upd_md_up').click(function(){$('#preview_pleaseWaitDialog').modal();});
         $('#btn_upd_md_dwn').click(function(){$('#preview_pleaseWaitDialog').modal();});
 
+        $('#btn_upd_md_done').click(function(){
+            $('#preview_pleaseWaitDialog').modal();
+            $('#layer_metadata_update').submit();
+            layer_metadata_update_done = true;
+        });
+        
         $('#preview_tab').on('show.bs.tab', function(){
             $('#preview_pleaseWaitDialog').modal();
             try {
@@ -310,6 +319,9 @@
                 $('#preview_pleaseWaitDialog').modal('hide');
             });
             e.preventDefault();
+            if (layer_metadata_update_done) {
+                window.location.replace(e.target.action.replace('/metadata',''));
+            }
         });
 
         if(totalNum == prevNum) {
