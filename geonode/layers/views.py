@@ -563,6 +563,7 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html', aj
 
         try:
             # Keywords from THESAURI management
+            tkeywords_to_add = []
             tkeywords_cleaned = tkeywords_form.clean()
             if tkeywords_cleaned and len(tkeywords_cleaned)>0:
                 tkeywords_ids = []
@@ -572,11 +573,10 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html', aj
                                         in tkeywords_cleaned[i].items()
                                         if 'tkeywords-tkeywords' in key.lower()
                                            and 'autocomplete' not in key.lower()]
+                        tkeywords_ids.extend(map(int, cleaned_data[0]))
                     except:
                         pass
-                    tkeywords_ids.extend(map(int, cleaned_data[0]))
 
-                tkeywords_to_add = []
                 if hasattr(settings, 'THESAURI'):
                     for el in settings.THESAURI:
                         choices_list = []

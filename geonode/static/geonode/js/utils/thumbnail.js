@@ -1,11 +1,11 @@
 var createMapThumbnail = function(obj_id) {
-    var xmap = $('.olMapViewport');
+    var xmap = ($('.olMapViewport')[0] != undefined ? $('.olMapViewport') : $('#embedded_map'));
     height = xmap.height();
     width = xmap.width();
     var map = xmap.clone(); 
     map.find('*').each(function(i) {
         e = $(this);
-        if(e.css('display') === 'none' || (e.attr("class") !== undefined && (e.attr("class").indexOf('olControl') >= 0 || e.attr("class").indexOf('x-') >= 0))) {
+        if(e.css('display') === 'none' || (e.attr("class") !== undefined && (e.attr("class").indexOf('olControl') >= 0 || e.attr("class").indexOf('ol-overlaycontainer') >= 0 || e.attr("class").indexOf('x-') >= 0))) {
             e.remove(); 
         } else if (e.attr('src') === '/static/geoexplorer/externals/ext/resources/images/default/s.gif') {
             e.remove();
@@ -23,6 +23,8 @@ var createMapThumbnail = function(obj_id) {
 
     url+= '/thumbnail';
 
+    console.log(("<div style='height:" + height + "px; width: " + width + "px;'>" + map.html() + "</div>"));
+    
     $.ajax({
         type: "POST",
         url: url, 

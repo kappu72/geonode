@@ -1,7 +1,6 @@
 {% include "geonode/ext_header.html" %}
 {% include "geonode/app_header.html" %}
 {% include "geonode/geo_header_mini.html" %}
-<script type="text/javascript" src="{{ STATIC_URL}}geonode/js/utils/thumbnail.js"></script>
 <script type="text/javascript">
 {% autoescape off %}
         var app;
@@ -125,14 +124,13 @@
 					}
 				}
 			}
-			
             app = new GeoExplorer.Viewer(config);
 
             for (var key in app.tools) {
                 var tool = app.tools[key];
-                // if (tool.ptype == 'gxp_styler') {
+                if (tool.ptype == 'gxp_styler') {
                     tool.rasterStyling = false;
-                //};
+                };
             };
 
             // change style displayed in map
