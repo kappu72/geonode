@@ -23,8 +23,6 @@ var createMapThumbnail = function(obj_id) {
 
     url+= '/thumbnail';
 
-    console.log(("<div style='height:" + height + "px; width: " + width + "px;'>" + map.html() + "</div>"));
-    
     $.ajax({
         type: "POST",
         url: url, 
