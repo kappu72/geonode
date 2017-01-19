@@ -218,13 +218,13 @@ span.grippy::after {
 </div>
   <ul class="wizard--progress wizard--progress--medium">
       <li data-step="1" id="first" class="is-active" data-toggle="tab" href="#mandatory">
-          <a>Data Info</a>
+          <a>Basic Metadata</a>
       </li>
       <li data-step="2" id="second"  data-toggle="tab" href="#advanced">
-          <a>Metadata Info</a>
+          <a>Location and Licenses</a>
       </li>
       <li data-step="3" data-toggle="tab" href="#ownership">
-          <a>Ownership</a>
+          <a>Optional Metadata</a>
       </li>
       <li data-step="4"  data-toggle="tab" href="#dataset">
           <a>Dataset Attributes</a>
@@ -375,8 +375,7 @@ span.grippy::after {
     <div id="ownership" class="tab-pane fade">
         <div class="panel-group"><div class="panel panel-default"><div class="panel-body">
         <div>
-            
-            <div class="col-xs-12 col-lg-6">
+            <div class="col-xs-12 col-lg-4">
               <p>Other, Optional, Metadata</p>
                 <div>
                     <span><label for="{{ layer_form.edition|id }}">{{ layer_form.edition.label }}</label></span>
@@ -394,8 +393,7 @@ span.grippy::after {
                     {{ layer_form.supplemental_information }}
                 </div>
             </div>
-            <div class="col-xs-12 col-lg-6">
-
+            <div class="col-xs-12 col-lg-5">
                     <div class="col-xs-12 col-lg-6">
                       <div class="input-group date">
                         <span><label for="{{ layer_form.temporal_extent_start|id }}">{{ layer_form.temporal_extent_start.label }}</label></span>
@@ -421,54 +419,54 @@ span.grippy::after {
                         <!--<p class="xxs-font-size">(Method used to represent geographic information in the dataset)</p>-->
                         {{ layer_form.spatial_representation_type }}
                     </div>
-                    
-                        <div class="panel panel-default" style="margin-top: 5px">
-                            <div class="panel-heading">Responsible Parties</div>
-                            <div class="panel-body">
-                                <span><label for="{{ layer_form.poc|id }}">{{ layer_form.poc.label }}</label></span>
-                                {{ layer_form.poc }}
-                            </div>
-                        </div>
-                    
-                        <div class="panel panel-default">
-                            <div class="panel-heading">Owner and Permissions</div>
-                            <div class="panel-body">
-                                <div>
-                                    <span><label for="{{ layer_form.owner|id }}">{{ layer_form.owner.label }}</label></span>
-                                    <!--<p class="xxs-font-size">(Owner of the cited resource)</p>-->
-                                    {{ layer_form.owner }}
-                                </div>
-                                <div>
-                                    <span><label for="{{ layer_form.metadata_author|id }}">{{ layer_form.metadata_author.label }}</label></span>
-                                    <!--<p class="xxs-font-size">(Author of the metadata)</p>-->
-                                    {{ layer_form.metadata_author }}
-                                </div>
-                               {% if GEONODE_SECURITY_ENABLED %}
-                                <!--<hr />
-                                <div class="modal-body" id="_permissions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                    {# include "_permissions.html" #}
-                                </div>
-                                <div class="modal fade" id="_permissions_feedbacks" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                  <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                      <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        <h4 class="modal-title" id="exampleModalLabel">Message box</h4>
-                                      </div>
-                                      <div class="modal-body">
-                                        ...
-                                      </div>
-                                      <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
-                                      </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-lg-3">
+              <div class="panel panel-default" style="margin-top: 5px">
+                          <div class="panel-heading">Responsible Parties</div>
+                          <div class="panel-body">
+                              <span><label for="{{ layer_form.poc|id }}">{{ layer_form.poc.label }}</label></span>
+                              {{ layer_form.poc }}
+                          </div>
+                      </div>
+                  
+                      <div class="panel panel-default">
+                          <div class="panel-heading">Owner and Permissions</div>
+                          <div class="panel-body">
+                              <div>
+                                  <span><label for="{{ layer_form.owner|id }}">{{ layer_form.owner.label }}</label></span>
+                                  <!--<p class="xxs-font-size">(Owner of the cited resource)</p>-->
+                                  {{ layer_form.owner }}
+                              </div>
+                              <div>
+                                  <span><label for="{{ layer_form.metadata_author|id }}">{{ layer_form.metadata_author.label }}</label></span>
+                                  <!--<p class="xxs-font-size">(Author of the metadata)</p>-->
+                                  {{ layer_form.metadata_author }}
+                              </div>
+                             {% if GEONODE_SECURITY_ENABLED %}
+                              <!--<hr />
+                              <div class="modal-body" id="_permissions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                  {# include "_permissions.html" #}
+                              </div>
+                              <div class="modal fade" id="_permissions_feedbacks" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                      <h4 class="modal-title" id="exampleModalLabel">Message box</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                      ...
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
                                     </div>
                                   </div>
-                                </div>-->
-                               {% endif %}
-                            </div>
-                        </div>
-                    
-                </div>
+                                </div>
+                              </div>-->
+                             {% endif %}
+                          </div>
+                      </div>
             </div>
         </div>
       </div></div></div>
