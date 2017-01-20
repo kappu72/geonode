@@ -60,7 +60,7 @@ form #mdeditor_form label{
   display: table;
   table-layout: fixed;
   width: 100%;
-  color: #849397;
+  color: #2c689c;
 }
 .wizard--progress > li {
   position: relative;
@@ -120,12 +120,19 @@ form #mdeditor_form label{
   z-index: 0;
   width: 100%;
 }
+.wizard--progress > li a {
+  color: #2c689c;
+}
 .wizard--progress > li.is-active {
-  color: #3498DB;
+  color: #2c689c;
 }
 .wizard--progress > li.is-active:before {
   color: #FFF;
-  background: #ff8f31;
+  background: #2c689c;
+}
+
+.wizard--progress > li.is-complete a {
+  color: #000;
 }
 
 /**
@@ -145,11 +152,13 @@ form #mdeditor_form label{
 .wizard--progress--large {
   font-size: 2em;
 }
-
-.wizard--progress li:hover {
+.wizard--progress > li:before {
+    text-decoration: none;
+}
+.wizard--progress li:hover a{
   text-decoration: underline;
 }
-.wizard--progress a, .wizard--progress li:hover::before {
+.wizard--progress a, .wizard--progress a:hover:before {
   text-decoration: none;
 }
 
