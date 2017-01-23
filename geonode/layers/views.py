@@ -114,16 +114,14 @@ def _resolve_layer(request, typename, permission='base.view_resourcebase',
         service = Service.objects.filter(name=service_typename[0])
         return resolve_object(request,
                               Layer,
-                              {'service': service[0],
-                               'typename': service_typename[1] if service[0].method != "C" else typename},
+                              {'typename': service_typename[1] if service[0].method != "C" else typename},
                               permission=permission,
                               permission_msg=msg,
                               **kwargs)
     else:
         return resolve_object(request,
                               Layer,
-                              {'typename': typename,
-                               'service': None},
+                              {'typename': typename},
                               permission=permission,
                               permission_msg=msg,
                               **kwargs)
@@ -536,33 +534,35 @@ def layer_metadata(request, layername, template='layers/layer_metadata.html', aj
             layer.keywords.add(*new_keywords)
             try:
                 the_layer = layer_form.save()
-                up_sessions = UploadSession.objects.filter(layer=the_layer.id)
-                if up_sessions.count() > 0 and up_sessions[0].user != the_layer.owner:
-                    up_sessions.update(user=the_layer.owner)
-                the_layer.poc = new_poc
-                the_layer.metadata_author = new_author
-                Layer.objects.filter(id=the_layer.id).update(
-                    category=new_category
-                    )
-
-                if getattr(settings, 'SLACK_ENABLED', False):
-                    try:
-                        from geonode.contrib.slack.utils import build_slack_message_layer, send_slack_messages
-                        send_slack_messages(build_slack_message_layer("layer_edit", the_layer))
-                    except:
-                        print "Could not send slack message."
-
-                if not ajax:
-                    return HttpResponseRedirect(
-                        reverse(
-                            'layer_detail',
-                            args=(
-                                layer.service_typename,
-                            )))
             except:
                 tb = traceback.format_exc()
                 if tb:
-                    logger.error(tb)
+                    logger.debug(tb)
+                the_layer = layer
+
+            up_sessions = UploadSession.objects.filter(layer=the_layer.id)
+            if up_sessions.count() > 0 and up_sessions[0].user != the_layer.owner:
+                up_sessions.update(user=the_layer.owner)
+            the_layer.poc = new_poc
+            the_layer.metadata_author = new_author
+            Layer.objects.filter(id=the_layer.id).update(
+                category=new_category
+                )
+
+            if getattr(settings, 'SLACK_ENABLED', False):
+                try:
+                    from geonode.contrib.slack.utils import build_slack_message_layer, send_slack_messages
+                    send_slack_messages(build_slack_message_layer("layer_edit", the_layer))
+                except:
+                    print "Could not send slack message."
+
+            if not ajax:
+                return HttpResponseRedirect(
+                    reverse(
+                        'layer_detail',
+                        args=(
+                            layer.service_typename,
+                        )))
 
         message = layer.typename
 
