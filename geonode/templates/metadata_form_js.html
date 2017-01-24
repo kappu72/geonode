@@ -21,6 +21,7 @@
         $('#poc_form').modal();
       }
     });
+    var layer_metadata_update_done = false;
     var updateWizard = function() {
       var activeTab = $("#edit-metadata .wizard--progress li.is-active");
       var first = $("#edit-metadata .wizard--progress li:first-child");
@@ -48,6 +49,7 @@
         }
       }
     }
+
     var updateCompleteness = function(completeness) {
       $('#profileCompleteness .progress-bar').html(parseFloat(((completeness)*100).toFixed(2)) + ' %').width(parseFloat(((completeness)*100).toFixed(2)) + '%');
       $('#profileCompleteness .completed').toggle(completeness === 1);
@@ -66,6 +68,7 @@
         .tooltip('fixTitle');
         $('.metadata-edit-done').animate(completeness === 1 ? {width: '100px', opacity: 1} : {width: 0, opacity: 0});
     }
+
     function getTab(number) {
       var activeTab = $("#edit-metadata .wizard--progress li.is-active");
       var tabIndex = activeTab && $(activeTab[0]).data("step");
@@ -77,6 +80,7 @@
       }
       updateWizard();
     }
+
     function getPrevTab(){
       var activeTab = $("#edit-metadata .wizard--progress li.is-active");
       var tabIndex = activeTab && $(activeTab[0]).data("step");

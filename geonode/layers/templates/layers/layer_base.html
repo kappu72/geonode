@@ -7,6 +7,7 @@
 {% block body_class %}data{% endblock body_class %}
 
 {% block body_outer %}
+  {{ block.super }}
   {% block body %}{% endblock body %}
   {% block sidebar %}{% endblock sidebar %}
 {% endblock body_outer %}
