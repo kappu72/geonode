@@ -16,15 +16,16 @@
 <div id="edit-metadata" class="tab-content tab-pane fade in active">
   <div id="completeness-hints" class="progress">
   
-  <div class="mandatory-hint progress-bar" role="progressbar" style="width:33%">
+  <div class="mandatory-hint progress-bar" role="progressbar" style="width:25%">
     Mandatory
   </div>
-  <div class="advanced-hint progress-bar" role="progressbar" style="width:34%">
+  <div class="advanced-hint progress-bar" role="progressbar" style="width:25%">
     Mandatory
   </div>
-  <div class="progress-bar" role="progressbar" style="width:33%">
+  <div class="progress-bar" role="progressbar" style="width:50%">
     Optional
   </div>
+    15 %
 </div>
   <ul class="wizard--progress wizard--progress--medium">
       <li data-step="1" id="first" class="is-active" data-toggle="tab" href="#mandatory">
@@ -75,6 +76,7 @@
                                     <span><label for="{{ map_form.keywords|id }}">{{ map_form.keywords.label }}</label></span>
                                     <!--<p class="xxs-font-size">(A space or comma separated list of keywords)</p>-->
                                     {{ map_form.keywords }}
+                                    <div id="treeview" class=""></div>
                                   </div>
                                     <div class="col-lg-12 thesauri_keywords">
                                           {{ tkeywords_form }}

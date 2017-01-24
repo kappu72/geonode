@@ -89,6 +89,10 @@
 {{ block.super }}
 {% endblock head %}
 
+{% block title %} {{ block.super }} {% endblock %}
+
+{% block body_class %}data{% endblock body_class %}
+
 {% block body_outer %}
 <div class="modal fade" style="width: 100%; height: 100%;" id="preview_pleaseWaitDialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
     <div class="modal-dialog">
@@ -107,7 +111,8 @@
     </div>
 </div>
 
-{{ block.super }}
+  {% block body %}{% endblock body %}
+  {% block sidebar %}{% endblock sidebar %}
 {% endblock body_outer %}
 
 {% block extra_script %}

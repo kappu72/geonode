@@ -1,4 +1,4 @@
-{% extends "metadata_base.html" %}
+{% extends "site_base.html" %}
 {% load i18n %}
 {% load url from future %}
 
@@ -7,7 +7,6 @@
 {% block body_class %}documents{% endblock %}
 
 {% block body_outer %}
-  {{ block.super }}
   {% block body %}{% endblock body %}
   {% block sidebar %}{% endblock sidebar %}
 {% endblock body_outer %}
