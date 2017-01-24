@@ -21,9 +21,6 @@
         $('#poc_form').modal();
       }
     });
-    
-    var layer_metadata_update_done = false;
-    
     var updateWizard = function() {
       var activeTab = $("#edit-metadata .wizard--progress li.is-active");
       var first = $("#edit-metadata .wizard--progress li:first-child");
@@ -132,97 +129,82 @@
         var empty = 0;
         $('#completeness-hints .mandatory-hint').click(getTab.bind(null, 1));
         $('#completeness-hints .advanced-hint').click(getTab.bind(null, 2));
-        // set proper class
+        
+        // set proper classes to count empty fields and display them
         var setInputEmpty = function( target, empty ) {
+          
           if($(target).hasClass('value-select')) {
-            $(target).toggleClass("input-empty", empty);
-            $(target).parent().find('input.autocomplete').toggleClass("input-empty", empty);
+            // tkeywords
+            // $(target).toggleClass("input-empty", empty);
+            // $(target).parent().find('input.autocomplete').toggleClass("input-empty", empty);
           } else if( !$(target).hasClass('autocomplete') ){
             // display error status for token fields if not completed
             
             $(target).toggleClass("input-empty", empty);
-          } else if($(target).parent().hasClass('tokenfield')) {
+          }
+          if(target.id === 'id_resource-keywords') {
             $(target).parent().parent().toggleClass('has-error', empty)
             $(target).toggleClass("input-empty", empty);
           }
         }
         
+        //check if a field is mandatory
+        var isMandatoryField = function (el) {
+          return el.id.indexOf("autocomplete") < 0 && !$(el).hasClass('value-select') && el.type !== 'radio'  && el.type !== 'button'
+        }
+        var onInputChange = function(e){
+            if(e.target.value.trim() === ''){
+                if(!$(e.target).hasClass("input-empty")){
+                    setInputEmpty(e.target, true);
+                    if(!!$(this).closest('#mdinfo').length) {
+                        $(e.target).parent().append("<p class='xxs-font-size mandatory-warning'>&nbsp;&nbsp;&nbsp;<strong>* ISO mandatory field</strong></p>");
+                    }
+                    if(isMandatoryField(this)) {
+                        empty++;
+                    }
+                }
+            }
+            else{
+                if($(e.target).hasClass("input-empty")){
+                    if(isMandatoryField(this)) {
+                        empty--;
+                    }
+                }
+                setInputEmpty(e.target, false);
+                $(e.target).parent().find(".mandatory-warning").remove();
+            }
+            if(totalNum == prevNum) {
+                try {
+                    updateCompleteness((totalNum-empty)/totalNum);
+                } catch(err) {
+                    // Log error
+                }
+            }
+
+        };
+        
         $('#mandatory').find(":input").each(function(){
 
-            if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button') {
+            if(isMandatoryField(this)) {
                 prevNum++;
             }
             $('#category_form').on('rendered.bs.select', function() {
               $('.has-popover').popover({'trigger':'hover'});
             });
+            
+            $(this).change(onInputChange).change();
 
-            $(this).change(function(e){
-                if(e.target.value.trim() === ''){
-                    if(!$(e.target).hasClass("input-empty")){
-                        setInputEmpty(e.target, true);
-                        if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button') {
-                            empty++;
-                        }
-                    }
-                }
-                else{
-                    if($(e.target).hasClass("input-empty")){
-                        if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button') {
-                            empty--;
-                        }
-                    }
-                    setInputEmpty(e.target, false);
-                    $(e.target).parent().find(".mandatory-warning").remove();
-                }
-                if(totalNum == prevNum && this.type !== 'radio'  && this.type !== 'button') {
-                    try {
-                        updateCompleteness((totalNum-empty)/totalNum);
-                    } catch(err) {
-                        // Log error
-                    }
-                }
-
-            }).change();
-
-            if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button'){
+            if(isMandatoryField(this)){
                 totalNum++;
             }
         });
 
         $('#mdinfo').find(":input").each(function(){
-            if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button') {
+            if(isMandatoryField(this)) {
                 prevNum++;
             }
 
-            $(this).change(function(e){
-                if(e.target.value.trim() === ''){
-                    if(!$(e.target).hasClass("input-empty")){
-                        setInputEmpty(e.target, true);
-                        $(e.target).parent().append("<p class='xxs-font-size mandatory-warning'>&nbsp;&nbsp;&nbsp;<strong>* ISO mandatory field</strong></p>");
-                        if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button') {
-                            empty++;
-                        }
-                    }
-                }
-                else{
-                    if($(e.target).hasClass("input-empty")){
-                        if(this.id.indexOf("autocomplete") < 0 && this.type !== 'radio'  && this.type !== 'button') {
-                            empty--;
-                        }
-                    }
-                    setInputEmpty(e.target, false);
-                    $(e.target).parent().find(".mandatory-warning").remove();
-                }
-
-                if(totalNum == prevNum) {
-                    try {
-                        updateCompleteness((totalNum-empty)/totalNum);
-                    } catch(err) {
-                        // Log error
-                    }
-                }
-
-            }).change();
+            $(this).change(onInputChange).change();
 
             if(this.id.indexOf("autocomplete") < 0){
                 totalNum++;
