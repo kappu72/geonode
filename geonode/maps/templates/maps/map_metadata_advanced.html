@@ -1,4 +1,4 @@
-{% extends "layers/layer_base.html" %}
+{% extends "maps/map_base.html" %}
 {% load i18n %}
 {% load bootstrap_tags %}
 
@@ -88,7 +88,7 @@
 {{ block.super }}
 {% endblock %}
 
-{% block title %}{{ layer.typename }} — {{ block.super }}{% endblock %}
+{% block title %}{{ map.title }} — {{ block.super }}{% endblock %}
 
 {% block body_class %}data{% endblock %}
 
@@ -112,68 +112,46 @@
 </div>
 
 <div class="page-header">
-  <a href="{% url "layer_browse" %}" class="btn btn-primary pull-right">{% trans "Explore Layers" %}</a>
+  <a href="{% url "maps_browse" %}" class="btn btn-primary pull-right">{% trans "Explore Maps" %}</a>
   <h2 class="page-title">{% trans "Edit Metadata" %}</h2>
 </div>
 <div class="row">
   <div class="col-md-8">
     <p class="lead">
-      {% blocktrans with layer.typename as layer_title %}
-        Editing details for {{ layer_title }}
+      {% blocktrans with map.title as map_title %}
+        Editing details for {{ map_title }}
       {% endblocktrans %}
     </p>
-    <form id="layer_metadata_update" class="form-horizontal" action="{% url "layer_metadata" layer.service_typename %}" method="POST">
-      {% if layer.metadata_uploaded_preserve %}
-        <p class="bg-warning">{% blocktrans %}Note: this layer's orginal metadata was populated and preserved by importing a metadata XML file.
-          This metadata cannot be edited.{% endblocktrans %}</p>
-      {% elif layer.metadata_uploaded %}
-        <p class="bg-warning">{% blocktrans %}Note: this layer's orginal metadata was populated by importing a metadata XML file.
-          GeoNode's metadata import supports a subset of ISO, FGDC, and Dublin Core metadata elements.
-          Some of your original metadata may have been lost.{% endblocktrans %}</p>
+    <form class="form-horizontal" action="{{ map.get_absolute_url }}/metadata" method="POST">
+      {% if map.metadata_uploaded %}
+      <div style="background-color: orange;">{% blocktrans %}Note: this map's orginal metadata was populated by importing a metadata XML file.
+        GeoNode's metadata import supports a subset of ISO, FGDC, and Dublin Core metadata elements.
+        Some of your original metadata may have been lost.{% endblocktrans %}</div>
       {% endif %}
 
-      {% if layer_form.errors or attribute_form.errors or category_form.errors or author_form.errors or poc.errors %}
-    	  <p class="bg-danger">{% blocktrans %}Error updating metadata.  Please check the following fields: {% endblocktrans %}</p>
-          <ul class="bg-danger">
-          {% if author_form.errors %}
-            <li>{% trans "Metadata Author" %}</li>
-            {{ author_form.errors }}
-          {% endif %}
-          {% if poc_form.errors %}
-            <li>{% trans "Point of Contact" %}</li>
-            {{ poc_form.errors }}
-          {% endif %}
-          {% for field in layer_form %}
+      {% if map_form.errors or category_form.errors %}
+      <div style="background-color: pink">{% blocktrans %}Error updating metadata.  Please check the following fields: {% endblocktrans %}
+        <ul>
+        {% for field in map_form %}
             {% if field.errors %}
-            <li>{{ field.label }}</li>
+                <li>{{ field.label }}</li>
             {% endif %}
-          {% endfor %}
-          {% if not attribute_form.is_valid %}
-            <li>{% trans "Attributes" %}</li>
-            {% for field in attribute_form %}
-            {% if field.errors %}
-            <li>{{ field.errors }}</li>
-            {% endif %}
-            {% endfor %}
-          {% endif %}
-          {% if category_form.errors %}
+        {% endfor %}
+
+        {% if category_form.errors %}
             <li>{{ category_form.errors.as_ul }}</li>
-          {% endif %}
-          </ul>
         {% endif %}
+        </ul>
+      </div>
+      {% endif %}
+      <div class="form-actions">
+        <input type="submit" class="btn btn-primary" value="{% trans "Update" %}"/>
+      </div>
+      {% csrf_token %}
+      <div class="form-controls">
+        {{ map_form|as_bootstrap }}
+      </div>
 
-        {% if not layer.metadata_uploaded_preserve %}
-        <div class="form-actions">
-          <input type="submit" id="btn_upd_md_up" class="btn btn-primary" value="{% trans "Update" %}"/>
-        </div>
-        {% endif %}
-
-
-        {% csrf_token %}
-        <div class="col-md-6 form-controls">
-          {{ layer_form|as_bootstrap }}
-        </div>
-        
         <div class="row">
           <div class="col-md-12">
             <label class="control-label required-field">{% trans "Category" %}</label>
@@ -199,43 +177,20 @@
           </div>
 
           <div class="col-md-12 grid-spacer">
-            <h5>{% trans "Attributes" %}</h5>
-            {{ attribute_form.management_form }}
-            <table class="table table-striped table-bordered table-condensed">
-              <tr>
-                <th>{% trans "Attribute" %}</th>
-                <th>{% trans "Label" %}</th>
-                <th>{% trans "Description" %}</th>
-                <th>{% trans "Display Order" %}</th>
-              </tr>
-              {% for form in attribute_form.forms %}
-              {% if form.attribute %}
-              <tr>
-                <td><div style="display:none">{{form.id}}</div>{{form.attribute}}</td>
-                <td>{{form.attribute_label}}</td>
-                <td>{{form.description}}</td>
-                <td>{{form.display_order}}</td>
-              </tr>
-              {% endif %}
-              {% endfor %}
-            </table>
-
-            <fieldset class="form-controls modal-forms modal hide fade" id="poc_form" >
-              <h2>{% trans "Point of Contact" %}</h2>
-              {{ poc_form|as_bootstrap }}
-              <button type='button' class="modal-cloose-btn btn btn-primary">Done</button>
-            </fieldset>
-            <fieldset class="form-controls modal-forms modal hide fade" id="metadata_form">
-              <h2>{% trans "Metadata Provider" %}</h2>
+              <fieldset class="form-controls modal-forms modal hide fade" id="poc_form" >
+                <h2>{% trans "Point of Contact" %}</h2>
+                {{ poc_form|as_bootstrap }}
+                <button type='button' class="modal-cloose-btn btn btn-primary">Done</button>
+              </fieldset>
+              <fieldset class="form-controls modal-forms modal hide fade" id="metadata_form">
+                <h2>{% trans "Metadata Provider" %}</h2>
                 {{ author_form|as_bootstrap }}
-              <button type='button' class="modal-cloose-btn btn btn-primary">Done</button>
-            </fieldset>
+                <button type='button' class="modal-cloose-btn btn btn-primary">Done</button>
+              </fieldset>
 
-            {% if not layer.metadata_uploaded_preserve %}
-            <div class="form-actions">
-              <input type="submit" id="btn_upd_md_dwn" class="btn btn-primary" value="{% trans "Update" %}"/>
-            </div>
-            {% endif %}
+              <div class="form-actions">
+                <input type="submit" class="btn btn-primary" value="{% trans "Update" %}"/>
+              </div>
           </div>
         </div>
       </form>

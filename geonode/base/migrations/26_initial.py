@@ -324,4 +324,29 @@ class Migration(migrations.Migration):
             name='contactrole',
             unique_together=set([('contact', 'resource', 'role')]),
         ),
+        migrations.AddField(
+            model_name='region',
+            name='bbox_x0',
+            field=models.DecimalField(null=True, max_digits=19, decimal_places=10, blank=True),
+        ),
+        migrations.AddField(
+            model_name='region',
+            name='bbox_x1',
+            field=models.DecimalField(null=True, max_digits=19, decimal_places=10, blank=True),
+        ),
+        migrations.AddField(
+            model_name='region',
+            name='bbox_y0',
+            field=models.DecimalField(null=True, max_digits=19, decimal_places=10, blank=True),
+        ),
+        migrations.AddField(
+            model_name='region',
+            name='bbox_y1',
+            field=models.DecimalField(null=True, max_digits=19, decimal_places=10, blank=True),
+        ),
+        migrations.AddField(
+            model_name='region',
+            name='srid',
+            field=models.CharField(default=b'EPSG:4326', max_length=255),
+        ),
     ]

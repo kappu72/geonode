@@ -191,6 +191,7 @@ span.grippy::after {
 </style>
 <button class="btn btn-success metadata-edit-done" id="btn_upd_md_done" type="submit" style="float:right; opacity: 0;" >Done!</button>
 
+{% block body_outer %}
 <ul id="md_tabs" class="nav nav-tabs">
     <li id="metadata_edit_tab" class="active">
         <a data-toggle="tab" href="#edit-metadata">Edit</a>
@@ -200,7 +201,6 @@ span.grippy::after {
     </li>
 </ul>
 
-{% block body_outer %}
 <div class="tab-content">
 <div id="edit-metadata" class="tab-content tab-pane fade in active">
   <div id="completeness-hints" class="progress">
