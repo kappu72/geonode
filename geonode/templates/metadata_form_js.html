@@ -147,7 +147,7 @@
             $(target).toggleClass("input-empty", empty);
           }
           if(target.id === 'id_resource-keywords') {
-            $(target).parent().parent().toggleClass('has-error', empty)
+            $(target).closest('.keywords-container').toggleClass('has-error', empty)
             $(target).toggleClass("input-empty", empty);
           }
         }

@@ -66,7 +66,7 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-5">
-                                  <div class="col-lg-12">
+                                  <div class="col-lg-12 keywords-container">
                                     <span><label for="{{ document_form.keywords|id }}">{{ document_form.keywords.label }}</label></span>
                                     <!--<p class="xxs-font-size">(A space or comma separated list of keywords)</p>-->
                                     {{ document_form.keywords }}
@@ -90,7 +90,7 @@
                                             data-live-search="true"
                                             data-size="5"
                                             name="category_choice_field"
-                                            value={{category_form.initial}}
+                                            value="{{category_form.initial}}"
                                             id="category_form"
                                             class="selectpicker form-control"
                                             >
