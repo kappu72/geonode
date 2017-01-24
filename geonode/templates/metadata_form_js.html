@@ -157,7 +157,7 @@
                 if(!$(e.target).hasClass("input-empty")){
                     setInputEmpty(e.target, true);
                     if(!!$(this).closest('#mdinfo').length) {
-                        $(e.target).parent().append("<p class='xxs-font-size mandatory-warning'>&nbsp;&nbsp;&nbsp;<strong>* ISO mandatory field</strong></p>");
+                        $(e.target).parent().append("<p class='xxs-font-size mandatory-warning'>&nbsp;&nbsp;&nbsp;<strong>* Mandatory field</strong></p>");
                     }
                     if(isMandatoryField(this)) {
                         empty++;
