@@ -31,8 +31,8 @@
       var lastIndex = last && $(last[0]).data("step");
 
       // buttons visibility
-      $('#layer_metadata_update #btn_back_dwn').toggle(firstIndex !== tabIndex);
-      $('#layer_metadata_update #btn_next_dwn').toggle(lastIndex !== tabIndex);
+      $('#btn_back_dwn').toggle(firstIndex !== tabIndex);
+      $('#btn_next_dwn').toggle(lastIndex !== tabIndex);
 
       // wizard
       if (tabIndex >= 0) {
@@ -300,16 +300,16 @@
                 $('#layer_metadata_update').submit();
 
                 // buttons visibility
-                $('#layer_metadata_update #btn_back_dwn').hide();
-                $('#layer_metadata_update #btn_next_dwn').hide();
-                $('#layer_metadata_update #btn_upd_md_dwn').hide();
+                $('#btn_back_dwn').hide();
+                $('#btn_next_dwn').hide();
+                $('#btn_upd_md_dwn').hide();
             } catch(err) {
                 // Log error
             }
         });
         $('#metadata_edit_tab').on('show.bs.tab', function(){
           // buttons visibility
-          $('#layer_metadata_update #btn_upd_md_dwn').show();
+          $('#btn_upd_md_dwn').show();
           updateWizard();
         });
 
