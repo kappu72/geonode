@@ -34,7 +34,7 @@
   </h2>
 </div>
 
-    <form class="form-horizontal" action="{{ map.get_absolute_url }}/metadata" method="POST">
+    <form id="metadata_update" class="form-horizontal" action="{{ map.get_absolute_url }}/metadata" method="POST">
       {% if map.metadata_uploaded %}
       <div style="background-color: orange;">{% blocktrans %}Note: this map's orginal metadata was populated by importing a metadata XML file.
         GeoNode's metadata import supports a subset of ISO, FGDC, and Dublin Core metadata elements.

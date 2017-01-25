@@ -21,7 +21,7 @@
         $('#poc_form').modal();
       }
     });
-    var layer_metadata_update_done = false;
+    var metadata_update_done = false;
     var updateWizard = function() {
       var activeTab = $("#edit-metadata .wizard--progress li.is-active");
       var first = $("#edit-metadata .wizard--progress li:first-child");
@@ -324,8 +324,8 @@
 
         $('#btn_upd_md_done').click(function(){
             $('#preview_pleaseWaitDialog').modal();
-            $('#layer_metadata_update').submit();
-            layer_metadata_update_done = true;
+            $('#metadata_update').submit();
+            metadata_update_done = true;
         });
         
         $('#preview_tab').on('show.bs.tab', function(){
@@ -333,7 +333,7 @@
             try {
                 $('#preview_encoder_iframe')[0].style.width='0';
                 $('#preview_encoder_iframe')[0].style.height='0';
-                $('#layer_metadata_update').submit();
+                $('#metadata_update').submit();
 
                 // buttons visibility
                 $('#btn_back_dwn').hide();
@@ -349,7 +349,7 @@
           updateWizard();
         });
 
-        $('#layer_metadata_update').submit(function(e){
+        $('#metadata_update').submit(function(e){
             var formData = $(this).serializeArray();
             // edit data here
                 /* var date = $('#id_resource-date').val();
@@ -370,7 +370,7 @@
                 $('#preview_pleaseWaitDialog').modal('hide');
             });
             e.preventDefault();
-            if (layer_metadata_update_done) {
+            if (metadata_update_done) {
                 window.location.replace(e.target.action.replace('/metadata',''));
             }
         });
@@ -392,7 +392,7 @@
 
     $(document).ready(function() {
         {% if layer.metadata_uploaded_preserve %}
-        $('#layer_metadata_update :input').attr('readonly','readonly');
+        $('#metadata_update :input').attr('readonly','readonly');
         {% endif %}
         $('.has-popover').popover({'trigger':'hover'});
 
