@@ -61,7 +61,12 @@
         #id_resource-title {
             width: 100% !important;
         }
-
+        #edit-metadata .tab-pane > .panel-group >.panel.panel-default {
+          border: none;
+        }
+        #edit-metadata .tab-pane {
+          min-height: 350px;
+        }
         .leaflet-container { /* all maps */
             height: 250px !important;
         }
@@ -73,7 +78,6 @@
         #regions_multiselect_container.content {
             position: absolute;
         }
-
         .fstControls {
             width: 100% !important;
         }
@@ -93,6 +97,9 @@
           max-height: 200px;
           overflow: auto;
           display: block;
+        }
+        .form-actions {
+          text-align: right;
         }
     </style>
 {{ block.super }}
