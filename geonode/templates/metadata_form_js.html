@@ -119,8 +119,8 @@
             $('.has-external-popover').each(function(){
                 var help_text = $(this).attr("data-content");
                 $(this)
-                    .parent()
-                    .children("span")
+                    .closest("div")
+                    .children("span:not(.input-group)")
                     .append("<span class='external-popover' data-content='" + help_text + "'><strong><i class='fa fa fa-question-circle fa-1x'></i></strong></span>");
                 });
             $('.external-popover').each(function(){
