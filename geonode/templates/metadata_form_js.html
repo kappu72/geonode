@@ -150,6 +150,13 @@
             $(target).closest('.keywords-container').toggleClass('has-error', empty)
             $(target).toggleClass("input-empty", empty);
           }
+          if(target.id === 'category_form' || target.id === 'id_resource-regions') {
+              // category selector
+              $(target).closest('#basicCategoryInfo').toggleClass('has-error', empty);
+              // regions container
+              $(target).closest('#regions_multiselect_container').toggleClass('has-error', empty);
+              $(target).toggleClass("input-empty", empty);
+          }
         }
         
         //check if a field is mandatory
@@ -157,7 +164,7 @@
           return el.id.indexOf("autocomplete") < 0 && !$(el).hasClass('value-select') && el.type !== 'radio'  && el.type !== 'button'
         }
         var onInputChange = function(e){
-            if(e.target.value.trim() === ''){
+            if(e.target.value.trim() === '' || e.target.value.trim() === '{}'){
                 if(!$(e.target).hasClass("input-empty")){
                     setInputEmpty(e.target, true);
                     if(!!$(this).closest('#mdinfo').length) {
@@ -186,7 +193,8 @@
             }
 
         };
-        
+        $('#category_form').change(onInputChange).change();
+        $('#id_resource-regions').change(onInputChange).change();
         $('#mandatory').find(":input").each(function(){
 
             if(isMandatoryField(this)) {
@@ -370,7 +378,7 @@
                     //TODO: This seems a horribly inelegant way of doing this in 12 Lines
                     kws = $('#id_resource-keywords').tokenfield('getTokens');
                     newToken = $data.text
-                    exists = false 
+                    exists = false
                     for (kw in kws) {
                         if (kws[kw]['value'].indexOf(newToken) >=0) {
                             exists = true
