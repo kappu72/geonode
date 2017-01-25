@@ -49,7 +49,6 @@
         }
       }
     }
-
     var updateCompleteness = function(completeness) {
       $('#profileCompleteness .progress-bar').html(parseFloat(((completeness)*100).toFixed(2)) + ' %').width(parseFloat(((completeness)*100).toFixed(2)) + '%');
       $('#profileCompleteness .completed').toggle(completeness === 1);
@@ -157,6 +156,10 @@
               // regions container
               $(target).closest('#regions_multiselect_container').toggleClass('has-error', empty);
               $(target).toggleClass("input-empty", empty);
+          }
+          // bootstrap-select copies the select's classes, so it have to be removed
+          if( $( '.bootstrap-select' ).hasClass("input-empty") ) {
+            $( '.bootstrap-select' ).toggleClass("input-empty");
           }
         }
         
