@@ -50,7 +50,7 @@
       }
     }
     var updateCompleteness = function(completeness) {
-      $('#profileCompleteness .progress-bar').html(parseFloat(((completeness)*100).toFixed(2)) + ' %').width(parseFloat(((completeness)*100).toFixed(2)) + '%');
+      $('#profileCompleteness .progress-bar').html(parseFloat(((completeness)*100).toFixed(0)) + ' %').width(parseFloat(((completeness)*100).toFixed(2)) + '%');
       $('#profileCompleteness .completed').toggle(completeness === 1);
       $('#profileCompleteness .not-completed').toggle(completeness !== 1);
       var mandatoryMissing =  $('#mandatory').find('.input-empty:not([id^=autocomlete])').length > 0;
