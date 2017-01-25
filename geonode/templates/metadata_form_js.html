@@ -101,7 +101,7 @@
     $(document).ready(
         function() {
           var pickerOptions = {
-              // format: 'YYYY-MM-DD hh:mm A',
+              // format: 'YYYY-MM-DD hh:mm',
               format: 'YYYY-MM-DD',
               icons: {
                   time: 'fa fa-clock-o',
@@ -313,11 +313,11 @@
         $('#layer_metadata_update').submit(function(e){
             var formData = $(this).serializeArray();
             // edit data here
-                var date = $('#id_resource-date').val();
+                /* var date = $('#id_resource-date').val();
                 var resource_date = $.grep(formData, function(e){ return e.name == 'resource-date'; });
                 if (resource_date.length >= 1) {
-                    resource_date[0].value = date + ' 12:00:00 PM';
-                }
+                    resource_date[0].value = date + ' AM';
+                } */
             $.post('metadata', /*$(this).serialize()*/ $.param(formData), function(data){
                 // Do something more fancy with your respone
                 // $('.message').html(data.message);
@@ -360,20 +360,20 @@
         var params = typeof FILTER_TYPE == 'undefined' ? {} : {'type': FILTER_TYPE};
         $.ajax('/h_keywords_api', {params: params}).success(function(data){
             data = JSON.parse(data)
-            /* var kws = [];
+            var kws = [];
             for (kw in data) {
                 if (data[kw] && data[kw].text) {
 				    kws.push(data[kw].text);
                 }
-            } */
+            }
 
-		    $('#id_resource-keywords').tokenfield(/* {
+		    $('#id_resource-keywords').tokenfield({
 		        autocomplete: {
 		            source: kws,
 		            delay: 100
 		        },
 		        showAutocompleteOnFocus: true
-		    }*/ )
+		    } )
 
             $('#treeview').treeview({
                 color: "#428bca",
@@ -390,8 +390,8 @@
                     kws = $('#id_resource-keywords').tokenfield('getTokens');
                     newToken = $data.text
                     exists = false
-                    for (kw in kws) {
-                        if (kws[kw]['value'].indexOf(newToken) >=0) {
+                    for (var i=0; i<kws.length; i++) {
+                        if (kws[i]['value'].indexOf(newToken) >=0) {
                             exists = true
                         }
                     }
