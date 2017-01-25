@@ -101,7 +101,8 @@
     $(document).ready(
         function() {
           var pickerOptions = {
-              format: 'YYYY-MM-DD hh:mm A',
+              // format: 'YYYY-MM-DD hh:mm A',
+              format: 'YYYY-MM-DD',
               icons: {
                   time: 'fa fa-clock-o',
                   date: 'fa fa-calendar',
@@ -188,7 +189,6 @@
         };
         
         $('#mandatory').find(":input").each(function(){
-
             if(isMandatoryField(this)) {
                 prevNum++;
             }
@@ -268,8 +268,12 @@
         $('#btn_next_up').click(function(){getNextTab()});
         $('#btn_next_dwn').click(function(){getNextTab()});
 
-        $('#btn_upd_md_up').click(function(){$('#preview_pleaseWaitDialog').modal();});
-        $('#btn_upd_md_dwn').click(function(){$('#preview_pleaseWaitDialog').modal();});
+        $('#btn_upd_md_up').click(function(){
+            $('#preview_pleaseWaitDialog').modal();
+        });
+        $('#btn_upd_md_dwn').click(function(){
+            $('#preview_pleaseWaitDialog').modal();
+        });
 
         $('#btn_upd_md_done').click(function(){
             $('#preview_pleaseWaitDialog').modal();
@@ -299,7 +303,14 @@
         });
 
         $('#layer_metadata_update').submit(function(e){
-            $.post('metadata', $(this).serialize(), function(data){
+            var formData = $(this).serializeArray();
+            // edit data here
+                var date = $('#id_resource-date').val();
+                var resource_date = $.grep(formData, function(e){ return e.name == 'resource-date'; });
+                if (resource_date.length >= 1) {
+                    resource_date[0].value = date + ' 12:00:00 PM';
+                }
+            $.post('metadata', /*$(this).serialize()*/ $.param(formData), function(data){
                 // Do something more fancy with your respone
                 // $('.message').html(data.message);
                 try {
