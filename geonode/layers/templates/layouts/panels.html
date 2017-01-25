@@ -265,9 +265,12 @@ span.grippy::after {
                                 <div class="col-lg-5">
                                   <div class="col-lg-12 keywords-container">
                                     <span><label for="{{ layer_form.keywords|id }}">{{ layer_form.keywords.label }}</label></span>
+                                    <span class="input-group">
                                     <!--<p class="xxs-font-size">(A space or comma separated list of keywords)</p>-->
                                     {{ layer_form.keywords }}
-                                    <div id="treeview" class=""></div>
+                                    <span class="input-group-addon" id="treeview-toggle"><i class="fa fa-folder"></i></span>
+                                  </span>
+                                    <div id="treeview" class="" style="display: none"></div>
                                   </div>
                                     <div class="col-lg-12 thesauri_keywords">
                                           {{ tkeywords_form }}
