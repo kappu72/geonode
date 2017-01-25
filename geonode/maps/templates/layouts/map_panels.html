@@ -54,11 +54,24 @@
                             <div id="basicDescriptiveInfo" class="container-fluid">
                                 <div class="col-lg-3">
                                     <span><label for="{{ map_form.thumbnail_url|id }}">{% trans "Thumbnail" %}</label></span>
-                                    <!-- <img src="{{ map_form.thumbnail_url.value }}" / -->
-                                    <div id="embedded_map" class="mrg-btm">
-                                      <div id="preview_map" style="height:250px;"></div>
+                                    <div id="embedded_map" class="mrg-btm" style="height:250px;width: 250px;">
+                                      <div id="preview_map" style="height: 85%;width: 100%;">
+                                      </div>
+                                      <div id="preview_image" style="height: 90%;width: 100%;">
+                                          <img id="preview_image_src" src="{{ map_form.thumbnail_url.value }}" height="100%" width="100%"/>
+                                      </div>
+                                      <div>
+                                        <span class="btn-group btn-group-xs btn-group-justified">
+                                            <a class="btn btn-default" href="#" id="set_thumbnail">{% trans "Save Thumbnail" %}</a>
+                                            <!-- span class="input-group-addon">
+                                                <form id="form1" runat="server">
+                                                    <input type='file' id="imgInp" />
+                                                </form>
+                                            </span -->
+                                            <a class="btn btn-default" href="#" id="change_thumbnail">{% trans "Edit Thumbnail" %}</a>
+                                        </span>
+                                      </div>
                                     </div>
-                                    <div><a class="btn btn-default btn-block btn-xs" href="#" id="set_thumbnail">{% trans "Set" %}</a></div>
                                 </div>
                                 <div class="col-lg-4">
                                     <span><label for="{{ map_form.title|id }}">{{ map_form.title.label }}</label></span>

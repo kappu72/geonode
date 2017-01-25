@@ -1,5 +1,16 @@
 var createMapThumbnail = function(obj_id) {
+    // var xmap = ($('.olMapViewport')[0] != undefined ? $('.olMapViewport') : $('#embedded_map'));
     var xmap = ($('.olMapViewport')[0] != undefined ? $('.olMapViewport') : $('#embedded_map'));
+
+    if ($('#preview_map')[0] != undefined) {
+        if ($('#preview_map').css('display') != 'none' && 
+                $('.olMapViewport')[0] != undefined) {
+            xmap = $('.olMapViewport');
+        } else {
+            xmap = $('#preview_image');
+        }
+    }
+
     height = xmap.height();
     width = xmap.width();
     var map = xmap.clone(); 

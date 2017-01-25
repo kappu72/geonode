@@ -17,8 +17,6 @@
 
 {% block body_outer %}
 
-{{ block.super }}
-
 <div class="container-fluid page-header" style="position: relative;">
   <h2 class="page-title">{% trans "Metadata" %}&nbsp;{% blocktrans with map.title as map_title %}for {{ map_title }}{% endblocktrans %}</h2>
       <div id="profileCompleteness" class="alert alert-info" style="position: absolute; right: 0; top: 0; padding: 4px;">
@@ -89,4 +87,5 @@
   </div>
 </div>
 
+{{ block.super }}
 {% endblock body_outer %}
