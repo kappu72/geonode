@@ -296,9 +296,9 @@ class ResourceBaseForm(TranslationModelForm):
         widget=autocomplete_light.ChoiceWidget('ProfileAutocomplete'))
 
     keywords = TaggitField(
-        label=_("Keywords"),
+        label=_("Free-text Keywords"),
         required=False,
-        help_text=_("A space or comma-separated list of keywords"),
+        help_text=_("A space or comma-separated list of keywords. Use the widget to select from Hierarchical tree."),
         widget=TaggitWidget('HierarchicalKeywordAutocomplete'))
 
     """

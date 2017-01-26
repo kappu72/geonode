@@ -62,21 +62,21 @@
                                       </div>
                                       <div>
                                         <span class="btn-group btn-group-xs btn-group-justified">
-                                            <a class="btn btn-default" href="#" id="set_thumbnail">{% trans "Save Thumbnail" %}</a>
+                                            <a class="btn btn-default" href="#" id="set_thumbnail">{% trans "Save" %}</a>
                                             <!-- span class="input-group-addon">
                                                 <form id="form1" runat="server">
                                                     <input type='file' id="imgInp" />
                                                 </form>
                                             </span -->
-                                            <a class="btn btn-default" href="#" id="change_thumbnail">{% trans "Edit Thumbnail" %}</a>
+                                            <a class="btn btn-default" href="#" id="change_thumbnail">{% trans "Edit" %}</a>
                                         </span>
                                       </div>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <span><label for="{{ map_form.title|id }}">{{ map_form.title.label }}</label></span>
-                                    <!--<p class="xxs-font-size">(Name by which the cited resource is known)</p>-->
-                                    {{ map_form.title }}
+                                        <!--<p class="xxs-font-size">(Name by which the cited resource is known)</p>-->
+                                        {{ map_form.title }}
                                     <div>
                                         <span><label for="{{ map_form.abstract|id }}">{{ map_form.abstract.label }}</label></span>
                                         <!--<p class="xxs-font-size">(Brief narrative summary of the content of the resource/s)</p>-->
@@ -87,14 +87,14 @@
                                   <div class="col-lg-12 keywords-container">
                                     <span><label for="{{ map_form.keywords|id }}">{{ map_form.keywords.label }}</label></span>
                                     <span class="input-group">
-                                    <!--<p class="xxs-font-size">(A space or comma separated list of keywords)</p>-->
-                                    {{ map_form.keywords }}
+                                        <!--<p class="xxs-font-size">(A space or comma separated list of keywords)</p>-->
+                                        {{ map_form.keywords }}
                                     <span class="input-group-addon" id="treeview-toggle"><i class="fa fa-folder"></i></span>
                                   </span>
                                     <div id="treeview" class="" style="display: none"></div>
                                   </div>
                                     <div class="col-lg-12 thesauri_keywords">
-                                          {{ tkeywords_form }}
+                                        {{ tkeywords_form }}
                                     </div>
                                     <div class="col-lg-6 col-xs-12">
                                         <span><label for="{{ map_form.date_type|id }}">{{ map_form.date_type.label }}</label></span>
@@ -163,13 +163,13 @@
                                 </div>
                                 <div class="col-lg-4">
                                       <div id="regions_multiselect_container">
-                                          <span><label for="{{ map_form.regions|id }}">{{ map_form.regions.label }}</label></span>
-                                          {{ map_form.regions }}
+                                        <span><label for="{{ map_form.regions|id }}">{{ map_form.regions.label }}</label></span>
+                                        {{ map_form.regions }}
                                       </div>
                                       <div>
-                                          <span><label for="{{ map_form.data_quality_statement|id }}">{{ map_form.data_quality_statement.label }}</label></span>
-                                          <!--<p class="xxs-font-size">(General explanation of the data producer's knowledge about the lineage)</p>-->
-                                          {{ map_form.data_quality_statement }}
+                                        <span><label for="{{ map_form.data_quality_statement|id }}">{{ map_form.data_quality_statement.label }}</label></span>
+                                        <!--<p class="xxs-font-size">(General explanation of the data producer's knowledge about the lineage)</p>-->
+                                        {{ map_form.data_quality_statement }}
                                       </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -260,9 +260,9 @@
                           <div class="panel-heading">Owner and Permissions</div>
                           <div class="panel-body">
                               <div>
-                                  <span><label for="{{ map_form.owner|id }}">{{ map_form.owner.label }}</label></span>
-                                  <!--<p class="xxs-font-size">(Owner of the cited resource)</p>-->
-                                  {{ map_form.owner }}
+                                <span><label for="{{ map_form.owner|id }}">{{ map_form.owner.label }}</label></span>
+                                <!--<p class="xxs-font-size">(Owner of the cited resource)</p>-->
+                                {{ map_form.owner }}
                               </div>
                               <div>
                                   <span><label for="{{ map_form.metadata_author|id }}">{{ map_form.metadata_author.label }}</label></span>

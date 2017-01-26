@@ -54,7 +54,7 @@
     var tooltipShown = false;
     var gotIt = false;
     var tooltipContent =  'All mandatory fields are completed, you can continue editing the optional fields or click on "Done" to save your changes and close this page. '
-      + '<button id="close-popover-done" data-toggle="clickover" class="btn btn-small btn-primary pull-right">Got it</button><br/>';
+      + '<a id="close-popover-done" data-toggle="clickover" class="btn btn-small btn-primary pull-right">Got it</a><br/>';
     $('.metadata-edit-done').popover({
         placement: 'left',
         html: true,
@@ -162,7 +162,7 @@
         $("#preview_map").hide();
         $("#set_thumbnail").hide();
 
-        var changeTxt = ["Edit Thumbnail", "Exit"];
+        var changeTxt = ["Edit", "Close"];
 
         $("#change_thumbnail").click(function () {
             $(this).text(changeTxt.reverse()[0]);
@@ -235,17 +235,17 @@
           return el.id.indexOf("autocomplete") < 0 && !$(el).hasClass('value-select') && el.type !== 'radio'  && el.type !== 'button'
         }
         var onInputChange = function(e){
-                if(e.target.value !== undefined && e.target.value.trim() === ''){
-                    if(!$(e.target).hasClass("input-empty")){
-                        setInputEmpty(e.target, true);
-                        if(!!$(this).closest('#mdinfo').length) {
-                            $(e.target).parent().append("<p class='xxs-font-size mandatory-warning'>&nbsp;&nbsp;&nbsp;<strong>* Mandatory field</strong></p>");
-                        }
-                        if(isMandatoryField(this)) {
-                            empty++;
-                        }
+            if(e.target.value !== undefined && e.target.value.trim() === ''){
+                if(!$(e.target).hasClass("input-empty")){
+                    setInputEmpty(e.target, true);
+                    if(!!$(this).closest('#mdinfo').length) {
+                        $(e.target).parent().append("<p class='xxs-font-size mandatory-warning'>&nbsp;&nbsp;&nbsp;<strong>* Mandatory field</strong></p>");
+                    }
+                    if(isMandatoryField(this)) {
+                        empty++;
                     }
                 }
+            }
             else {
                 if($(e.target).hasClass("input-empty")) {
                     if(isMandatoryField(this)) {
@@ -266,7 +266,7 @@
         };
         $('#category_form').change(onInputChange).change();
         $('#id_resource-regions').change(onInputChange).change();
-        $('#mandatory').find(":input").each(function(){
+        $('#mandatory').find(":input:not(.value-select):not(.autocomplete)").each(function(){
             if(isMandatoryField(this)) {
                 prevNum++;
             }
@@ -281,7 +281,7 @@
             }
         });
 
-        $('#mdinfo').find(":input").each(function(){
+        $('#mdinfo').find(":input:not(.value-select):not(.autocomplete)").each(function(){
             if(isMandatoryField(this)) {
                 prevNum++;
             }

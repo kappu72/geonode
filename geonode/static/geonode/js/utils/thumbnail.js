@@ -17,7 +17,7 @@ var createMapThumbnail = function(obj_id) {
     map.find('*').each(function(i) {
         e = $(this);
         if(e.css('display') === 'none' || (e.attr("class") !== undefined && (e.attr("class").indexOf('olControl') >= 0 || e.attr("class").indexOf('ol-overlaycontainer') >= 0 || e.attr("class").indexOf('x-') >= 0))) {
-            e.remove(); 
+            e.remove();
         } else if (e.attr('src') === '/static/geoexplorer/externals/ext/resources/images/default/s.gif') {
             e.remove();
         } else {
@@ -33,13 +33,24 @@ var createMapThumbnail = function(obj_id) {
     }
 
     url+= '/thumbnail';
+    var body = ("<div style='height:" + height + "px; width: " + width + "px;'>" + map.html() + "</div>");
 
     $.ajax({
         type: "POST",
-        url: url, 
-        data: ("<div style='height:" + height + "px; width: " + width + "px;'>" + map.html() + "</div>"), 
+        url: url,
+        data: body,
+        async: false,
+        cache: false,
         success: function(data, status, jqXHR) {
-            return true;
+            try {
+                $("#_thumbnail_feedbacks").find('.modal-title').text(status);
+                $("#_thumbnail_feedbacks").find('.modal-body').text(data);
+                $("#_thumbnail_feedbacks").modal("show");
+            } catch(err) {
+                console.log(err);
+            } finally {
+                return true;
+            }
         }
     });
     return true;
