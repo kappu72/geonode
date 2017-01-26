@@ -296,12 +296,14 @@
     <div class="col-xs-12 col-lg-4">
       <div class="panel-group">
           <div class="panel panel-default">
-              <!-- div class="panel-heading">Data info</div -->
               <div class="panel-body">
                 <div class="panel panel-default" >
-                  
                   <div class="panel-heading">Publishing</div>
                   <div class="panel-body">
+                    <div>
+                        <span><label for="{{ map_form.metadata_uploaded_preserve|id }}">{{ map_form.metadata_uploaded_preserve.label }}</label></span>
+                        {{ map_form.metadata_uploaded_preserve }}
+                    </div>
                     <div>
                         <span><label for="{{ map_form.is_published|id }}">{{ map_form.is_published.label }}</label></span>
                         {{ map_form.is_published }}
@@ -313,9 +315,30 @@
                   </div>
                 </div>
               </div>
-            </div>
-        </div>
+          </div>
       </div>
     </div>
+    <div class="col-xs-12 col-lg-4">
+      <div class="panel-group">
+          <div class="panel panel-default">
+              <div class="panel-body">
+                <div class="panel panel-default" >
+                  <div class="panel-heading">Other Settings</div>
+                  <div class="panel-body">
+                    <div>
+                        <span><label for="{{ map_form.urlsuffix|id }}">{{ map_form.urlsuffix.label }}</label></span>
+                        {{ map_form.urlsuffix }}
+                    </div>
+                    <div>
+                        <span><label for="{{ map_form.featuredurl|id }}">{{ map_form.featuredurl.label }}</label></span>
+                        {{ map_form.featuredurl }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+      </div>
+    </div>
+</div>
 </div>
 {% endblock %}

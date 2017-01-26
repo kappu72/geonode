@@ -35,10 +35,20 @@ form #mdeditor_form label{
   cursor: pointer;
 }
 
-/* owner checkboxes */
-#mdeditor_form #id_resource-is_published, #mdeditor_form #id_resource-featured  {
+/* publishing checkboxes */
+#mdeditor_form #id_resource-metadata_uploaded_preserve,
+#mdeditor_form #id_resource-is_published,
+#mdeditor_form #id_resource-featured  {
   float: right;
 }
+
+/* mosaiking checkboxes */
+#mdeditor_form #id_resource-is_mosaic,
+#mdeditor_form #id_resource-has_time,
+#mdeditor_form #id_resource-has_elevation  {
+  float: right;
+}
+
 /* keywords */
 #mdeditor_form .tokenfield.form-control {
   height: auto;
@@ -531,26 +541,62 @@ span.grippy::after {
     <div class="col-xs-12 col-lg-4">
       <div class="panel-group">
           <div class="panel panel-default">
-              <!-- div class="panel-heading">Data info</div -->
               <div class="panel-body">
                 <div class="panel panel-default" >
-                  
-                  <div class="panel-heading">Publishing</div>
+                    <div class="panel-heading">Publishing</div>
+                      <div class="panel-body">
+                        <div>
+                            <span><label for="{{ layer_form.metadata_uploaded_preserve|id }}">{{ layer_form.metadata_uploaded_preserve.label }}</label></span>
+                            {{ layer_form.metadata_uploaded_preserve }}
+                        </div>
+                        <div>
+                            <span><label for="{{ layer_form.is_published|id }}">{{ layer_form.is_published.label }}</label></span>
+                            {{ layer_form.is_published }}
+                        </div>
+                        <div>
+                            <span><label for="{{ layer_form.featured|id }}">{{ layer_form.featured.label }}</label></span>
+                            {{ layer_form.featured }}
+                        </div>
+                      </div>
+                </div>
+              </div>
+            </div>
+     </div>
+    </div>
+    <div class="col-xs-12 col-lg-4">
+      <div class="panel-group">
+          <div class="panel panel-default">
+              <div class="panel-body">
+                <div class="panel panel-default" >
+                  <div class="panel-heading">Other Settings</div>
                   <div class="panel-body">
                     <div>
-                        <span><label for="{{ layer_form.is_published|id }}">{{ layer_form.is_published.label }}</label></span>
-                        {{ layer_form.is_published }}
+                        <span><label for="{{ layer_form.is_mosaic|id }}">{{ layer_form.is_mosaic.label }}</label></span>
+                        {{ layer_form.is_mosaic }}
                     </div>
                     <div>
-                        <span><label for="{{ layer_form.featured|id }}">{{ layer_form.featured.label }}</label></span>
-                        {{ layer_form.featured }}
+                        <span><label for="{{ layer_form.has_time|id }}">{{ layer_form.has_time.label }}</label></span>
+                        {{ layer_form.has_time }}
+                    </div>
+                    <div>
+                        <span><label for="{{ layer_form.has_elevation|id }}">{{ layer_form.has_elevation.label }}</label></span>
+                        {{ layer_form.has_elevation }}
+                    </div>
+                    
+                    <div>
+                        <span><label for="{{ layer_form.time_regex|id }}">{{ layer_form.time_regex.label }}</label></span>
+                        {{ layer_form.time_regex }}
+                    </div>
+                    <div>
+                        <span><label for="{{ layer_form.elevation_regex|id }}">{{ layer_form.elevation_regex.label }}</label></span>
+                        {{ layer_form.elevation_regex }}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
         </div>
-      </div>
-    </div>
+    </div>    
+</div>
 </div>
 {% endblock %}
