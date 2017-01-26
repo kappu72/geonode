@@ -194,10 +194,13 @@ span.grippy::after {
 {% block body_outer %}
 <ul id="md_tabs" class="nav nav-tabs">
     <li id="metadata_edit_tab" class="active">
-        <a data-toggle="tab" href="#edit-metadata">Edit</a>
+        <a data-toggle="tab" href="#edit-metadata"><i class="fa fa-pencil"></i> Edit</a>
     </li>
-    <li id="preview_tab" data-toggle="tab" dhref="#preview">
-        <a data-toggle="tab" href="#preview">Preview</a>
+    <li id="preview_tab" dhref="#preview">
+        <a data-toggle="tab" href="#preview"><i class="fa fa-camera"></i> Preview</a>
+    </li>
+    <li id="settings_tab" dhref="#settings">
+        <a data-toggle="tab" href="#settings"><i class="fa fa-cog"></i> Settings</a>
     </li>
 </ul>
 
@@ -342,16 +345,10 @@ span.grippy::after {
                                         <!--<p class="xxs-font-size">(Language used within the dataset)</p>-->
                                         {{ layer_form.language }}
                                     </div>
-                                    <hr />
                                     <div>
-                                        <span><label for="{{ layer_form.restriction_code_type|id }}">{{ layer_form.restriction_code_type.label }}</label></span>
-                                        <!--<p class="xxs-font-size">(Limitation/s placed upon the access or use of data)</p>-->
-                                        {{ layer_form.restriction_code_type }}
-                                    </div>
-                                    <div>
-                                        <span><label for="{{ layer_form.constraints_other|id }}">{{ layer_form.constraints_other.label }}</label></span>
-                                        <!--<p class="xxs-font-size">(Other restrictions and legal prerequisites for accessing or use data and metadata)</p>-->
-                                        {{ layer_form.constraints_other }}
+                                        <span><label for="{{ layer_form.license|id }}">{{ layer_form.license.label }}</label></span>
+                                        <!--<p class="xxs-font-size">(License of the dataset)</p>-->
+                                        {{ layer_form.license }}
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -366,19 +363,16 @@ span.grippy::after {
                                       </div>
                                 </div>
                                 <div class="col-lg-4">
+                                    
                                     <div>
-                                        <span><label for="{{ layer_form.license|id }}">{{ layer_form.license.label }}</label></span>
-                                        <!--<p class="xxs-font-size">(License of the dataset)</p>-->
-                                        {{ layer_form.license }}
-                                    </div>
-                                    <hr />
-                                    <div>
-                                        <span><label for="{{ layer_form.is_published|id }}">{{ layer_form.is_published.label }}</label></span>
-                                        {{ layer_form.is_published }}
+                                        <span><label for="{{ layer_form.restriction_code_type|id }}">{{ layer_form.restriction_code_type.label }}</label></span>
+                                        <!--<p class="xxs-font-size">(Limitation/s placed upon the access or use of data)</p>-->
+                                        {{ layer_form.restriction_code_type }}
                                     </div>
                                     <div>
-                                        <span><label for="{{ layer_form.featured|id }}">{{ layer_form.featured.label }}</label></span>
-                                        {{ layer_form.featured }}
+                                        <span><label for="{{ layer_form.constraints_other|id }}">{{ layer_form.constraints_other.label }}</label></span>
+                                        <!--<p class="xxs-font-size">(Other restrictions and legal prerequisites for accessing or use data and metadata)</p>-->
+                                        {{ layer_form.constraints_other }}
                                     </div>
                                 </div>
                             </div>
@@ -532,5 +526,31 @@ span.grippy::after {
         <iframe id="preview_encoder_iframe" frameborder="0" scrolling="no" onload="if(this.contentWindow.document.body) {$('#preview').height(this.contentWindow.document.body.scrollHeight)}" src="/catalogue/csw_to_extra_format/{{resource.uuid}}/{{resource.title}}.html"></iframe>
     {% endif %}
 </div>
+<div id="settings" class="tab-pane fade" style="overflow: hidden;">
+  <!--<br />-->
+    <div class="col-xs-12 col-lg-4">
+      <div class="panel-group">
+          <div class="panel panel-default">
+              <!-- div class="panel-heading">Data info</div -->
+              <div class="panel-body">
+                <div class="panel panel-default" >
+                  
+                  <div class="panel-heading">Publishing</div>
+                  <div class="panel-body">
+                    <div>
+                        <span><label for="{{ layer_form.is_published|id }}">{{ layer_form.is_published.label }}</label></span>
+                        {{ layer_form.is_published }}
+                    </div>
+                    <div>
+                        <span><label for="{{ layer_form.featured|id }}">{{ layer_form.featured.label }}</label></span>
+                        {{ layer_form.featured }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
 </div>
 {% endblock %}

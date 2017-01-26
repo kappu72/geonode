@@ -4,12 +4,15 @@
 
 {% block body_outer %}
 <ul id="md_tabs" class="nav nav-tabs">
-    <li id="metadata_edit_tab" class="active">
-        <a data-toggle="tab" href="#edit-metadata">Edit</a>
-    </li>
+  <li id="metadata_edit_tab" class="active">
+      <a data-toggle="tab" href="#edit-metadata"><i class="fa fa-pencil"></i> Edit</a>
+  </li>
     <!-- li id="preview_tab" data-toggle="tab" dhref="#preview">
         <a data-toggle="tab" href="#preview">Preview</a>
     </li -->
+    <li id="settings_tab" dhref="#settings">
+        <a data-toggle="tab" href="#settings"><i class="fa fa-cog"></i> Settings</a>
+    </li>
 </ul>
 
 <div class="tab-content">
@@ -149,16 +152,10 @@
                                         <!--<p class="xxs-font-size">(Language used within the dataset)</p>-->
                                         {{ map_form.language }}
                                     </div>
-                                    <hr />
                                     <div>
-                                        <span><label for="{{ map_form.restriction_code_type|id }}">{{ map_form.restriction_code_type.label }}</label></span>
-                                        <!--<p class="xxs-font-size">(Limitation/s placed upon the access or use of data)</p>-->
-                                        {{ map_form.restriction_code_type }}
-                                    </div>
-                                    <div>
-                                        <span><label for="{{ map_form.constraints_other|id }}">{{ map_form.constraints_other.label }}</label></span>
-                                        <!--<p class="xxs-font-size">(Other restrictions and legal prerequisites for accessing or use data and metadata)</p>-->
-                                        {{ map_form.constraints_other }}
+                                        <span><label for="{{ map_form.license|id }}">{{ map_form.license.label }}</label></span>
+                                        <!--<p class="xxs-font-size">(License of the dataset)</p>-->
+                                        {{ map_form.license }}
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -174,18 +171,14 @@
                                 </div>
                                 <div class="col-lg-4">
                                     <div>
-                                        <span><label for="{{ map_form.license|id }}">{{ map_form.license.label }}</label></span>
-                                        <!--<p class="xxs-font-size">(License of the dataset)</p>-->
-                                        {{ map_form.license }}
-                                    </div>
-                                    <hr />
-                                    <div>
-                                        <span><label for="{{ map_form.is_published|id }}">{{ map_form.is_published.label }}</label></span>
-                                        {{ map_form.is_published }}
+                                        <span><label for="{{ map_form.restriction_code_type|id }}">{{ map_form.restriction_code_type.label }}</label></span>
+                                        <!--<p class="xxs-font-size">(Limitation/s placed upon the access or use of data)</p>-->
+                                        {{ map_form.restriction_code_type }}
                                     </div>
                                     <div>
-                                        <span><label for="{{ map_form.featured|id }}">{{ map_form.featured.label }}</label></span>
-                                        {{ map_form.featured }}
+                                        <span><label for="{{ map_form.constraints_other|id }}">{{ map_form.constraints_other.label }}</label></span>
+                                        <!--<p class="xxs-font-size">(Other restrictions and legal prerequisites for accessing or use data and metadata)</p>-->
+                                        {{ map_form.constraints_other }}
                                     </div>
                                 </div>
                             </div>
@@ -298,6 +291,31 @@
       </div></div></div>
     </div>
 </div>
-
+<div id="settings" class="tab-pane fade" style="overflow: hidden;">
+  <!--<br />-->
+    <div class="col-xs-12 col-lg-4">
+      <div class="panel-group">
+          <div class="panel panel-default">
+              <!-- div class="panel-heading">Data info</div -->
+              <div class="panel-body">
+                <div class="panel panel-default" >
+                  
+                  <div class="panel-heading">Publishing</div>
+                  <div class="panel-body">
+                    <div>
+                        <span><label for="{{ map_form.is_published|id }}">{{ map_form.is_published.label }}</label></span>
+                        {{ map_form.is_published }}
+                    </div>
+                    <div>
+                        <span><label for="{{ map_form.featured|id }}">{{ map_form.featured.label }}</label></span>
+                        {{ map_form.featured }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
 </div>
 {% endblock %}

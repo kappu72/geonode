@@ -374,6 +374,12 @@
                 // Log error
             }
         });
+        $('#settings_tab').on('show.bs.tab', function(){
+            // buttons visibility
+            $('#btn_back_dwn').hide();
+            $('#btn_next_dwn').hide();
+            $('#btn_upd_md_dwn').show();
+          });
         $('#metadata_edit_tab').on('show.bs.tab', function(){
           // buttons visibility
           $('#btn_upd_md_dwn').show();
