@@ -49,6 +49,19 @@
         }
       }
     }
+    
+    // done button tooltip variables
+    var tooltipShown = false;
+    var gotIt = false;
+    var tooltipContent =  'All mandatory fields are completed, you can continue editing the optional fields or click on "Done" to save your changes and close this page. '
+      + '<button id="close-popover-done" data-toggle="clickover" class="btn btn-small btn-primary pull-right">Got it</button><br/>';
+    $('.metadata-edit-done').popover({
+        placement: 'left',
+        html: true,
+        animation: true,
+        content: tooltipContent
+      });
+      
     var updateCompleteness = function(completeness) {
       $('#profileCompleteness .progress-bar').html(parseFloat(((completeness)*100).toFixed(0)) + ' %').width(parseFloat(((completeness)*100).toFixed(2)) + '%');
       $('#profileCompleteness .completed').toggle(completeness === 1);
@@ -65,6 +78,24 @@
         .toggleClass('progress-bar-success', !advancedMissing)
         .attr('title', advancedMissing ? "some mandatory fields are missing" : "Mandatory fields completed" )
         .tooltip('fixTitle');
+        
+      
+        
+        //done button tooltip
+        if(completeness === 1 && $('.metadata-edit-done').css('opacity')+"" === "0" && !tooltipShown && !gotIt) {
+          tooltipShown = true;
+          setTimeout(function() {
+            $('.metadata-edit-done').popover('show');
+            $(document).on('click', '#close-popover-done', function() {
+                 $('.metadata-edit-done').popover('hide');
+                 gotIt = true;
+             });
+          },1500);
+        } else if (completeness < 1){
+          tooltipShown = false;
+          $('.metadata-edit-done').popover('hide');
+        }
+        // show/hide done button
         $('.metadata-edit-done').animate(completeness === 1 ? {width: '100px', opacity: 1} : {width: 0, opacity: 0});
     }
 
@@ -133,7 +164,7 @@
 
         var changeTxt = ["Edit Thumbnail", "Exit"];
 
-        $("#change_thumbnail").click(function () {       
+        $("#change_thumbnail").click(function () {
             $(this).text(changeTxt.reverse()[0]);
             $("#preview_map, #preview_image").toggle(1000);
             $("#set_thumbnail").toggle();
@@ -144,7 +175,7 @@
                queryPos = src.indexOf('?');
                if(queryPos != -1) {
                   src = src.substring(0, queryPos);
-               }    
+               }
                $('#preview_image_src').attr('src', src + '?' + Math.random());
         });
 
