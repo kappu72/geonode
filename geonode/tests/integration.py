@@ -445,7 +445,7 @@ class GeoNodeMapTest(TestCase):
             'san_andres_y_providencia_poi.shp')
         shp_layer = file_upload(shp_file, overwrite=True)
 
-        geoserver_post_save2(shp_layer.id)
+        shp_layer = geoserver_post_save2(shp_layer.id)
 
         ws = gs_cat.get_workspace(shp_layer.workspace)
         shp_store = gs_cat.get_store(shp_layer.store, ws)
@@ -480,7 +480,7 @@ class GeoNodeMapTest(TestCase):
             'san_andres_y_providencia_poi.shp')
         shp_layer = file_upload(shp_file)
 
-        geoserver_post_save2(shp_layer.id)
+        shp_layer = geoserver_post_save2(shp_layer.id)
 
         time.sleep(20)
 
@@ -529,15 +529,19 @@ class GeoNodeMapTest(TestCase):
             'san_andres_y_providencia_poi.shp')
         shp_layer = file_upload(shp_file)
 
-        geoserver_post_save2(shp_layer.id)
+        shp_layer = geoserver_post_save2(shp_layer.id)
 
         time.sleep(20)
 
         # Save the names of the Resource/Store/Styles
+        self.assertIsNotNone(shp_layer.name)
         resource_name = shp_layer.name
+        self.assertIsNotNone(shp_layer.workspace)
         ws = gs_cat.get_workspace(shp_layer.workspace)
+        self.assertIsNotNone(shp_layer.store)
         store = gs_cat.get_store(shp_layer.store, ws)
         store_name = store.name
+        self.assertIsNotNone(resource_name)
         layer = gs_cat.get_layer(resource_name)
         styles = layer.styles + [layer.default_style]
 
@@ -900,7 +904,7 @@ class GeoNodeThumbnailTest(TestCase):
             overwrite=True,
         )
 
-        geoserver_post_save2(saved_layer.id)
+        saved_layer = geoserver_post_save2(saved_layer.id)
 
         thumbnail_url = saved_layer.get_thumbnail_url()
 
